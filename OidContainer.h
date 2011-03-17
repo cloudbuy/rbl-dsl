@@ -1,3 +1,6 @@
+#ifndef     _EM_OID_CONTAINER_H
+#define     _EM_OID_CONTAINER_H
+
 #include <string>
 #include <stdexcept>
 #include <string.h>
@@ -9,6 +12,8 @@
 #include <SF/string.hpp>
 
 namespace event_model
+{
+namespace primitives
 {
 
 template<typename char_type, unsigned length>
@@ -100,6 +105,9 @@ private:
 template< typename str_type, typename size_type>
 class OidType
 {
+    const static size_type MAX = boost::integer_traits<size_type>::const_max;
+    BOOST_STATIC_ASSERT(boost::integer_traits<size_type>::is_integer == true);
+
 public:
     typedef str_type name_type;
     typedef size_type ordinal_type;    
@@ -107,8 +115,13 @@ public:
     inline OidType()
         : name_(),ordinal_() {}
      
-    inline OidType(const std::string & str_in, const size_type ordinal_in)
-        : name_(str_in), ordinal_(ordinal_in) {}
+    inline OidType(const std::string & str_in, const boost::uint32_t ordinal_in)
+        : name_(str_in), ordinal_() { 
+        if( ordinal_in > MAX )
+            throw std::out_of_range("ordinal exceeds limit");
+
+        ordinal_ = ordinal_in;
+    }
  
     void serialize(SF::Archive & ar)
     {
@@ -174,7 +187,12 @@ public:
     {
         return id_.ordinal();
     }
+    inline const _entry_type & entry() const
+    {
+        return entry_;
+    }
     inline const identifier_type & Id() const { return id_; }
+
 private:
     identifier_type id_;
     _entry_type     entry_;
@@ -339,5 +357,7 @@ private:
 };
 
 
-
 }
+}
+
+#endif

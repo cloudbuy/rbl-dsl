@@ -6,7 +6,7 @@
 #include <SF/IBinaryStream.hpp>
 #include <boost/cstdint.hpp>
 
-using namespace event_model;
+using namespace event_model::primitives;
 
 typedef OidConstrainedString<char,8> oid_str_type;
 
@@ -79,7 +79,6 @@ struct x
         ar & y;
     }
 };
-
 typedef OidContainer<oid,x> test_container;
 
 
