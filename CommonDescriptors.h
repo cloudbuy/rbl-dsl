@@ -1,5 +1,5 @@
-#ifndef _EM_COMMON_H
-#define _EM_COMMON_H
+#ifndef _EM_COMMON_DESCRIPTORS_H
+#define _EM_COMMON_DESCRIPTORS_H
 #include <boost/cstdint.hpp>
 #include <RCF/Idl.hpp>
 #include <SF/Archive.hpp>

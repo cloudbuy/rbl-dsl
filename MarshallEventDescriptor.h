@@ -1,3 +1,5 @@
+#ifndef _EM_MARSHALL_EVENT_DESCRIPTOR_H
+#define _EM_MARSHALL_EVENT_DESCRIPTOR_H
 #include "CommonDescriptors.h"
 
 namespace event_model
@@ -8,14 +10,5 @@ namespace event_model
     private:
         EventTypeContainer etc_;
     };
-    
-    class MarshallEventDescriptorBuilder
-    {
-    public:
-        MarshallEventDescriptorBuilder();
-        inline void AddEventType(   const EventTypeContainer::entry_type & et,
-                                    bool & pass); 
-    private:
-        EventTypeContainer etc_;
-    };
 }
+#endif
