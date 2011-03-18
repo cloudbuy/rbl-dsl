@@ -34,10 +34,10 @@ namespace event_model
         VALUE_TYPE  type;
 
         EventTypeDescriptor();
-
         EventTypeDescriptor( EVENT_DESCRIPTOR_QUALIFIER _qualifier,
-                             VALUE_TYPE _type );
-
+                             VALUE_TYPE _type,
+                             bool primitive_in);
+        inline const bool is_primitive() const;
         void serialize(SF::Archive & ar);
     private:
         bool primitive_;
