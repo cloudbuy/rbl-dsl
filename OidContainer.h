@@ -213,7 +213,23 @@ public:
     typedef OidContainerEntryType<identifier_type, _entry_type> entry_type;
     
     OidContainer() : entries_(),name_index_() { }
-    
+    OidContainer(const OidContainer & rhs)
+    {
+        name_index_.clear();
+        entries_ = rhs.entries_;
+        regen_name_index_();
+    }
+    OidContainer& operator=(const OidContainer & oid)
+    {
+        if(this != &oid)
+        {
+            name_index_.clear();
+            entries_ = oid.entries_;
+            regen_name_index_();
+            return *this; 
+        }
+    }
+     
     inline const std::size_t Size() const
     {
         return entries_.size();

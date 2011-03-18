@@ -1,7 +1,29 @@
+#include "Descriptors.h"
+
 namespace event_model
 {
     using namespace primitives;
+    
+    EventTypeDescriptor::EventTypeDescriptor() {} 
 
+    EventTypeDescriptor::EventTypeDescriptor( 
+        EVENT_DESCRIPTOR_QUALIFIER _qualifier, 
+        VALUE_TYPE _type,
+        bool primitive_in)
+    :   qualifier(_qualifier),
+        type(_type),
+        primitive_(primitive_in)
+    {
+        
+    }
+    void EventTypeDescriptor::serialize(SF::Archive & ar)
+    {
+        ar & qualifier & type & primitive_;
+    }
+    const bool EventTypeDescriptor::is_primitive() const { return primitive_; }
+
+        
+    // Builders - MarshallEventDescriptorBuilder
     MarshallEventDescriptorBuilder::MarshallEventDescriptorBuilder()
         : etc_()
     {
@@ -20,24 +42,19 @@ namespace event_model
             pass_ = false; 
         }
     }
-
-    EventTypeDescriptor::EventTypeDescriptor() {} 
-
-    EventTypeDescriptor::EventTypeDescriptor( 
-        EVENT_DESCRIPTOR_QUALIFIER _qualifier, 
-        VALUE_TYPE _type,
-        bool primitive_in)
-    :   qualifier(_qualifier),
-        type(_type),
-        primitive_(primitive_in)
+    // Builders - MarshallNamespaceDescriptorBuilder
+    MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder()
+    :  ec_() {}
+    
+    void MarshallNamespaceDescriptorBuilder::AddEvent 
+        ( const EventContainer::entry_type & et,bool & pass )
     {
-        
+        OP_RESPONSE resp = ec_.SetEntry(et);
+        if( resp == OP_NO_ERROR)
+            pass = true;
+        else
+        {
+            pass=false;
+        } 
     }
-
-    void EventTypeDescriptor::serialize(SF::Archive & ar)
-    {
-        ar & qualifier & type & primitive_;
-    }
-    const bool EventTypeDescriptor::is_primitive() const { return primitive_; }
-
 };

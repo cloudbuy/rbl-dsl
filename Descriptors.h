@@ -1,13 +1,16 @@
+#ifndef _EM_DESCRIPTORS_H
+#define _EM_DESCRIPTORS_H
+
 #include <boost/cstdint.hpp>
 #include <RCF/Idl.hpp>
 #include <SF/Archive.hpp>
-
 #include "OidContainer.h"
 
 namespace event_model
 {
     using namespace primitives;
-    
+   
+    // Common 
     typedef OidConstrainedString<char, 32> OidName;
     typedef OidType<OidName, boost::uint8_t> Oid;
     
@@ -40,9 +43,13 @@ namespace event_model
         bool primitive_;
     };
     
-    typedef OidContainer<Oid,EventTypeDescriptor> EventTypeContainer;
-
+    typedef OidContainer<Oid, EventTypeDescriptor> EventTypeContainer;
+    typedef OidContainer<Oid, EventTypeContainer> EventContainer;
+    
     // Generator
+    class RelayEventDescriptor;
+    class RelayNamespaceDescriptor;
+
     class GeneratorEventDescriptor
     {
     public:
@@ -58,12 +65,15 @@ namespace event_model
     public:
         GeneratorNamespaceDescriptor();
         GeneratorNamespaceDescriptor(const RelayNamespaceDescriptor & rnd);
-        void serialize(SF::archive & ar);
+        void serialize(SF::Archive & ar);
     private:
         GeneratorEventDescriptor ged_;
     };   
     
     // relay
+    class MarshallEventDescriptor;
+    class MarshallNamespaceDescriptor;
+
     class RelayEventDescriptor
     {
     public:
@@ -71,7 +81,7 @@ namespace event_model
         RelayEventDescriptor( const MarshallEventDescriptor & med);
         void serialize(SF::Archive & ar);
     private:
-        EventTypecontainer etc_;
+        EventTypeContainer etc_;
     };
     
     class RelayNamespaceDescriptor
@@ -79,7 +89,7 @@ namespace event_model
     public:
         RelayNamespaceDescriptor();
         RelayNamespaceDescriptor(const MarshallNamespaceDescriptor & mnd);
-        void serialize(SF::archive & ar);
+        void serialize(SF::Archive & ar);
     private:
         RelayEventDescriptor etc_;
     };
@@ -118,8 +128,12 @@ namespace event_model
 
     class MarshallNamespaceDescriptorBuilder
     {
+    public:
+        MarshallNamespaceDescriptorBuilder();
+        inline void AddEvent(   const EventContainer::entry_type & et,
+                                bool & pass);
+    private:
+        EventContainer ec_;
     };
-
-
 }
-
+#endif
