@@ -1,12 +1,13 @@
 #ifndef     _EM_OID_CONTAINER_H
 #define     _EM_OID_CONTAINER_H
-
 #include <string>
 #include <stdexcept>
 #include <string.h>
 #include <vector>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/intrusive/set.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/static_assert.hpp>
 
 #include <SF/vector.hpp>
 #include <SF/string.hpp>
@@ -154,6 +155,7 @@ class OidContainerEntryType:
     public intrusive::set_base_hook<>
 {
 public:
+    typedef _entry_type basic_entry_type;
     inline OidContainerEntryType()
         : id_(), entry_()
     {}    
@@ -162,7 +164,7 @@ public:
         : id_(id), entry_(et) {}
 
     inline bool is_initialized() const { return id_.name().is_initialized(); }
-
+    
     inline bool operator< 
         (const OidContainerEntryType<identifier_type,_entry_type> & rhs) const
     { return id_.name() < rhs.id_.name() ; }
@@ -174,7 +176,23 @@ public:
     inline bool operator> 
         (const OidContainerEntryType<identifier_type, _entry_type> & rhs) const
     { return id_.name() > rhs.id_.name() ; }
-    
+
+    // todo! 
+    template<typename T>
+    OidContainerEntryType & operator=(const T & rhs)
+    {
+        BOOST_STATIC_ASSERT( (
+            boost::is_base_of<   basic_entry_type,
+                                typename T::basic_entry_type> ::value) );
+                                 
+        if((void *) this != (void *) &rhs)
+        {
+            id_ = rhs.Id();
+            entry_ = rhs.entry(); 
+        }
+        return *this;
+    }  
+ 
     void serialize(SF::Archive & ar)
     {
         ar & id_ & entry_; 
@@ -210,6 +228,7 @@ template<typename identifier_type, typename _entry_type>
 class OidContainer
 {
 public:
+    typedef _entry_type                                         basic_entry_type;
     typedef OidContainerEntryType<identifier_type, _entry_type> entry_type;
     
     OidContainer() : entries_(),name_index_() { }
@@ -226,10 +245,64 @@ public:
             name_index_.clear();
             entries_ = oid.entries_;
             regen_name_index_();
-            return *this; 
         }
+
+        return *this; 
     }
-     
+    template<typename T>
+    OidContainer(const T & rhs)
+    {
+        BOOST_STATIC_ASSERT( ( 
+            boost::is_base_of<  basic_entry_type, 
+                                typename T::basic_entry_type >::value) );
+
+        typedef std::vector<typename T::entry_type> rhs_container;
+        
+        name_index_.clear();
+        
+        rhs_container  & _rhs = rhs.get_entries();
+       
+        std::size_t size = _rhs.Size();    
+ 
+        this->entries_.resize(size);
+
+        for(int i =0; i < size; ++i)
+        {
+            this.entries_.at(i) = _rhs.at(i);
+        }
+
+        regen_name_index_();
+    }
+ 
+    template<typename T>
+    OidContainer& operator=(const T & rhs)
+    {
+        BOOST_STATIC_ASSERT( (
+            boost::is_base_of<  basic_entry_type, 
+                                typename T::basic_entry_type >::value) );
+
+        if((void *)this != (void *) &rhs)
+        {
+            std::size_t size = rhs.Size();    
+
+            this->entries_.resize(size);
+
+            for(int i =0; i < size; ++i)
+            {
+                const typename T::entry_type * x = rhs.EntryAtordinal(i);
+                this->entries_.at(i) = *x;
+            }
+
+            regen_name_index_();
+        }
+        return *this;
+    }
+    
+    inline const std::vector<entry_type> & get_entries() const
+    {
+        return entries_;
+    }
+ 
     inline const std::size_t Size() const
     {
         return entries_.size();

@@ -21,21 +21,32 @@ namespace event_model
     {
         ar & qualifier & type & primitive;
     }
-
+    
     GeneratorEventDescriptor::GeneratorEventDescriptor()
-        : identifier(), events() {}
-    GeneratorEventDescriptor::GeneratorEventDescriptor(const Oid & identifier)
-        : identifier(identifier), events() {}
+        :  events() {}
+    
+    GeneratorEventDescriptor::
+    GeneratorEventDescriptor(const RelayEventDescriptor & rhs)
+        : events(rhs.events) {}
+    GeneratorEventDescriptor::
+    GeneratorEventDescriptor(const EventTypeContainer & events_in)
+        : events(events_in) {}
+
 
     RelayEventDescriptor::RelayEventDescriptor()
         : GeneratorEventDescriptor() {}
-    RelayEventDescriptor::RelayEventDescriptor( const Oid & identifier )
-        :   GeneratorEventDescriptor(identifier){}
-   
+    RelayEventDescriptor::
+    RelayEventDescriptor(const MarshallEventDescriptor & rhs)
+        : GeneratorEventDescriptor(rhs.events) {}
+    RelayEventDescriptor::RelayEventDescriptor
+        (const EventTypeContainer & rhs) : GeneratorEventDescriptor(rhs) {}
+     
     MarshallEventDescriptor::MarshallEventDescriptor()
         : RelayEventDescriptor() {}
-    MarshallEventDescriptor::MarshallEventDescriptor(const Oid & identifier)
-        : RelayEventDescriptor( identifier) {}
+    MarshallEventDescriptor::   
+    MarshallEventDescriptor(const MarshallEventDescriptorBuilder & rhs)
+        : RelayEventDescriptor(rhs.events) {}
+
  
     void MarshallEventDescriptorBuilder::AddEventTypeEntry( 
         const Oid & oid, 
@@ -49,10 +60,13 @@ namespace event_model
 
     //Namespace Objects
     GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor()
-        : name() {}
+        : name(),Events() {}
     GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor(
-        const std::string & name_in)
-        :   name(name_in) {}
+        const RelayNamespaceDescriptor & rhs)
+    {
+       name = rhs.name;
+        Events=rhs.Events;
+    }
 
     RelayNamespaceDescriptor::RelayNamespaceDescriptor()
         : GeneratorNamespaceDescriptor() {}

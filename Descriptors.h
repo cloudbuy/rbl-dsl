@@ -45,28 +45,36 @@ namespace event_model
     
     typedef OidContainer<Oid, EventTypeDescriptor> EventTypeContainer;
 
+    class RelayEventDescriptor;
+
     class GeneratorEventDescriptor
     {
     public:
         GeneratorEventDescriptor();
-        GeneratorEventDescriptor(const Oid & identifier);
-
-        const Oid identifier;
-        const EventTypeContainer events;
+        GeneratorEventDescriptor(const RelayEventDescriptor &);
+        GeneratorEventDescriptor(const EventTypeContainer & );
+        //GeneratorEventDescriptor & operator=(const RelayEventDescriptor & rhs)  {}
+ 
+        EventTypeContainer events;
     };
-    
+   
+    class MarshallEventDescriptor;
+ 
     class RelayEventDescriptor : public GeneratorEventDescriptor
     {
     public:
         RelayEventDescriptor();
-        RelayEventDescriptor(const Oid & identifier);
+        RelayEventDescriptor(const MarshallEventDescriptor &);
+        RelayEventDescriptor(const EventTypeContainer &);
     };
 
+    class MarshallEventDescriptorBuilder;
+    
     class MarshallEventDescriptor : public RelayEventDescriptor
     {
     public:
         MarshallEventDescriptor();
-        MarshallEventDescriptor(const Oid & identifier);
+        MarshallEventDescriptor(const MarshallEventDescriptorBuilder &);
     };
 
     class MarshallEventDescriptorBuilder : public MarshallEventDescriptor
@@ -76,26 +84,44 @@ namespace event_model
                                 const EventTypeDescriptor & ets);
     };
 
+    class RelayNamespaceDescriptor;
+
     class GeneratorNamespaceDescriptor
     {
     public:
+        typedef OidContainer<Oid,GeneratorEventDescriptor> 
+            EventDescriptorContainer;
+
         GeneratorNamespaceDescriptor();
-        GeneratorNamespaceDescriptor(const std::string &);
-        const std::string name;
-    };
+        GeneratorNamespaceDescriptor(const RelayNamespaceDescriptor &);
+        
+        std::string name;
+        EventDescriptorContainer Events;
+     };
+
+    class MarshallNamespaceDescriptor;
 
     class RelayNamespaceDescriptor : public GeneratorNamespaceDescriptor
     {
     public:
+        typedef OidContainer<Oid,RelayEventDescriptor>
+            EventDescriptorContainer;
+
         RelayNamespaceDescriptor();
         RelayNamespaceDescriptor(const std::string &);
+        
+        EventDescriptorContainer Events;
     };
 
     class MarshallNamespaceDescriptor : public RelayNamespaceDescriptor
     {
     public:
+        typedef OidContainer<Oid,MarshallEventDescriptor> 
+            EventDescriptorContainer;
         MarshallNamespaceDescriptor();
         MarshallNamespaceDescriptor(const std::string & name_in);
+        
+        const EventDescriptorContainer Events;    
     };
     
     class MarshallNamespaceDescriptorBuilder 
@@ -104,6 +130,7 @@ namespace event_model
     public:
         MarshallNamespaceDescriptorBuilder();
         MarshallNamespaceDescriptorBuilder(const std::string &);
+         
     };
 }
 #endif
