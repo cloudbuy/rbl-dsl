@@ -4,7 +4,10 @@ namespace event_model
 {
     using namespace primitives;
     
-    EventTypeDescriptor::EventTypeDescriptor() {} 
+    EventTypeDescriptor::EventTypeDescriptor()
+        :   qualifier(ENTRY_UNINITIALIZED), 
+            type(VALUE_UNINITIALIZED), 
+            primitive(false) {} 
 
     EventTypeDescriptor::EventTypeDescriptor( 
         EVENT_DESCRIPTOR_QUALIFIER _qualifier, 
@@ -12,49 +15,58 @@ namespace event_model
         bool primitive_in)
     :   qualifier(_qualifier),
         type(_type),
-        primitive_(primitive_in)
-    {
-        
-    }
+        primitive(primitive_in) {}
+
     void EventTypeDescriptor::serialize(SF::Archive & ar)
     {
-        ar & qualifier & type & primitive_;
-    }
-    const bool EventTypeDescriptor::is_primitive() const { return primitive_; }
-
-        
-    // Builders - MarshallEventDescriptorBuilder
-    MarshallEventDescriptorBuilder::MarshallEventDescriptorBuilder()
-        : etc_()
-    {
-        
+        ar & qualifier & type & primitive;
     }
 
-    void
-    MarshallEventDescriptorBuilder::AddEventType(
-        const EventTypeContainer::entry_type & et_in, bool & pass_)
+    GeneratorEventDescriptor::GeneratorEventDescriptor()
+        : identifier(), events() {}
+    GeneratorEventDescriptor::GeneratorEventDescriptor(const Oid & identifier)
+        : identifier(identifier), events() {}
+
+    RelayEventDescriptor::RelayEventDescriptor()
+        : GeneratorEventDescriptor() {}
+    RelayEventDescriptor::RelayEventDescriptor( const Oid & identifier )
+        :   GeneratorEventDescriptor(identifier){}
+   
+    MarshallEventDescriptor::MarshallEventDescriptor()
+        : RelayEventDescriptor() {}
+    MarshallEventDescriptor::MarshallEventDescriptor(const Oid & identifier)
+        : RelayEventDescriptor( identifier) {}
+ 
+    void MarshallEventDescriptorBuilder::AddEventTypeEntry( 
+        const Oid & oid, 
+        const EventTypeDescriptor & ets)
     {
-        OP_RESPONSE resp = etc_.SetEntry( et_in );
-        if(resp == OP_NO_ERROR)
-            pass_ = true;
-        else
-        {
-            pass_ = false; 
-        }
+        EventTypeContainer * event_ptr =  
+            const_cast<EventTypeContainer *>(&events);
+            
+        event_ptr->SetEntry(EventTypeContainer::entry_type(oid, ets));  
     }
-    // Builders - MarshallNamespaceDescriptorBuilder
-    MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder()
-    :  ec_() {}
+
+    //Namespace Objects
+    GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor()
+        : name() {}
+    GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor(
+        const std::string & name_in)
+        :   name(name_in) {}
+
+    RelayNamespaceDescriptor::RelayNamespaceDescriptor()
+        : GeneratorNamespaceDescriptor() {}
+    RelayNamespaceDescriptor::RelayNamespaceDescriptor(
+        const std::string & name_in) : GeneratorNamespaceDescriptor(name_in) {}
+
+    MarshallNamespaceDescriptor::MarshallNamespaceDescriptor()
+        : RelayNamespaceDescriptor() {}
+    MarshallNamespaceDescriptor::MarshallNamespaceDescriptor(
+        const std::string & name_in) : RelayNamespaceDescriptor(name_in) {}
     
-    void MarshallNamespaceDescriptorBuilder::AddEvent 
-        ( const EventContainer::entry_type & et,bool & pass )
-    {
-        OP_RESPONSE resp = ec_.SetEntry(et);
-        if( resp == OP_NO_ERROR)
-            pass = true;
-        else
-        {
-            pass=false;
-        } 
-    }
+    MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder()
+        : MarshallNamespaceDescriptor() {}
+    MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder(
+        const std::string & name_in) : MarshallNamespaceDescriptor(name_in) {}
+    
 };

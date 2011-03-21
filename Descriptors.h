@@ -16,14 +16,16 @@ namespace event_model
     
     enum VALUE_TYPE
     {
-        VALUE_INT4 = 0,
+        VALUE_UNINITIALIZED,
+        VALUE_INT4,
         VALUE_INT8,
         VALUE_STRING
     };
 
     enum EVENT_DESCRIPTOR_QUALIFIER
     {
-        ENTRY_REQUIRED = 0,
+        ENTRY_UNINITIALIZED = 0,
+        ENTRY_REQUIRED,
         ENTRY_OPTIONAL,
     };
     
@@ -32,108 +34,76 @@ namespace event_model
     public:
         EVENT_DESCRIPTOR_QUALIFIER qualifier;
         VALUE_TYPE  type;
+        bool primitive;
 
         EventTypeDescriptor();
         EventTypeDescriptor( EVENT_DESCRIPTOR_QUALIFIER _qualifier,
                              VALUE_TYPE _type,
                              bool primitive_in);
-        inline const bool is_primitive() const;
         void serialize(SF::Archive & ar);
-    private:
-        bool primitive_;
     };
     
     typedef OidContainer<Oid, EventTypeDescriptor> EventTypeContainer;
-    typedef OidContainer<Oid, EventTypeContainer> EventContainer;
-    
-    // Generator
-    class RelayEventDescriptor;
-    class RelayNamespaceDescriptor;
 
     class GeneratorEventDescriptor
     {
     public:
         GeneratorEventDescriptor();
-        GeneratorEventDescriptor( const RelayEventDescriptor & red);
-        void serialize(SF::Archive & ar);        
-    private:
-        EventTypeContainer etc_;
+        GeneratorEventDescriptor(const Oid & identifier);
+
+        const Oid identifier;
+        const EventTypeContainer events;
     };
     
+    class RelayEventDescriptor : public GeneratorEventDescriptor
+    {
+    public:
+        RelayEventDescriptor();
+        RelayEventDescriptor(const Oid & identifier);
+    };
+
+    class MarshallEventDescriptor : public RelayEventDescriptor
+    {
+    public:
+        MarshallEventDescriptor();
+        MarshallEventDescriptor(const Oid & identifier);
+    };
+
+    class MarshallEventDescriptorBuilder : public MarshallEventDescriptor
+    {
+    
+        void AddEventTypeEntry( const Oid & oid, 
+                                const EventTypeDescriptor & ets);
+    };
+
     class GeneratorNamespaceDescriptor
     {
     public:
         GeneratorNamespaceDescriptor();
-        GeneratorNamespaceDescriptor(const RelayNamespaceDescriptor & rnd);
-        void serialize(SF::Archive & ar);
-    private:
-        GeneratorEventDescriptor ged_;
-    };   
-    
-    // relay
-    class MarshallEventDescriptor;
-    class MarshallNamespaceDescriptor;
-
-    class RelayEventDescriptor
-    {
-    public:
-        RelayEventDescriptor();
-        RelayEventDescriptor( const MarshallEventDescriptor & med);
-        void serialize(SF::Archive & ar);
-    private:
-        EventTypeContainer etc_;
+        GeneratorNamespaceDescriptor(const std::string &);
+        const std::string name;
     };
-    
-    class RelayNamespaceDescriptor
+
+    class RelayNamespaceDescriptor : public GeneratorNamespaceDescriptor
     {
     public:
         RelayNamespaceDescriptor();
-        RelayNamespaceDescriptor(const MarshallNamespaceDescriptor & mnd);
-        void serialize(SF::Archive & ar);
-    private:
-        RelayEventDescriptor etc_;
+        RelayNamespaceDescriptor(const std::string &);
     };
-    
-    // Marshall
-    class MarshallEventDescriptor
-    {
-    public:
-    private:
-        EventTypeContainer etc_;
-    };
-    
-    class MarshallNamespaceDescriptor
+
+    class MarshallNamespaceDescriptor : public RelayNamespaceDescriptor
     {
     public:
         MarshallNamespaceDescriptor();
-
-        inline void set_name(const std::string name_in);
-        inline const std::string & name() const;
-
-    private:
-        std::string name_;
-        MarshallEventDescriptor med_;
+        MarshallNamespaceDescriptor(const std::string & name_in);
     };
     
-    // Builders
-    class MarshallEventDescriptorBuilder
-    {
-    public:
-        MarshallEventDescriptorBuilder();
-        inline void AddEventType(   const EventTypeContainer::entry_type & et,
-                                    bool & pass); 
-    private:
-        EventTypeContainer etc_;
-    };
-
-    class MarshallNamespaceDescriptorBuilder
+    class MarshallNamespaceDescriptorBuilder 
+        : public MarshallNamespaceDescriptor
     {
     public:
         MarshallNamespaceDescriptorBuilder();
-        inline void AddEvent(   const EventContainer::entry_type & et,
-                                bool & pass);
-    private:
-        EventContainer ec_;
+        MarshallNamespaceDescriptorBuilder(const std::string &);
     };
 }
 #endif
