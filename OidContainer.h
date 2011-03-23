@@ -177,22 +177,6 @@ public:
         (const OidContainerEntryType<identifier_type, _entry_type> & rhs) const
     { return id_.name() > rhs.id_.name() ; }
 
-    // todo! 
-    template<typename T>
-    OidContainerEntryType & operator=(const T & rhs)
-    {
-        BOOST_STATIC_ASSERT( (
-            boost::is_base_of<   basic_entry_type,
-                                typename T::basic_entry_type> ::value) );
-                                 
-        if((void *) this != (void *) &rhs)
-        {
-            id_ = rhs.Id();
-            entry_ = rhs.entry(); 
-        }
-        return *this;
-    }  
- 
     void serialize(SF::Archive & ar)
     {
         ar & id_ & entry_; 
@@ -274,29 +258,6 @@ public:
         regen_name_index_();
     }
  
-    template<typename T>
-    OidContainer& operator=(const T & rhs)
-    {
-        BOOST_STATIC_ASSERT( (
-            boost::is_base_of<  basic_entry_type, 
-                                typename T::basic_entry_type >::value) );
-
-        if((void *)this != (void *) &rhs)
-        {
-            std::size_t size = rhs.Size();    
-
-            this->entries_.resize(size);
-
-            for(int i =0; i < size; ++i)
-            {
-                const typename T::entry_type * x = rhs.EntryAtordinal(i);
-                this->entries_.at(i) = *x;
-            }
-
-            regen_name_index_();
-        }
-        return *this;
-    }
     
     inline const std::vector<entry_type> & get_entries() const
     {

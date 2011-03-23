@@ -32,17 +32,25 @@ namespace event_model
     class EventTypeDescriptor
     {
     public:
-        EVENT_DESCRIPTOR_QUALIFIER qualifier;
-        VALUE_TYPE  type;
-        bool primitive;
-
+        
         EventTypeDescriptor();
-        EventTypeDescriptor( EVENT_DESCRIPTOR_QUALIFIER _qualifier,
-                             VALUE_TYPE _type,
-                             bool primitive_in);
+        explicit EventTypeDescriptor(   EVENT_DESCRIPTOR_QUALIFIER _qualifier,
+                                        VALUE_TYPE _type,
+                                        bool primitive_in);
+        
+        // no operator= or copy constructor as bitwise copy is fine
+
+        const bool is_primitive() const;
+        const EVENT_DESCRIPTOR_QUALIFIER qualifier() const;    
+        const VALUE_TYPE type() const;
+ 
         void serialize(SF::Archive & ar);
+    private:
+        EVENT_DESCRIPTOR_QUALIFIER qualifier_;
+        VALUE_TYPE  type_;
+        bool primitive_;
     };
-    
+ 
     typedef OidContainer<Oid, EventTypeDescriptor> EventTypeContainer;
 
     class RelayEventDescriptor;
@@ -51,39 +59,52 @@ namespace event_model
     {
     public:
         GeneratorEventDescriptor();
-        GeneratorEventDescriptor(const RelayEventDescriptor &);
-        GeneratorEventDescriptor(const EventTypeContainer & );
-        //GeneratorEventDescriptor & operator=(const RelayEventDescriptor & rhs)  {}
- 
-        EventTypeContainer events;
+        explicit GeneratorEventDescriptor(const RelayEventDescriptor &);
+    
+        const EventTypeContainer & events() const;
+    private: 
+        EventTypeContainer events_;
     };
    
     class MarshallEventDescriptor;
  
-    class RelayEventDescriptor : public GeneratorEventDescriptor
+    class RelayEventDescriptor     
     {
     public:
         RelayEventDescriptor();
-        RelayEventDescriptor(const MarshallEventDescriptor &);
-        RelayEventDescriptor(const EventTypeContainer &);
+        explicit RelayEventDescriptor(const MarshallEventDescriptor &);
+   
+        const EventTypeContainer & events() const;
+    private:
+        EventTypeContainer events_;
     };
 
     class MarshallEventDescriptorBuilder;
     
-    class MarshallEventDescriptor : public RelayEventDescriptor
+    class MarshallEventDescriptor     
     {
     public:
         MarshallEventDescriptor();
-        MarshallEventDescriptor(const MarshallEventDescriptorBuilder &);
+        explicit MarshallEventDescriptor(
+            const MarshallEventDescriptorBuilder &);
+        
+        const EventTypeContainer & events() const;
+    private:
+        EventTypeContainer events_;
     };
 
-    class MarshallEventDescriptorBuilder : public MarshallEventDescriptor
+    class MarshallEventDescriptorBuilder     
     {
-    
+    public:
         void AddEventTypeEntry( const Oid & oid, 
-                                const EventTypeDescriptor & ets);
+            const EventTypeDescriptor & ets);
+        
+        const EventTypeContainer & events() const;
+    private:
+        EventTypeContainer events_;
     };
-
+    
+    /*
     class RelayNamespaceDescriptor;
 
     class GeneratorNamespaceDescriptor
@@ -93,15 +114,16 @@ namespace event_model
             EventDescriptorContainer;
 
         GeneratorNamespaceDescriptor();
-        GeneratorNamespaceDescriptor(const RelayNamespaceDescriptor &);
-        
+        explicit GeneratorNamespaceDescriptor(
+            const RelayNamespaceDescriptor &);
+    private: 
         std::string name;
         EventDescriptorContainer Events;
      };
 
     class MarshallNamespaceDescriptor;
 
-    class RelayNamespaceDescriptor : public GeneratorNamespaceDescriptor
+    class RelayNamespaceDescriptor     
     {
     public:
         typedef OidContainer<Oid,RelayEventDescriptor>
@@ -109,7 +131,8 @@ namespace event_model
 
         RelayNamespaceDescriptor();
         RelayNamespaceDescriptor(const std::string &);
-        
+    
+    private: 
         EventDescriptorContainer Events;
     };
 
@@ -121,7 +144,8 @@ namespace event_model
         MarshallNamespaceDescriptor();
         MarshallNamespaceDescriptor(const std::string & name_in);
         
-        const EventDescriptorContainer Events;    
+    private:
+        EventDescriptorContainer Events;    
     };
     
     class MarshallNamespaceDescriptorBuilder 
@@ -132,5 +156,7 @@ namespace event_model
         MarshallNamespaceDescriptorBuilder(const std::string &);
          
     };
+    */
+    #include "Descriptors_inline.h"
 }
 #endif
