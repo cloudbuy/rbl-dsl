@@ -25,38 +25,75 @@ inline void EventTypeDescriptor::serialize(SF::Archive & ar)
 {
     ar & qualifier_ & type_ & primitive_;
 }
-
+///////////////////////////////////////////////////////////////////////////////
 inline GeneratorEventDescriptor::GeneratorEventDescriptor()
     :  events_() {}
-
 inline GeneratorEventDescriptor::GeneratorEventDescriptor
-        (const RelayEventDescriptor & rhs)
-    : events_(rhs.events()) {}
-
+    ( const EventTypeContainer & etc) : events_(etc) {}
 inline const EventTypeContainer & GeneratorEventDescriptor::events() const
     { return events_; }
-
-
-inline const EventTypeContainer & RelayEventDescriptor::events() const 
-    { return events_; }
-
+///////////////////////////////////////////////////////////////////////////////
 inline RelayEventDescriptor::RelayEventDescriptor()
     :  events_() {}
 
 inline RelayEventDescriptor::RelayEventDescriptor
+    (const  EventTypeContainer & etc) : events_(etc) {}
+
+inline RelayEventDescriptor::operator GeneratorEventDescriptor()
+    { return GeneratorEventDescriptor(events_); }
+
+inline const EventTypeContainer & RelayEventDescriptor::events() const 
+    { return events_; }
+
+inline RelayEventDescriptor::RelayEventDescriptor
     (const MarshallEventDescriptor & rhs)
     : events_(rhs.events()) {}
-
+///////////////////////////////////////////////////////////////////////////////
 inline const EventTypeContainer & MarshallEventDescriptor::events() const 
     { return events_; }
 
 inline MarshallEventDescriptor::MarshallEventDescriptor()
     : events_() {}
 
-inline MarshallEventDescriptor::MarshallEventDescriptor
-    (const MarshallEventDescriptorBuilder & rhs)
-    : events_(rhs.events()) {}
+inline MarshallEventDescriptor::operator RelayEventDescriptor()
+    { return RelayEventDescriptor(events_);  }
 
-inline const EventTypeContainer & MarshallEventDescriptorBuilder::events() 
+inline const EventTypeContainer & MarshallEventDescriptorBuilder::events()
     const { return events_; }
+///////////////////////////////////////////////////////////////////////////////
+inline const std::string & GeneratorNamespaceDescriptor::name() const
+    { return name_; }
 
+inline const GeneratorNamespaceDescriptor::EventDescriptorContainer & 
+    GeneratorNamespaceDescriptor::events() const
+        { return events_; }
+///////////////////////////////////////////////////////////////////////////////
+
+inline const std::string & RelayNamespaceDescriptor::name() const
+    { return name_; }
+
+inline const RelayNamespaceDescriptor::EventDescriptorContainer & 
+    RelayNamespaceDescriptor::events() const
+        { return events_; }
+///////////////////////////////////////////////////////////////////////////////
+inline MarshallNamespaceDescriptor::MarshallNamespaceDescriptor
+    (const MarshallNamespaceDescriptorBuilder & nsb)
+    : name_(nsb.name()), events_(nsb.events()) {}
+
+inline const std::string & MarshallNamespaceDescriptor::name() const
+    { return name_; }
+
+inline const MarshallNamespaceDescriptor::EventDescriptorContainer & 
+    MarshallNamespaceDescriptor::events() const
+        { return events_; }
+///////////////////////////////////////////////////////////////////////////////
+inline const std::string & MarshallNamespaceDescriptorBuilder::name() const
+    { return name_; }
+
+inline const MarshallNamespaceDescriptorBuilder::EventDescriptorContainer & 
+    MarshallNamespaceDescriptorBuilder::events() const
+        { return events_; }
+
+inline MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder
+    (const std::string & s) : name_(s), events_()  { }
+///////////////////////////////////////////////////////////////////////////////

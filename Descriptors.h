@@ -52,47 +52,47 @@ namespace event_model
     };
  
     typedef OidContainer<Oid, EventTypeDescriptor> EventTypeContainer;
-
+///////////////////////////////////////////////////////////////////////////////
     class RelayEventDescriptor;
 
     class GeneratorEventDescriptor
     {
     public:
         GeneratorEventDescriptor();
-        explicit GeneratorEventDescriptor(const RelayEventDescriptor &);
-    
+        explicit GeneratorEventDescriptor( const EventTypeContainer & etc);
         const EventTypeContainer & events() const;
     private: 
         EventTypeContainer events_;
     };
-   
+///////////////////////////////////////////////////////////////////////////////   
     class MarshallEventDescriptor;
  
     class RelayEventDescriptor     
     {
     public:
         RelayEventDescriptor();
+        explicit RelayEventDescriptor(const  EventTypeContainer & etc);
         explicit RelayEventDescriptor(const MarshallEventDescriptor &);
    
         const EventTypeContainer & events() const;
+        operator GeneratorEventDescriptor();
     private:
         EventTypeContainer events_;
     };
-
+///////////////////////////////////////////////////////////////////////////////
     class MarshallEventDescriptorBuilder;
     
     class MarshallEventDescriptor     
     {
     public:
         MarshallEventDescriptor();
-        explicit MarshallEventDescriptor(
-            const MarshallEventDescriptorBuilder &);
         
         const EventTypeContainer & events() const;
+        operator RelayEventDescriptor();
     private:
         EventTypeContainer events_;
     };
-
+///////////////////////////////////////////////////////////////////////////////
     class MarshallEventDescriptorBuilder     
     {
     public:
@@ -103,60 +103,75 @@ namespace event_model
     private:
         EventTypeContainer events_;
     };
-    
-    /*
+
+    typedef OidContainer<Oid,GeneratorEventDescriptor>  GeneratorEDC;
+    typedef OidContainer<Oid,RelayEventDescriptor>      RelayEDC;
+    typedef OidContainer<Oid,MarshallEventDescriptor>   MarshallEDC;
+
+///////////////////////////////////////////////////////////////////////////////    
     class RelayNamespaceDescriptor;
 
     class GeneratorNamespaceDescriptor
     {
     public:
-        typedef OidContainer<Oid,GeneratorEventDescriptor> 
+        typedef SlicingContainer<GeneratorEDC, RelayEDC> 
             EventDescriptorContainer;
-
-        GeneratorNamespaceDescriptor();
         explicit GeneratorNamespaceDescriptor(
             const RelayNamespaceDescriptor &);
+        
+        const std::string & name() const ;
+        const EventDescriptorContainer & events() const;
     private: 
-        std::string name;
-        EventDescriptorContainer Events;
+        std::string name_;
+        EventDescriptorContainer events_;
      };
-
+///////////////////////////////////////////////////////////////////////////////
     class MarshallNamespaceDescriptor;
 
     class RelayNamespaceDescriptor     
     {
     public:
-        typedef OidContainer<Oid,RelayEventDescriptor>
+        typedef SlicingContainer<RelayEDC, MarshallEDC> 
             EventDescriptorContainer;
-
-        RelayNamespaceDescriptor();
-        RelayNamespaceDescriptor(const std::string &);
-    
-    private: 
-        EventDescriptorContainer Events;
-    };
-
-    class MarshallNamespaceDescriptor : public RelayNamespaceDescriptor
-    {
-    public:
-        typedef OidContainer<Oid,MarshallEventDescriptor> 
-            EventDescriptorContainer;
-        MarshallNamespaceDescriptor();
-        MarshallNamespaceDescriptor(const std::string & name_in);
+        explicit RelayNamespaceDescriptor(const MarshallNamespaceDescriptor &);
         
-    private:
-        EventDescriptorContainer Events;    
+        const std::string & name() const ;
+        const EventDescriptorContainer & events() const ;
+    private: 
+        std::string name_;
+        EventDescriptorContainer events_;
     };
-    
-    class MarshallNamespaceDescriptorBuilder 
-        : public MarshallNamespaceDescriptor
+/////////////////////////////////////////////////////////////////////////////// 
+    class MarshallNamespaceDescriptorBuilder;
+
+    class MarshallNamespaceDescriptor
     {
     public:
-        MarshallNamespaceDescriptorBuilder();
-        MarshallNamespaceDescriptorBuilder(const std::string &);
-         
+        typedef MarshallEDC EventDescriptorContainer;
+
+        explicit MarshallNamespaceDescriptor
+            (const MarshallNamespaceDescriptorBuilder & nsb);
+        
+        const std::string & name() const ;
+        const MarshallEDC & events() const;
+    private:
+        std::string name_;
+        EventDescriptorContainer events_;
     };
-    */
+///////////////////////////////////////////////////////////////////////////////    
+    class MarshallNamespaceDescriptorBuilder  
+    {
+    public:
+        typedef MarshallEDC EventDescriptorContainer;
+
+        MarshallNamespaceDescriptorBuilder(const std::string &);
+        const std::string & name() const ;
+        const MarshallEDC & events() const ;
+    private:
+        std::string name_;
+        EventDescriptorContainer events_;     
+    };
+///////////////////////////////////////////////////////////////////////////////   
     #include "Descriptors_inline.h"
 }
 #endif

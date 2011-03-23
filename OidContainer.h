@@ -140,6 +140,15 @@ public:
     }
     inline const str_type & name() const { return name_; }
     inline const size_type ordinal() const { return ordinal_; }
+
+    inline void set_name(const name_type & name_in) 
+    {
+        name_ = name_in;    
+    }
+    inline void set_ordinal(const size_type & ordinal_in)
+    {
+        ordinal_  = ordinal_in;
+    }
 private:
     str_type name_;
     size_type ordinal_;
@@ -194,7 +203,16 @@ public:
         return entry_;
     }
     inline const identifier_type & Id() const { return id_; }
-
+    
+    inline void set_identifier(const identifier_type & id_in) 
+    { 
+        id_.set_name(id_in.name());
+        id_.set_ordinal(id_in.ordinal());
+    }
+    inline void set_entry(const basic_entry_type & entry_in)
+    {
+        entry_ = entry_in;
+    }
 private:
     identifier_type id_;
     _entry_type     entry_;
@@ -212,8 +230,10 @@ template<typename identifier_type, typename _entry_type>
 class OidContainer
 {
 public:
-    typedef _entry_type                                         basic_entry_type;
-    typedef OidContainerEntryType<identifier_type, _entry_type> entry_type;
+    typedef _entry_type                                 basic_entry_type;
+    typedef OidContainerEntryType<  identifier_type, 
+                                    basic_entry_type>   entry_type;
+    typedef std::vector<entry_type>                     vector_type;
     
     OidContainer() : entries_(),name_index_() { }
     OidContainer(const OidContainer & rhs)
@@ -233,33 +253,8 @@ public:
 
         return *this; 
     }
-    template<typename T>
-    OidContainer(const T & rhs)
-    {
-        BOOST_STATIC_ASSERT( ( 
-            boost::is_base_of<  basic_entry_type, 
-                                typename T::basic_entry_type >::value) );
-
-        typedef std::vector<typename T::entry_type> rhs_container;
-        
-        name_index_.clear();
-        
-        rhs_container  & _rhs = rhs.get_entries();
-       
-        std::size_t size = _rhs.Size();    
- 
-        this->entries_.resize(size);
-
-        for(int i =0; i < size; ++i)
-        {
-            this.entries_.at(i) = _rhs.at(i);
-        }
-
-        regen_name_index_();
-    }
- 
     
-    inline const std::vector<entry_type> & get_entries() const
+    inline const vector_type & get_entries() const
     {
         return entries_;
     }
@@ -327,7 +322,7 @@ public:
             regen_name_index_();
         }
     }
-private:
+protected:
     typedef intrusive::set< entry_type > name_index_set;    
     
     struct name_key_finder // functor
@@ -406,6 +401,34 @@ private:
     name_index_set name_index_;
 };
 
+template <typename Base, typename Derived>
+class SlicingContainer : public Base
+{
+public:
+    typedef Base    base_type;
+    typedef Derived derived_type;
+    
+    explicit SlicingContainer(const derived_type & d)
+    {
+        Base::name_index_.clear();
+        Base::entries_.clear();
+        std::size_t size=d.Size();
+
+        Base::entries_.resize(size);
+        for(int i = 0; i < size; ++i)
+        {
+            typename Base::entry_type & bi       = Base::entries_.at(i);
+            const typename Derived::entry_type * di  = d.EntryAtordinal(i);
+            
+            if(di != NULL) {
+                bi.set_identifier(di->Id());//bi.ordinal 
+                typename Base::entry_type::basic_entry_type bet = di->entry();
+                bi.set_entry(bet);
+            }
+        }
+        Base::regen_name_index_();
+    }
+};
 
 }
 }
