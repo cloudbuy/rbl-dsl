@@ -89,7 +89,7 @@ namespace event_model
         explicit MarshallEventDescriptor(const EventTypeContainer & etc);
 
         const EventTypeContainer & types() const;
-        operator RelayEventDescriptor();
+        operator RelayEventDescriptor() const;
     private:
         EventTypeContainer types_;
     };

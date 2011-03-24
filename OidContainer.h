@@ -418,7 +418,7 @@ public:
     {
         Base::name_index_.clear();
         Base::entries_.clear();
-        std::size_t size=d.Size();
+        std::size_t size=d.size();
 
         Base::entries_.resize(size);
         for(int i = 0; i < size; ++i)
@@ -428,7 +428,7 @@ public:
             
             if(di != NULL) {
                 bi.set_identifier(di->Id());//bi.ordinal 
-                typename Base::entry_type::basic_entry_type bet = di->entry();
+                const typename Base::entry_type::basic_entry_type bet = di->entry();
                 bi.set_entry(bet);
             }
         }

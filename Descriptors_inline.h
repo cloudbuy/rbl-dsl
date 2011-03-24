@@ -58,7 +58,7 @@ inline const EventTypeContainer & MarshallEventDescriptor::types() const
 inline MarshallEventDescriptor::MarshallEventDescriptor()
     : types_() {}
 
-inline MarshallEventDescriptor::operator RelayEventDescriptor()
+inline MarshallEventDescriptor::operator RelayEventDescriptor() const
     { return RelayEventDescriptor(types_);  }
 ///////////////////////////////////////////////////////////////////////////////
 inline const EventTypeContainer & MarshallEventDescriptorBuilder::events()
@@ -77,6 +77,9 @@ inline const GeneratorNamespaceDescriptor::EventDescriptorContainer &
     GeneratorNamespaceDescriptor::events() const
         { return events_; }
 ///////////////////////////////////////////////////////////////////////////////
+inline RelayNamespaceDescriptor::RelayNamespaceDescriptor
+    (const MarshallNamespaceDescriptor & ndb) 
+        : name_(ndb.name()),  events_(ndb.types()) {}
 
 inline const std::string & RelayNamespaceDescriptor::name() const
     { return name_; }
