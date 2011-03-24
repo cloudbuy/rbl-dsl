@@ -118,8 +118,8 @@ TEST(OidContainer_test, serialization_tests)
     ASSERT_TRUE ( container.EntryAtordinal(3)->name() == "hassan");
     ASSERT_TRUE ( container.EntryAtordinal(3)->ordinal() == 3);
    
-    ASSERT_TRUE( container.Size() == 4);
-    ASSERT_TRUE( container.OccupiedSize() == 1);    
+    ASSERT_TRUE( container.size() == 4);
+    ASSERT_TRUE( container.occupied_size() == 1);    
  
     ASSERT_TRUE( container.EntryWithName("hassan")->is_initialized());
     ASSERT_TRUE ( container.EntryWithName("hassan")->name() == "hassan");
@@ -143,16 +143,16 @@ TEST(OidContainer_test, serialization_tests)
     ASSERT_TRUE ( container.SetEntry(entry) == OP_ALLREADY_CONTAINS_ENTRY);
 
     //double check that a resize wasn't triggered
-    ASSERT_TRUE( container.Size() == 4);
-    ASSERT_TRUE( container.OccupiedSize() == 1);
+    ASSERT_TRUE( container.size() == 4);
+    ASSERT_TRUE( container.occupied_size() == 1);
 
     // add an entry into a lower index and test the entire data
     // container.
     test_container::entry_type entry_at_zero(oid("whateva",0),ex); 
     ASSERT_TRUE( container.SetEntry(entry_at_zero) == OP_NO_ERROR);
     
-    ASSERT_TRUE( container.Size() == 4);
-    ASSERT_TRUE( container.OccupiedSize() == 2);
+    ASSERT_TRUE( container.size() == 4);
+    ASSERT_TRUE( container.occupied_size() == 2);
 
     ASSERT_TRUE( container.EntryAtordinal(0)->is_initialized());
     ASSERT_TRUE ( container.EntryAtordinal(0)->name() == "whateva");
@@ -176,8 +176,8 @@ TEST(OidContainer_test, serialization_tests)
     // add that causes a resize
     test_container::entry_type entry_at_five(oid("lambda",5),ex);
     ASSERT_TRUE( container.SetEntry(entry_at_five) == OP_NO_ERROR);
-    ASSERT_TRUE( container.Size() == 6 );
-    ASSERT_TRUE( container.OccupiedSize() == 3);
+    ASSERT_TRUE( container.size() == 6 );
+    ASSERT_TRUE( container.occupied_size() == 3);
 
     // check new entry, then recheck check the previous state
     ASSERT_TRUE( container.EntryAtordinal(5)->is_initialized());
@@ -217,8 +217,8 @@ TEST(OidContainer_test, serialization_tests)
     SF::IBinaryStream is(ss);
     is >> container2;
 
-    ASSERT_TRUE( container2.Size() == 6 );
-    ASSERT_TRUE( container2.OccupiedSize() == 3);
+    ASSERT_TRUE( container2.size() == 6 );
+    ASSERT_TRUE( container2.occupied_size() == 3);
 
     // check new entry, then recheck check the previous state
     ASSERT_TRUE( container2.EntryAtordinal(5)->is_initialized());

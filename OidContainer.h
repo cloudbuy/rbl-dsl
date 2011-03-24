@@ -259,12 +259,12 @@ public:
         return entries_;
     }
  
-    inline const std::size_t Size() const
+    inline const std::size_t size() const
     {
         return entries_.size();
     }
 
-    inline const std::size_t OccupiedSize() const
+    inline const std::size_t occupied_size() const
     {
         return name_index_.size();
     }
@@ -312,6 +312,39 @@ public:
         
         return OP_NO_ERROR;
     }
+    
+    OP_RESPONSE ContainsEither(const identifier_type & id) const
+    {
+        bool ordinal_in_vector=false;
+       
+        if(occupied_size() == 0)
+            return OP_NO_ERROR;
+     
+        if(size() < (id.ordinal()+1))
+            ordinal_in_vector=false;
+        else if( entries_.at( id.ordinal() ).is_initialized())
+            ordinal_in_vector=true;
+        
+        typename name_index_set::const_iterator it =
+            name_index_.find(id.name(), name_key_finder());
+        
+        bool entry_name_used=true;
+    
+        if( it == name_index_.end())
+            entry_name_used=false;
+
+        if( ordinal_in_vector != entry_name_used ) {
+            if( ordinal_in_vector)
+                return OP_ORDINAL_USED;
+            else
+                return OP_NAME_USED;
+        }
+        
+        if(entry_name_used)
+            return OP_ALLREADY_CONTAINS_ENTRY;
+        
+        return OP_NO_ERROR;
+    }
 
     void serialize(SF::Archive & ar)
     {
@@ -339,34 +372,7 @@ protected:
         }
     };
 
-    OP_RESPONSE ContainsEither(const identifier_type & id) const
-    {
-        bool ordinal_in_vector=false;
-        
-        if( entries_.at( id.ordinal() ).is_initialized())
-            ordinal_in_vector=true;
-        
-        typename name_index_set::const_iterator it =
-            name_index_.find(id.name(), name_key_finder());
-        
-        bool entry_name_used=true;
     
-        if( it == name_index_.end())
-            entry_name_used=false;
-
-        if( ordinal_in_vector != entry_name_used ) {
-            if( ordinal_in_vector)
-                return OP_ORDINAL_USED;
-            else
-                return OP_NAME_USED;
-        }
-        
-        if(entry_name_used)
-            return OP_ALLREADY_CONTAINS_ENTRY;
-        
-        return OP_NO_ERROR;
-    }
-
     
     void resize_if_needed_(boost::uint32_t ordinal)
     {

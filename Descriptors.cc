@@ -3,48 +3,34 @@
 namespace event_model
 {
     using namespace primitives;
-   /* 
-         
-    MarshallEventDescriptor::MarshallEventDescriptor()
-        : RelayEventDescriptor() {}
-    MarshallEventDescriptor::   
-    MarshallEventDescriptor(const MarshallEventDescriptorBuilder & rhs)
-        : RelayEventDescriptor(rhs.events) {}
-
- 
-    void MarshallEventDescriptorBuilder::AddEventTypeEntry( 
-        const Oid & oid, 
-        const EventTypeDescriptor & ets)
-    {
-        EventTypeContainer * event_ptr =  
-            const_cast<EventTypeContainer *>(&events);
-            
-        event_ptr->SetEntry(EventTypeContainer::entry_type(oid, ets));  
-    }
-
-    //Namespace Objects
-    GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor()
-        : name(),Events() {}
-    GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor(
-        const RelayNamespaceDescriptor & rhs)
-    {
-       name = rhs.name;
-        Events=rhs.Events;
-    }
-
-    RelayNamespaceDescriptor::RelayNamespaceDescriptor()
-        : GeneratorNamespaceDescriptor() {}
-    RelayNamespaceDescriptor::RelayNamespaceDescriptor(
-        const std::string & name_in) : GeneratorNamespaceDescriptor(name_in) {}
-
-    MarshallNamespaceDescriptor::MarshallNamespaceDescriptor()
-        : RelayNamespaceDescriptor() {}
-    MarshallNamespaceDescriptor::MarshallNamespaceDescriptor(
-        const std::string & name_in) : RelayNamespaceDescriptor(name_in) {}
     
-    MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder()
-        : MarshallNamespaceDescriptor() {}
-    MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder(
-        const std::string & name_in) : MarshallNamespaceDescriptor(name_in) {}
-    */
+    void MarshallEventDescriptorBuilder::Init(   
+        const Oid & oid, 
+        MarshallNamespaceDescriptorBuilder & mndb,
+        bool & ok)
+    {
+        self_oid_ = oid;
+        mndb_= &mndb;
+        ok = true; 
+        
+        OP_RESPONSE resp = mndb_->ContainsEventIdentifier(oid);
+        
+        if(resp == OP_NO_ERROR) return;
+        //TODO set error string
+        ok = false;
+        return;
+    }
+    void MarshallEventDescriptorBuilder::AddEventType
+        (const Oid & oid, const EventTypeDescriptor & type, bool & ok)
+    {
+        ok=true;
+        if(types_.ContainsEither(oid) != OP_NO_ERROR) {
+            ok=false;
+            //TODO set error string
+            return;
+        }  
+        EventTypeContainer::entry_type entry(oid,type);
+        types_.SetEntry(entry);
+    }
+    
 };

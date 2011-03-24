@@ -8,6 +8,8 @@
 
 using namespace event_model;
 
+
+// test the serialization of the event type descriptor
 TEST(testing_const_serialization, test_one)
 {
     EventTypeDescriptor etd_default_constructed;
@@ -24,6 +26,80 @@ TEST(testing_const_serialization, test_one)
     ASSERT_TRUE(etd_default_constructed.type() == VALUE_INT4);
     ASSERT_TRUE(etd_default_constructed.is_primitive() == false);
 }
+
+// 
+TEST(testing_marshall_building, test_one)
+{
+    MarshallNamespaceDescriptorBuilder mndb("testing");
+    ASSERT_TRUE(mndb.name() == "testing");
+    ASSERT_TRUE(mndb.events().size() == 0); 
+    ASSERT_TRUE(mndb.events().occupied_size() == 0);
+
+    MarshallEventDescriptorBuilder medb;
+
+    bool res;
+    Oid hassan_zero("hassan",0);
+    Oid hassan_zero_ord_collision("hassan1",0);
+    Oid hassan_zero_name_collision("hassan",1);
+
+    medb.Init(hassan_zero,mndb,res);
+    ASSERT_TRUE(res);
+
+    medb.AddEventType(  hassan_zero,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_TRUE(res);
+    medb.AddEventType(  hassan_zero,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_FALSE(res);
+    
+    medb.AddEventType(  hassan_zero_ord_collision,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_FALSE(res);
+    medb.AddEventType(  hassan_zero_name_collision,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_FALSE(res);
+//    medb.
+}
+
+TEST(testing_marshall_building, test_two)
+{
+    MarshallNamespaceDescriptorBuilder mndb("testing");
+    ASSERT_TRUE(mndb.name() == "testing");
+    ASSERT_TRUE(mndb.events().size() == 0); 
+    ASSERT_TRUE(mndb.events().occupied_size() == 0);
+
+    MarshallEventDescriptorBuilder medb;
+
+    bool res;
+    Oid one("monkey",0);
+    Oid two("zebra",3);
+    Oid three("giraffe",8);
+    
+    medb.Init(Oid("event",0),mndb,res);
+    ASSERT_TRUE(res);
+
+    medb.AddEventType(  one,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_TRUE(res);
+    medb.AddEventType(  two,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_TRUE(res);
+    
+    medb.AddEventType(  three,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_TRUE(res);
+    
+    mndb.AddEventDescriptor(medb); 
+}
+
+
 
 int main(int argc,char ** argv)
 {

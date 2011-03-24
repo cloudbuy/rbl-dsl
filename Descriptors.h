@@ -74,10 +74,10 @@ namespace event_model
         explicit RelayEventDescriptor(const  EventTypeContainer & etc);
         explicit RelayEventDescriptor(const MarshallEventDescriptor &);
    
-        const EventTypeContainer & events() const;
+        const EventTypeContainer & types() const;
         operator GeneratorEventDescriptor();
     private:
-        EventTypeContainer events_;
+        EventTypeContainer types_;
     };
 ///////////////////////////////////////////////////////////////////////////////
     class MarshallEventDescriptorBuilder;
@@ -86,22 +86,32 @@ namespace event_model
     {
     public:
         MarshallEventDescriptor();
-        
-        const EventTypeContainer & events() const;
+        explicit MarshallEventDescriptor(const EventTypeContainer & etc);
+
+        const EventTypeContainer & types() const;
         operator RelayEventDescriptor();
     private:
-        EventTypeContainer events_;
+        EventTypeContainer types_;
     };
 ///////////////////////////////////////////////////////////////////////////////
+    class MarshallNamespaceDescriptorBuilder;
+
     class MarshallEventDescriptorBuilder     
     {
     public:
-        void AddEventTypeEntry( const Oid & oid, 
-            const EventTypeDescriptor & ets);
-        
+        void Init(  const Oid & oid, 
+                    MarshallNamespaceDescriptorBuilder & mndb,
+                    bool & ok);
+        void AddEventType(  const Oid & oid, 
+                            const EventTypeDescriptor & type,bool & ok); 
         const EventTypeContainer & events() const;
+        const Oid & oid() const;
+        operator MarshallEventDescriptor() const;
+    
     private:
-        EventTypeContainer events_;
+        Oid self_oid_;
+        MarshallNamespaceDescriptorBuilder * mndb_;
+        EventTypeContainer types_;
     };
 
     typedef OidContainer<Oid,GeneratorEventDescriptor>  GeneratorEDC;
@@ -142,21 +152,21 @@ namespace event_model
         EventDescriptorContainer events_;
     };
 /////////////////////////////////////////////////////////////////////////////// 
-    class MarshallNamespaceDescriptorBuilder;
-
+    // the builder is declared above, before the event builder.
     class MarshallNamespaceDescriptor
     {
     public:
         typedef MarshallEDC EventDescriptorContainer;
 
         explicit MarshallNamespaceDescriptor
-            (const MarshallNamespaceDescriptorBuilder & nsb);
+            (   const std::string & name, 
+                const MarshallEDC & EDC);
         
         const std::string & name() const ;
-        const MarshallEDC & events() const;
+        const MarshallEDC & types() const;
     private:
         std::string name_;
-        EventDescriptorContainer events_;
+        EventDescriptorContainer types_;
     };
 ///////////////////////////////////////////////////////////////////////////////    
     class MarshallNamespaceDescriptorBuilder  
@@ -165,11 +175,17 @@ namespace event_model
         typedef MarshallEDC EventDescriptorContainer;
 
         MarshallNamespaceDescriptorBuilder(const std::string &);
+
+        void AddEventDescriptor(const MarshallEventDescriptorBuilder & medb);
+    
+        operator MarshallNamespaceDescriptor() const;
+
         const std::string & name() const ;
         const MarshallEDC & events() const ;
+        const OP_RESPONSE ContainsEventIdentifier(const Oid & id) const;         
     private:
         std::string name_;
-        EventDescriptorContainer events_;     
+        EventDescriptorContainer types_;     
     };
 ///////////////////////////////////////////////////////////////////////////////   
     #include "Descriptors_inline.h"
