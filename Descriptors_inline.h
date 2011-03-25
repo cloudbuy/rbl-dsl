@@ -71,46 +71,46 @@ inline const Oid & MarshallEventDescriptorBuilder::oid() const
     { return self_oid_; }
 ///////////////////////////////////////////////////////////////////////////////
 inline GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor
-    (const std::string & name, const RelayEDC & types)
-        : name_(name), types_(types) {}
+    (const std::string & name, const RelayEDC & events)
+        : name_(name), events_(events) {}
 
 inline const std::string & GeneratorNamespaceDescriptor::name() const
     { return name_; }
 
 inline const GeneratorNamespaceDescriptor::EventDescriptorContainer & 
-    GeneratorNamespaceDescriptor::types() const
-        { return types_; }
+    GeneratorNamespaceDescriptor::events() const
+        { return events_; }
 ///////////////////////////////////////////////////////////////////////////////
 inline RelayNamespaceDescriptor::RelayNamespaceDescriptor
-    (const std::string & name , const MarshallEDC & types) 
-        : name_(name),  types_(types) {}
+    (const std::string & name , const MarshallEDC & events) 
+        : name_(name),  events_(events) {}
 
 inline const std::string & RelayNamespaceDescriptor::name() const
     { return name_; }
 
 inline const RelayNamespaceDescriptor::EventDescriptorContainer & 
-    RelayNamespaceDescriptor::types() const
-        { return types_; }
+    RelayNamespaceDescriptor::events() const
+        { return events_; }
 ///////////////////////////////////////////////////////////////////////////////
 inline MarshallNamespaceDescriptor::MarshallNamespaceDescriptor(
     const std::string & name, 
     const MarshallEDC & EDC)
-        : name_(name), types_(EDC) {}
+        : name_(name), events_(EDC), event(events_) {}
 
 inline MarshallNamespaceDescriptor::operator RelayNamespaceDescriptor() const
 {
-    return RelayNamespaceDescriptor(name_,types_);
+    return RelayNamespaceDescriptor(name_,events_);
 }
 
 inline const std::string & MarshallNamespaceDescriptor::name() const
     { return name_; }
 
 inline const MarshallNamespaceDescriptor::EventDescriptorContainer & 
-    MarshallNamespaceDescriptor::types() const
-        { return types_; }
+    MarshallNamespaceDescriptor::events() const
+        { return events_; }
 ///////////////////////////////////////////////////////////////////////////////
 inline MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder
-    (const std::string & s) : name_(s), types_()  { }
+    (const std::string & s) : name_(s), events_()  { }
 
 inline void MarshallNamespaceDescriptorBuilder::AddEventDescriptor
     (const MarshallEventDescriptorBuilder & medb)
@@ -119,13 +119,13 @@ inline void MarshallNamespaceDescriptorBuilder::AddEventDescriptor
         medb.oid(), (
         MarshallEventDescriptor) medb);
     
-    types_.SetEntry(entry); 
+    events_.SetEntry(entry); 
 }
 
 inline MarshallNamespaceDescriptorBuilder::operator 
     MarshallNamespaceDescriptor() const
 {
-    return MarshallNamespaceDescriptor(name_,types_);
+    return MarshallNamespaceDescriptor(name_,events_);
 }
 
 inline const std::string & MarshallNamespaceDescriptorBuilder::name() const
@@ -133,9 +133,9 @@ inline const std::string & MarshallNamespaceDescriptorBuilder::name() const
 
 inline const MarshallNamespaceDescriptorBuilder::EventDescriptorContainer & 
     MarshallNamespaceDescriptorBuilder::events() const
-        { return types_; }
+        { return events_; }
 
 inline const OP_RESPONSE MarshallNamespaceDescriptorBuilder::ContainsEventIdentifier
-    (const Oid & id) const{ return types_.ContainsEither(id); }
+    (const Oid & id) const{ return events_.ContainsEither(id); }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,10 +4,12 @@
 #include <stdexcept>
 #include <string.h>
 #include <vector>
+
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/intrusive/set.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/noncopyable.hpp>
 
 #include <SF/vector.hpp>
 #include <SF/string.hpp>
@@ -226,15 +228,16 @@ enum OP_RESPONSE {
         OP_ORDINAL_OVERFLOW
 };
 
-template<typename identifier_type, typename _entry_type>
+template<typename _identifier_type, typename _entry_type>
 class OidContainer
 {
 public:
+    typedef _identifier_type                            identifier_type;
     typedef _entry_type                                 basic_entry_type;
     typedef OidContainerEntryType<  identifier_type, 
                                     basic_entry_type>   entry_type;
     typedef std::vector<entry_type>                     vector_type;
-    
+
     OidContainer() : entries_(),name_index_() { }
     OidContainer(const OidContainer & rhs)
     {
@@ -434,6 +437,29 @@ public:
         }
         Base::regen_name_index_();
     }
+};
+
+template<typename TContainer>
+class OidContainerSubscript 
+{
+public:
+    typedef typename TContainer::entry_type entry_type;
+    typedef typename TContainer::identifier_type::name_type name_type;
+    typedef typename TContainer::identifier_type::ordinal_type ordinal_type;
+
+    explicit OidContainerSubscript(const TContainer & container)
+        : container_(container) {}
+    
+    const  entry_type * operator[] (const name_type & name) const 
+    {
+        return EntryWithName(name);
+    }
+    const  entry_type * operator[] (const ordinal_type & ordinal) const
+    {
+        return EntryAtordinal(ordinal);
+    }
+private:
+    const TContainer & container_;
 };
 
 }

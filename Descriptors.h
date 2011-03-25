@@ -130,10 +130,10 @@ namespace event_model
             const std::string &, const RelayEDC &);
         
         const std::string & name() const ;
-        const EventDescriptorContainer & types() const;
+        const EventDescriptorContainer & events() const;
     private: 
         std::string name_;
-        EventDescriptorContainer types_;
+        EventDescriptorContainer events_;
      };
 ///////////////////////////////////////////////////////////////////////////////
     class MarshallNamespaceDescriptor;
@@ -147,10 +147,10 @@ namespace event_model
             const std::string &, const MarshallEDC &);
         
         const std::string & name() const ;
-        const EventDescriptorContainer & types() const ;
+        const EventDescriptorContainer & events() const ;
     private: 
         std::string name_;
-        EventDescriptorContainer types_;
+        EventDescriptorContainer events_;
     };
 /////////////////////////////////////////////////////////////////////////////// 
     // the builder is declared above, before the event builder.
@@ -166,10 +166,12 @@ namespace event_model
         operator RelayNamespaceDescriptor() const;
  
         const std::string & name() const ;
-        const MarshallEDC & types() const;
+        const MarshallEDC & events() const;
+
+        OidContainerSubscript<MarshallEDC> event;
     private:
         std::string name_;
-        EventDescriptorContainer types_;
+        EventDescriptorContainer events_;
     };
 ///////////////////////////////////////////////////////////////////////////////    
     class MarshallNamespaceDescriptorBuilder  
@@ -185,10 +187,10 @@ namespace event_model
 
         const std::string & name() const ;
         const MarshallEDC & events() const ;
-        const OP_RESPONSE ContainsEventIdentifier(const Oid & id) const;         
+        const OP_RESPONSE ContainsEventIdentifier(const Oid & id) const;
     private:
         std::string name_;
-        EventDescriptorContainer types_;     
+        EventDescriptorContainer events_;     
     };
 ///////////////////////////////////////////////////////////////////////////////   
     #include "Descriptors_inline.h"

@@ -72,31 +72,54 @@ TEST(testing_marshall_building, test_two)
     ASSERT_TRUE(mndb.events().size() == 0); 
     ASSERT_TRUE(mndb.events().occupied_size() == 0);
 
-    MarshallEventDescriptorBuilder medb;
+    MarshallEventDescriptorBuilder medb1;
 
     bool res;
     Oid one("monkey",0);
     Oid two("zebra",3);
     Oid three("giraffe",8);
     
-    medb.Init(Oid("event",0),mndb,res);
+    medb1.Init(Oid("event",0),mndb,res);
     ASSERT_TRUE(res);
 
-    medb.AddEventType(  one,
+    medb1.AddEventType(  one,
                         EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
                         res);
     ASSERT_TRUE(res);
-    medb.AddEventType(  two,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
-                        res);
-    ASSERT_TRUE(res);
-    
-    medb.AddEventType(  three,
+    medb1.AddEventType(  two,
                         EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
                         res);
     ASSERT_TRUE(res);
     
-    mndb.AddEventDescriptor(medb); 
+    medb1.AddEventType(  three,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_TRUE(res);
+   
+    MarshallEventDescriptorBuilder medb2;
+
+    medb2.Init(Oid("event",5),mndb,res);
+    ASSERT_TRUE(res);
+
+    medb2.AddEventType(  one,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_TRUE(res);
+    medb2.AddEventType(  two,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_TRUE(res);
+    
+    medb2.AddEventType(  three,
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        res);
+    ASSERT_TRUE(res);
+
+    mndb.AddEventDescriptor(medb1);
+    mndb.AddEventDescriptor(medb2);
+
+    // first test if medb1 and medb2 are structuraly correct
+    // then downcast to non-builder marshallnamespace and test
 }
 
 
