@@ -95,11 +95,30 @@ TEST(testing_marshall_building, test_two)
                         EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
                         res);
     ASSERT_TRUE(res);
+    
+    std::cout << medb1.types().EntryAtordinal(0)->name().c_str() << std::endl;    
+    //std::cout << medb1.types().EntryAtordinal(1)->name().c_str() << std::endl;
 
+    ASSERT_TRUE( medb1.type[0] != NULL);
+    ASSERT_TRUE( medb1.type[1] == NULL); 
+    //ASSERT_TRUE( medb1.types().EntryAtordinal(0)->is_initialized() == true);
+   
+    EventTypeContainer test_copy_constructor(medb1.types());
+    ASSERT_TRUE( test_copy_constructor.EntryAtordinal(0) != NULL);
+    ASSERT_TRUE( test_copy_constructor.EntryAtordinal(1) == NULL); 
+
+    std::cout << test_copy_constructor.EntryAtordinal(0)->name().c_str() << std::endl;
+ 
     MarshallEventDescriptorBuilder medb2;
     MarshallEventDescriptorBuilder init_return_false_damn_you;
     
-    
+    // test the downcast
+    MarshallEventDescriptor med = medb1;
+    ASSERT_TRUE( med.type[0] != NULL);
+    ASSERT_TRUE( med.type[1] == NULL); 
+
+
+ 
     medb2.Init(Oid("monkey",5),mndb,res);
     ASSERT_TRUE(res);
 
@@ -121,8 +140,8 @@ TEST(testing_marshall_building, test_two)
     ASSERT_TRUE(res);
 
     // following should be returning false
-    init_return_false_damn_you.Init(Oid("eVent",5),mndb,res);
-    ASSERT_FALSE(res);
+ //   init_return_false_damn_you.Init(Oid("eVent",5),mndb,res);
+   // ASSERT_FALSE(res);
 
     
     mndb.AddEventDescriptor(medb2,res);
@@ -138,12 +157,51 @@ TEST(testing_marshall_building, test_two)
     ASSERT_TRUE(mndb.event[3] == NULL);
     ASSERT_TRUE(mndb.event[4] == NULL);
     ASSERT_TRUE(mndb.event[5] != NULL);
+//    ASSERT_TRUE(mndb.event[6] == NULL);
     // then downcast to non-builder marshallnamespace and test
+ 
+    ASSERT_EQ(mndb.events().EntryAtordinal(0)->entry().types().occupied_size(),3);
+    ASSERT_EQ(mndb.events().EntryAtordinal(0)->entry().types().size(),9);
 
+    ASSERT_EQ(mndb.events().EntryAtordinal(5)->entry().types().occupied_size(),3);
+    ASSERT_EQ(mndb.events().EntryAtordinal(5)->entry().types().size(),9);
+
+    ASSERT_TRUE(mndb.event[0]->type[0]!=NULL);
+    ASSERT_TRUE(mndb.event[5]->type[0]!=NULL);
     
+    ASSERT_TRUE(mndb.events().EntryAtordinal(0)->entry().types().EntryAtordinal(0) 
+        != NULL);
+
+    ASSERT_TRUE(mndb.events().EntryAtordinal(0)->entry().types().EntryAtordinal(1) 
+        == NULL);
+    ASSERT_TRUE(mndb.events().EntryAtordinal(0)->entry().types().EntryAtordinal(2) 
+        == NULL);
+    
+    std::cout << mndb.events().EntryAtordinal(0)->entry().types().EntryAtordinal(0)->name().c_str() << std::endl;
+    std::cout << mndb.events().EntryAtordinal(0)->entry().types().EntryAtordinal(3)->name().c_str() << std::endl;
+    std::cout << mndb.events().EntryAtordinal(0)->entry().types().EntryAtordinal(8)->name().c_str() << std::endl;
+
+
+    ASSERT_TRUE(mndb.events().EntryAtordinal(0)->entry().types().EntryAtordinal(1) 
+        == NULL);
+    
+    MarshallEventDescriptor grr= mndb.events().EntryAtordinal(0)->entry();
+//    ASSERT_TRUE(grr.type[1] == NULL);
+    const MarshallEventDescriptor * grr2 = mndb.event[0];
+    ASSERT_TRUE(grr2->types().EntryAtordinal(1) == NULL);
+    
+    ASSERT_TRUE(mndb.event[0]->types().EntryAtordinal(0)->entry().is_primitive()==true );
+    ASSERT_TRUE(mndb.event[0]->types().EntryAtordinal(1) == NULL);
+    ASSERT_TRUE(mndb.event[0]->types().EntryAtordinal(2) == NULL);
+    ASSERT_TRUE(mndb.event[0]->types().EntryAtordinal(3)->entry().is_primitive()==true );
+    ASSERT_TRUE(mndb.event[0]->types().EntryAtordinal(8)->entry().is_primitive()==true );
+    //ASSERT_TRUE(mndb.events().EntryAtordinal(0)->entry().types())  
+
+    ASSERT_TRUE(mndb.event[5]->type[1] == NULL);
+
+    //ASSERT_TRUE(mndb.event[0]->type[0]->type() == VALUE_INT4 ); 
+    //ASSERT_TRUE(mndb.event[0]->type[0]
     /*
-    ASSERT_TRUE(mndb.event[0].type[0]
-    ASSERT_TRUE(mndb.event[0].type[0]
     ASSERT_TRUE(mndb.event[0].type[0]
     ASSERT_TRUE(mndb.event[0].type[0]
     ASSERT_TRUE(mndb.event[0].type[0]

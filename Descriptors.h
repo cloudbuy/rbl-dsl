@@ -119,11 +119,10 @@ namespace event_model
         MarshallNamespaceDescriptorBuilder * mndb_;
         EventTypeContainer types_;
     };
-
+///////////////////////////////////////////////////////////////////////////////
     typedef OidContainer<Oid,GeneratorEventDescriptor>  GeneratorEDC;
     typedef OidContainer<Oid,RelayEventDescriptor>      RelayEDC;
     typedef OidContainer<Oid,MarshallEventDescriptor>   MarshallEDC;
-
 ///////////////////////////////////////////////////////////////////////////////    
     class RelayNamespaceDescriptor;
 

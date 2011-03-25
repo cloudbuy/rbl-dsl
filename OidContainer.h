@@ -19,6 +19,7 @@ namespace event_model
 namespace primitives
 {
 
+// uninstantiatable generic template
 template<typename char_type, unsigned length>
 class OidConstrainedString
 {
@@ -26,6 +27,7 @@ private:
     OidConstrainedString();
 };
 
+// instantiatable specialization
 template<unsigned length>
 class OidConstrainedString<char,length> 
 {
@@ -35,13 +37,13 @@ public:
         str_[0]='\0';
     };
    
-    inline OidConstrainedString(const char * char_)
+    explicit inline OidConstrainedString(const char * char_)
     {
         std::string str(char_);
         construct_(str); 
     };
 
-    inline OidConstrainedString(const std::string & str)
+    explicit inline OidConstrainedString(const std::string & str)
     {
         construct_(str);
     };
@@ -118,8 +120,10 @@ public:
     inline OidType()
         : name_(),ordinal_() {}
      
-    inline OidType(const std::string & str_in, const boost::uint32_t ordinal_in)
-        : name_(str_in), ordinal_() { 
+    explicit inline OidType( const std::string & str_in, 
+                             const boost::uint32_t ordinal_in)
+        : name_(str_in), ordinal_() 
+    { 
         if( ordinal_in > MAX )
             throw std::out_of_range("ordinal exceeds limit");
 
@@ -170,7 +174,7 @@ public:
     inline OidContainerEntryType()
         : id_(), entry_()
     {}    
-    inline 
+    explicit inline 
     OidContainerEntryType(const identifier_type & id, const _entry_type & et)
         : id_(id), entry_(et) {}
 
@@ -276,7 +280,7 @@ public:
     {   
         try
         {
-            const entry_type * e = &entries_.at(ordinal);
+            const entry_type * e = &(entries_.at(ordinal));
             if(e->is_initialized())
                 return e;
             else
@@ -443,20 +447,29 @@ template<typename TContainer>
 class OidContainerSubscript 
 {
 public:
-    typedef typename TContainer::entry_type entry_type;
-    typedef typename TContainer::identifier_type::name_type name_type;
-    typedef typename TContainer::identifier_type::ordinal_type ordinal_type;
+    typedef typename TContainer::entry_type                     entry_type;
+    typedef typename TContainer::entry_type::basic_entry_type   basic_entry_type;
+    typedef typename TContainer::identifier_type::name_type     name_type;
+    typedef typename TContainer::identifier_type::ordinal_type  ordinal_type;
 
     explicit OidContainerSubscript(const TContainer & container)
         : container_(container) {}
     
-    const  entry_type * operator[] (const name_type & name) const 
+    const  basic_entry_type * operator[] (const name_type & name) const 
     {
-        return container_.EntryWithName(name);
+        const entry_type * ent = container_.EntryWithName(name);
+
+        if( ent != NULL )
+            return (& ( ent->entry() ) );
+        else return NULL;
     }
-    const  entry_type * operator[] (const ordinal_type & ordinal) const
+    const basic_entry_type * operator[] (const ordinal_type & ordinal) const
     {
-        return container_.EntryAtordinal(ordinal);
+        const entry_type * ent = container_.EntryAtordinal(ordinal);
+        if( ent != NULL) {
+            return (& ( ent->entry() ) );
+        }
+        else return NULL;
     }
     OidContainerSubscript & operator=(const OidContainerSubscript & rhs)
     {
