@@ -39,7 +39,7 @@ inline RelayEventDescriptor::RelayEventDescriptor()
 inline RelayEventDescriptor::RelayEventDescriptor
     (const  EventTypeContainer & etc) : types_(etc) {}
 
-inline RelayEventDescriptor::operator GeneratorEventDescriptor()
+inline RelayEventDescriptor::operator GeneratorEventDescriptor() const
     { return GeneratorEventDescriptor(types_); }
 
 inline const EventTypeContainer & RelayEventDescriptor::types() const 
@@ -70,28 +70,37 @@ inline MarshallEventDescriptorBuilder::operator MarshallEventDescriptor() const
 inline const Oid & MarshallEventDescriptorBuilder::oid() const
     { return self_oid_; }
 ///////////////////////////////////////////////////////////////////////////////
+inline GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor
+    (const std::string & name, const RelayEDC & types)
+        : name_(name), types_(types) {}
+
 inline const std::string & GeneratorNamespaceDescriptor::name() const
     { return name_; }
 
 inline const GeneratorNamespaceDescriptor::EventDescriptorContainer & 
-    GeneratorNamespaceDescriptor::events() const
-        { return events_; }
+    GeneratorNamespaceDescriptor::types() const
+        { return types_; }
 ///////////////////////////////////////////////////////////////////////////////
 inline RelayNamespaceDescriptor::RelayNamespaceDescriptor
-    (const MarshallNamespaceDescriptor & ndb) 
-        : name_(ndb.name()),  events_(ndb.types()) {}
+    (const std::string & name , const MarshallEDC & types) 
+        : name_(name),  types_(types) {}
 
 inline const std::string & RelayNamespaceDescriptor::name() const
     { return name_; }
 
 inline const RelayNamespaceDescriptor::EventDescriptorContainer & 
-    RelayNamespaceDescriptor::events() const
-        { return events_; }
+    RelayNamespaceDescriptor::types() const
+        { return types_; }
 ///////////////////////////////////////////////////////////////////////////////
 inline MarshallNamespaceDescriptor::MarshallNamespaceDescriptor(
     const std::string & name, 
     const MarshallEDC & EDC)
         : name_(name), types_(EDC) {}
+
+inline MarshallNamespaceDescriptor::operator RelayNamespaceDescriptor() const
+{
+    return RelayNamespaceDescriptor(name_,types_);
+}
 
 inline const std::string & MarshallNamespaceDescriptor::name() const
     { return name_; }

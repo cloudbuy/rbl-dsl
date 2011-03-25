@@ -75,7 +75,7 @@ namespace event_model
         explicit RelayEventDescriptor(const MarshallEventDescriptor &);
    
         const EventTypeContainer & types() const;
-        operator GeneratorEventDescriptor();
+        operator GeneratorEventDescriptor() const;
     private:
         EventTypeContainer types_;
     };
@@ -127,13 +127,13 @@ namespace event_model
         typedef SlicingContainer<GeneratorEDC, RelayEDC> 
             EventDescriptorContainer;
         explicit GeneratorNamespaceDescriptor(
-            const RelayNamespaceDescriptor &);
+            const std::string &, const RelayEDC &);
         
         const std::string & name() const ;
-        const EventDescriptorContainer & events() const;
+        const EventDescriptorContainer & types() const;
     private: 
         std::string name_;
-        EventDescriptorContainer events_;
+        EventDescriptorContainer types_;
      };
 ///////////////////////////////////////////////////////////////////////////////
     class MarshallNamespaceDescriptor;
@@ -143,13 +143,14 @@ namespace event_model
     public:
         typedef SlicingContainer<RelayEDC, MarshallEDC> 
             EventDescriptorContainer;
-        explicit RelayNamespaceDescriptor(const MarshallNamespaceDescriptor &);
+        explicit RelayNamespaceDescriptor(
+            const std::string &, const MarshallEDC &);
         
         const std::string & name() const ;
-        const EventDescriptorContainer & events() const ;
+        const EventDescriptorContainer & types() const ;
     private: 
         std::string name_;
-        EventDescriptorContainer events_;
+        EventDescriptorContainer types_;
     };
 /////////////////////////////////////////////////////////////////////////////// 
     // the builder is declared above, before the event builder.
@@ -161,7 +162,9 @@ namespace event_model
         explicit MarshallNamespaceDescriptor
             (   const std::string & name, 
                 const MarshallEDC & EDC);
-        
+
+        operator RelayNamespaceDescriptor() const;
+ 
         const std::string & name() const ;
         const MarshallEDC & types() const;
     private:
