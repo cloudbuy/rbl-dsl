@@ -79,7 +79,7 @@ TEST(testing_marshall_building, test_two)
     Oid two("zebra",3);
     Oid three("giraffe",8);
     
-    medb1.Init(Oid("event",0),mndb,res);
+    medb1.Init(Oid("evenT",0),mndb,res);
     ASSERT_TRUE(res);
 
     medb1.AddEventType(  one,
@@ -95,10 +95,12 @@ TEST(testing_marshall_building, test_two)
                         EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
                         res);
     ASSERT_TRUE(res);
-   
-    MarshallEventDescriptorBuilder medb2;
 
-    medb2.Init(Oid("event",5),mndb,res);
+    MarshallEventDescriptorBuilder medb2;
+    MarshallEventDescriptorBuilder init_return_false_damn_you;
+    
+    
+    medb2.Init(Oid("monkey",5),mndb,res);
     ASSERT_TRUE(res);
 
     medb2.AddEventType(  one,
@@ -115,11 +117,52 @@ TEST(testing_marshall_building, test_two)
                         res);
     ASSERT_TRUE(res);
 
-    mndb.AddEventDescriptor(medb1);
-    mndb.AddEventDescriptor(medb2);
+    mndb.AddEventDescriptor(medb1,res);
+    ASSERT_TRUE(res);
+
+    // following should be returning false
+    init_return_false_damn_you.Init(Oid("eVent",5),mndb,res);
+    ASSERT_FALSE(res);
+
+    
+    mndb.AddEventDescriptor(medb2,res);
+    ASSERT_TRUE(res);
+
+    ASSERT_EQ(mndb.events().size(),6) ;    
+    ASSERT_EQ(mndb.events().occupied_size(), 2);
 
     // first test if medb1 and medb2 are structuraly correct
+    ASSERT_TRUE(mndb.event[0] != NULL);
+    ASSERT_TRUE(mndb.event[1] == NULL);
+    ASSERT_TRUE(mndb.event[2] == NULL);
+    ASSERT_TRUE(mndb.event[3] == NULL);
+    ASSERT_TRUE(mndb.event[4] == NULL);
+    ASSERT_TRUE(mndb.event[5] != NULL);
     // then downcast to non-builder marshallnamespace and test
+
+    
+    /*
+    ASSERT_TRUE(mndb.event[0].type[0]
+    ASSERT_TRUE(mndb.event[0].type[0]
+    ASSERT_TRUE(mndb.event[0].type[0]
+    ASSERT_TRUE(mndb.event[0].type[0]
+    ASSERT_TRUE(mndb.event[0].type[0]
+   
+    ASSERT_TRUE(mndb.event[0].type[3] 
+    ASSERT_TRUE(mndb.event[0].type[3]    
+    ASSERT_TRUE(mndb.event[0].type[3]
+    ASSERT_TRUE(mndb.event[0].type[3]
+    ASSERT_TRUE(mndb.event[0].type[3]
+ 
+    ASSERT_TRUE(mndb.event[0].type[8]  
+    ASSERT_TRUE(mndb.event[0].type[8]
+    ASSERT_TRUE(mndb.event[0].type[8]
+    ASSERT_TRUE(mndb.event[0].type[8]
+    ASSERT_TRUE(mndb.event[0].type[8]
+    */
+
+        
+
 }
 
 

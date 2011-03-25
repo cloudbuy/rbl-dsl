@@ -27,17 +27,21 @@ inline void EventTypeDescriptor::serialize(SF::Archive & ar)
 }
 ///////////////////////////////////////////////////////////////////////////////
 inline GeneratorEventDescriptor::GeneratorEventDescriptor()
-    :  events_() {}
+    :  types_(),type(types_) {}
 inline GeneratorEventDescriptor::GeneratorEventDescriptor
-    ( const EventTypeContainer & etc) : events_(etc) {}
-inline const EventTypeContainer & GeneratorEventDescriptor::events() const
-    { return events_; }
+    ( const EventTypeContainer & etc) : types_(etc),type(types_) {}
+inline const EventTypeContainer & GeneratorEventDescriptor::types() const
+    { return types_; }
 ///////////////////////////////////////////////////////////////////////////////
 inline RelayEventDescriptor::RelayEventDescriptor()
-    :  types_() {}
+    :  types_(),type(types_) {}
 
 inline RelayEventDescriptor::RelayEventDescriptor
-    (const  EventTypeContainer & etc) : types_(etc) {}
+    (const  EventTypeContainer & etc) : types_(etc),type(types_) {}
+
+inline RelayEventDescriptor::RelayEventDescriptor
+    (const MarshallEventDescriptor & rhs)
+    : types_(rhs.types()),type(types_) {}
 
 inline RelayEventDescriptor::operator GeneratorEventDescriptor() const
     { return GeneratorEventDescriptor(types_); }
@@ -45,25 +49,24 @@ inline RelayEventDescriptor::operator GeneratorEventDescriptor() const
 inline const EventTypeContainer & RelayEventDescriptor::types() const 
     { return types_; }
 
-inline RelayEventDescriptor::RelayEventDescriptor
-    (const MarshallEventDescriptor & rhs)
-    : types_(rhs.types()) {}
 ///////////////////////////////////////////////////////////////////////////////
 inline MarshallEventDescriptor::MarshallEventDescriptor(const EventTypeContainer & etc)
-   : types_(etc) {};
+   : types_(etc),type(types_) {};
+
+inline MarshallEventDescriptor::MarshallEventDescriptor()
+    : types_(),type(types_) {}
 
 inline const EventTypeContainer & MarshallEventDescriptor::types() const 
     { return types_; }
 
-inline MarshallEventDescriptor::MarshallEventDescriptor()
-    : types_() {}
 
 inline MarshallEventDescriptor::operator RelayEventDescriptor() const
     { return RelayEventDescriptor(types_);  }
 ///////////////////////////////////////////////////////////////////////////////
-inline const EventTypeContainer & MarshallEventDescriptorBuilder::events()
+inline MarshallEventDescriptorBuilder::MarshallEventDescriptorBuilder()
+    : types_(), type(types_) {}
+inline const EventTypeContainer & MarshallEventDescriptorBuilder::types()
    const { return types_; }
-
 inline MarshallEventDescriptorBuilder::operator MarshallEventDescriptor() const
     { return MarshallEventDescriptor(types_); }
 
@@ -97,6 +100,7 @@ inline MarshallNamespaceDescriptor::MarshallNamespaceDescriptor(
     const MarshallEDC & EDC)
         : name_(name), events_(EDC), event(events_) {}
 
+
 inline MarshallNamespaceDescriptor::operator RelayNamespaceDescriptor() const
 {
     return RelayNamespaceDescriptor(name_,events_);
@@ -110,16 +114,17 @@ inline const MarshallNamespaceDescriptor::EventDescriptorContainer &
         { return events_; }
 ///////////////////////////////////////////////////////////////////////////////
 inline MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder
-    (const std::string & s) : name_(s), events_()  { }
+    (const std::string & s) : name_(s), events_(),event(events_)  { }
 
 inline void MarshallNamespaceDescriptorBuilder::AddEventDescriptor
-    (const MarshallEventDescriptorBuilder & medb)
+    (const MarshallEventDescriptorBuilder & medb, bool & ok)
 {
-    EventDescriptorContainer::entry_type entry( 
-        medb.oid(), (
-        MarshallEventDescriptor) medb);
+    ok = true;
+    EventDescriptorContainer::entry_type entry
+        (medb.oid(), (MarshallEventDescriptor) medb);
     
-    events_.SetEntry(entry); 
+    if( events_.SetEntry(entry) != OP_NO_ERROR)
+        ok = false; 
 }
 
 inline MarshallNamespaceDescriptorBuilder::operator 
@@ -137,5 +142,4 @@ inline const MarshallNamespaceDescriptorBuilder::EventDescriptorContainer &
 
 inline const OP_RESPONSE MarshallNamespaceDescriptorBuilder::ContainsEventIdentifier
     (const Oid & id) const{ return events_.ContainsEither(id); }
-
 ///////////////////////////////////////////////////////////////////////////////

@@ -452,11 +452,15 @@ public:
     
     const  entry_type * operator[] (const name_type & name) const 
     {
-        return EntryWithName(name);
+        return container_.EntryWithName(name);
     }
     const  entry_type * operator[] (const ordinal_type & ordinal) const
     {
-        return EntryAtordinal(ordinal);
+        return container_.EntryAtordinal(ordinal);
+    }
+    OidContainerSubscript & operator=(const OidContainerSubscript & rhs)
+    {
+        return * this;
     }
 private:
     const TContainer & container_;

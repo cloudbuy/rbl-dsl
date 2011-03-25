@@ -60,9 +60,11 @@ namespace event_model
     public:
         GeneratorEventDescriptor();
         explicit GeneratorEventDescriptor( const EventTypeContainer & etc);
-        const EventTypeContainer & events() const;
+        const EventTypeContainer & types() const;
+
+        OidContainerSubscript<EventTypeContainer> type;
     private: 
-        EventTypeContainer events_;
+        EventTypeContainer types_;
     };
 ///////////////////////////////////////////////////////////////////////////////   
     class MarshallEventDescriptor;
@@ -76,6 +78,8 @@ namespace event_model
    
         const EventTypeContainer & types() const;
         operator GeneratorEventDescriptor() const;
+
+        OidContainerSubscript<EventTypeContainer> type;
     private:
         EventTypeContainer types_;
     };
@@ -90,6 +94,7 @@ namespace event_model
 
         const EventTypeContainer & types() const;
         operator RelayEventDescriptor() const;
+        OidContainerSubscript<EventTypeContainer> type;
     private:
         EventTypeContainer types_;
     };
@@ -99,15 +104,16 @@ namespace event_model
     class MarshallEventDescriptorBuilder     
     {
     public:
+        MarshallEventDescriptorBuilder();
         void Init(  const Oid & oid, 
                     MarshallNamespaceDescriptorBuilder & mndb,
                     bool & ok);
         void AddEventType(  const Oid & oid, 
                             const EventTypeDescriptor & type,bool & ok); 
-        const EventTypeContainer & events() const;
+        const EventTypeContainer & types() const;
         const Oid & oid() const;
         operator MarshallEventDescriptor() const;
-    
+        OidContainerSubscript<EventTypeContainer> type;
     private:
         Oid self_oid_;
         MarshallNamespaceDescriptorBuilder * mndb_;
@@ -181,13 +187,16 @@ namespace event_model
 
         MarshallNamespaceDescriptorBuilder(const std::string &);
 
-        void AddEventDescriptor(const MarshallEventDescriptorBuilder & medb);
+        void AddEventDescriptor( const MarshallEventDescriptorBuilder & medb, 
+                                 bool & ok);
     
         operator MarshallNamespaceDescriptor() const;
 
         const std::string & name() const ;
         const MarshallEDC & events() const ;
         const OP_RESPONSE ContainsEventIdentifier(const Oid & id) const;
+        
+        OidContainerSubscript<MarshallEDC> event; 
     private:
         std::string name_;
         EventDescriptorContainer events_;     
