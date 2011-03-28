@@ -79,7 +79,7 @@ struct x
         ar & y;
     }
 };
-typedef OidContainer<oid,x> test_container;
+typedef ContainerBuilder< OidContainer<oid,x> > test_container;
 
 
 TEST(oid_entry_test, serialization_tests)

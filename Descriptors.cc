@@ -24,9 +24,9 @@ namespace event_model
         (const Oid & oid, const EventTypeDescriptor & type, bool & ok)
     {
         ok=true;
-        if(types_.ContainsEither(oid) == OP_NO_ERROR) {
+        if(types.ContainsEither(oid) == OP_NO_ERROR) {
             EventTypeContainer::entry_type entry(oid,type);
-            types_.SetEntry(entry);
+            types.SetEntry(entry);
             return;
         }
         ok = false;

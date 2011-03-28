@@ -37,13 +37,13 @@ public:
         str_[0]='\0';
     };
    
-    explicit inline OidConstrainedString(const char * char_)
+    inline OidConstrainedString(const char * char_)
     {
         std::string str(char_);
         construct_(str); 
     };
 
-    explicit inline OidConstrainedString(const std::string & str)
+    inline OidConstrainedString(const std::string & str)
     {
         construct_(str);
     };
@@ -240,6 +240,8 @@ public:
     typedef _entry_type                                 basic_entry_type;
     typedef OidContainerEntryType<  identifier_type, 
                                     basic_entry_type>   entry_type;
+    typedef typename _identifier_type::name_type        name_type;
+    typedef typename _identifier_type::ordinal_type     ordinal_type;
     typedef std::vector<entry_type>                     vector_type;
 
     OidContainer() : entries_(),name_index_() { }
@@ -306,19 +308,7 @@ public:
         }
     }
 
-    OP_RESPONSE SetEntry(const entry_type & entry)
-    {
-        resize_if_needed_(entry.ordinal() );
-
-        OP_RESPONSE ret = ContainsEither(entry.Id());
-        if (ret != OP_NO_ERROR)
-            return ret;
-        
-        entries_.at(entry.ordinal()) = entry;
-        name_index_.insert( entries_.at( entry.ordinal() )); 
-        
-        return OP_NO_ERROR;
-    }
+    
     
     OP_RESPONSE ContainsEither(const identifier_type & id) const
     {
@@ -362,6 +352,24 @@ public:
             regen_name_index_();
         }
     }
+
+    const  basic_entry_type * operator[] (const name_type & name) const 
+    {
+        const entry_type * ent = EntryWithName(name);
+
+        if( ent != NULL )
+            return (& ( ent->entry() ) );
+        else return NULL;
+    }
+    const basic_entry_type * operator[] (const ordinal_type & ordinal) const
+    {
+        const entry_type * ent = EntryAtordinal(ordinal);
+        if( ent != NULL) {
+            return (& ( ent->entry() ) );
+        }
+        else return NULL;
+    }
+
 protected:
     typedef intrusive::set< entry_type > name_index_set;    
     
@@ -444,6 +452,25 @@ public:
 };
 
 template<typename TContainer>
+class ContainerBuilder : public TContainer
+{
+public:
+    OP_RESPONSE SetEntry(const typename TContainer::entry_type & entry)
+    {
+        resize_if_needed_(entry.ordinal() );
+
+        OP_RESPONSE ret = ContainsEither(entry.Id());
+        if (ret != OP_NO_ERROR)
+            return ret;
+        
+        TContainer::entries_.at(entry.ordinal()) = entry;
+        TContainer::name_index_.insert( TContainer::entries_.at( entry.ordinal() )); 
+        
+        return OP_NO_ERROR;
+    } 
+};
+
+template<typename TContainer>
 class OidContainerSubscript 
 {
 public:
@@ -455,23 +482,7 @@ public:
     explicit OidContainerSubscript(const TContainer & container)
         : container_(container) {}
     
-    const  basic_entry_type * operator[] (const name_type & name) const 
-    {
-        const entry_type * ent = container_.EntryWithName(name);
-
-        if( ent != NULL )
-            return (& ( ent->entry() ) );
-        else return NULL;
-    }
-    const basic_entry_type * operator[] (const ordinal_type & ordinal) const
-    {
-        const entry_type * ent = container_.EntryAtordinal(ordinal);
-        if( ent != NULL) {
-            return (& ( ent->entry() ) );
-        }
-        else return NULL;
-    }
-    OidContainerSubscript & operator=(const OidContainerSubscript & rhs)
+        OidContainerSubscript & operator=(const OidContainerSubscript & rhs)
     {
         return * this;
     }

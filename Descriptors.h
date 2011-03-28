@@ -60,11 +60,9 @@ namespace event_model
     public:
         GeneratorEventDescriptor();
         explicit GeneratorEventDescriptor( const EventTypeContainer & etc);
-        const EventTypeContainer & types() const;
 
-        OidContainerSubscript<EventTypeContainer> type;
+        EventTypeContainer types;
     private: 
-        EventTypeContainer types_;
     };
 ///////////////////////////////////////////////////////////////////////////////   
     class MarshallEventDescriptor;
@@ -76,12 +74,10 @@ namespace event_model
         explicit RelayEventDescriptor(const  EventTypeContainer & etc);
         explicit RelayEventDescriptor(const MarshallEventDescriptor &);
    
-        const EventTypeContainer & types() const;
         operator GeneratorEventDescriptor() const;
 
-        OidContainerSubscript<EventTypeContainer> type;
+        EventTypeContainer types;
     private:
-        EventTypeContainer types_;
     };
 ///////////////////////////////////////////////////////////////////////////////
     class MarshallEventDescriptorBuilder;
@@ -92,11 +88,9 @@ namespace event_model
         MarshallEventDescriptor();
         explicit MarshallEventDescriptor(const EventTypeContainer & etc);
 
-        const EventTypeContainer & types() const;
         operator RelayEventDescriptor() const;
-        OidContainerSubscript<EventTypeContainer> type;
-    private:
-        EventTypeContainer types_;
+
+        EventTypeContainer types;
     };
 ///////////////////////////////////////////////////////////////////////////////
     class MarshallNamespaceDescriptorBuilder;
@@ -110,14 +104,13 @@ namespace event_model
                     bool & ok);
         void AddEventType(  const Oid & oid, 
                             const EventTypeDescriptor & type,bool & ok); 
-        const EventTypeContainer & types() const;
         const Oid & oid() const;
         operator MarshallEventDescriptor() const;
-        OidContainerSubscript<EventTypeContainer> type;
+        ContainerBuilder<EventTypeContainer> types;
     private:
         Oid self_oid_;
         MarshallNamespaceDescriptorBuilder * mndb_;
-        EventTypeContainer types_;
+        ;
     };
 ///////////////////////////////////////////////////////////////////////////////
     typedef OidContainer<Oid,GeneratorEventDescriptor>  GeneratorEDC;
@@ -135,10 +128,10 @@ namespace event_model
             const std::string &, const RelayEDC &);
         
         const std::string & name() const ;
-        const EventDescriptorContainer & events() const;
+
+        EventDescriptorContainer events;
     private: 
         std::string name_;
-        EventDescriptorContainer events_;
      };
 ///////////////////////////////////////////////////////////////////////////////
     class MarshallNamespaceDescriptor;
@@ -152,10 +145,10 @@ namespace event_model
             const std::string &, const MarshallEDC &);
         
         const std::string & name() const ;
-        const EventDescriptorContainer & events() const ;
+
+        EventDescriptorContainer events;
     private: 
         std::string name_;
-        EventDescriptorContainer events_;
     };
 /////////////////////////////////////////////////////////////////////////////// 
     // the builder is declared above, before the event builder.
@@ -182,7 +175,7 @@ namespace event_model
     class MarshallNamespaceDescriptorBuilder  
     {
     public:
-        typedef MarshallEDC EventDescriptorContainer;
+        typedef ContainerBuilder<MarshallEDC> EventDescriptorContainer;
 
         MarshallNamespaceDescriptorBuilder(const std::string &);
 
@@ -192,13 +185,11 @@ namespace event_model
         operator MarshallNamespaceDescriptor() const;
 
         const std::string & name() const ;
-        const MarshallEDC & events() const ;
         const OP_RESPONSE ContainsEventIdentifier(const Oid & id) const;
         
-        OidContainerSubscript<MarshallEDC> event; 
+        EventDescriptorContainer events;
     private:
         std::string name_;
-        EventDescriptorContainer events_;     
     };
 ///////////////////////////////////////////////////////////////////////////////   
     #include "Descriptors_inline.h"
