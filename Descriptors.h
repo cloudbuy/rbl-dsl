@@ -62,6 +62,7 @@ namespace event_model
         explicit GeneratorEventDescriptor( const EventTypeContainer & etc);
 
         EventTypeContainer types;
+        void serialize(SF::Archive & ar);
     private: 
     };
 ///////////////////////////////////////////////////////////////////////////////   
@@ -73,9 +74,9 @@ namespace event_model
         RelayEventDescriptor();
         explicit RelayEventDescriptor(const  EventTypeContainer & etc);
         explicit RelayEventDescriptor(const MarshallEventDescriptor &);
-   
         operator GeneratorEventDescriptor() const;
-
+        void serialize(SF::Archive & ar);
+        
         EventTypeContainer types;
     private:
     };
@@ -87,10 +88,10 @@ namespace event_model
     public:
         MarshallEventDescriptor();
         explicit MarshallEventDescriptor(const EventTypeContainer & etc);
-
         operator RelayEventDescriptor() const;
 
         EventTypeContainer types;
+    
     };
 ///////////////////////////////////////////////////////////////////////////////
     class MarshallNamespaceDescriptorBuilder;
@@ -106,6 +107,7 @@ namespace event_model
                             const EventTypeDescriptor & type,bool & ok); 
         const Oid & oid() const;
         operator MarshallEventDescriptor() const;
+        
         ContainerBuilder<EventTypeContainer> types;
     private:
         Oid self_oid_;
@@ -126,7 +128,7 @@ namespace event_model
             EventDescriptorContainer;
         explicit GeneratorNamespaceDescriptor(
             const std::string &, const RelayEDC &);
-        
+        void serialize(SF::Archive & ar);
         const std::string & name() const ;
 
         EventDescriptorContainer events;
@@ -143,9 +145,10 @@ namespace event_model
             EventDescriptorContainer;
         explicit RelayNamespaceDescriptor(
             const std::string &, const MarshallEDC &);
-        
+        void serialize(SF::Archive & ar);
         const std::string & name() const ;
-
+        operator GeneratorNamespaceDescriptor() const;
+        
         EventDescriptorContainer events;
     private: 
         std::string name_;

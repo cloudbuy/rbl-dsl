@@ -75,6 +75,10 @@ inline const std::string & GeneratorNamespaceDescriptor::name() const
 inline RelayNamespaceDescriptor::RelayNamespaceDescriptor
     (const std::string & name , const MarshallEDC & events) 
         : name_(name),  events(events) {}
+inline RelayNamespaceDescriptor::operator GeneratorNamespaceDescriptor() const
+{
+    return GeneratorNamespaceDescriptor(name_, events);
+}
 
 inline const std::string & RelayNamespaceDescriptor::name() const
     { return name_; }

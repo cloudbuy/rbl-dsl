@@ -6,6 +6,8 @@
 #include <SF/IBinaryStream.hpp>
 #include <boost/cstdint.hpp>
 
+#include <typeinfo>
+
 using namespace event_model;
 
 
@@ -186,6 +188,214 @@ TEST(testing_marshall_building, test_two)
     ASSERT_EQ(mndb.events[5]->types[8]->type(), VALUE_INT8);
     ASSERT_EQ(mndb.events[5]->types[8]->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(mndb.events[5]->types[8]->is_primitive(), true);
+
+    MarshallNamespaceDescriptor mnd = mndb;
+    
+    ASSERT_TRUE(mnd.events[0] != NULL);
+    ASSERT_TRUE(mnd.events[1] == NULL);
+    ASSERT_TRUE(mnd.events[2] == NULL);
+    ASSERT_TRUE(mnd.events[3] == NULL);
+    ASSERT_TRUE(mnd.events[4] == NULL);
+    ASSERT_TRUE(mnd.events[5] != NULL);
+ 
+    ASSERT_TRUE( mnd.events.EntryWithName("MonKey") != NULL);
+    ASSERT_TRUE( mnd.events.EntryWithName("HasSan") ==NULL);
+    ASSERT_TRUE( mnd.events.EntryWithName("eVeNt") !=NULL);
+
+    ASSERT_TRUE(mnd.events.EntryWithName("MonKey")->ordinal() == 5);
+    ASSERT_TRUE(mnd.events.EntryWithName("eVeNt")->ordinal() == 0);
+
+    ASSERT_EQ( typeid(mnd.events.EntryWithName("Monkey")->entry()) 
+        ,typeid(*new MarshallEventDescriptor()) );
+
+    ASSERT_EQ(mnd.events[0]->types.size(),9);
+    ASSERT_EQ(mnd.events[0]->types.occupied_size(),3);
+
+    ASSERT_TRUE(mnd.events[0]->types[0]!=NULL);
+    ASSERT_TRUE(mnd.events[0]->types[1]==NULL);
+    ASSERT_TRUE(mnd.events[0]->types[2]==NULL);
+    ASSERT_TRUE(mnd.events[0]->types[3]!=NULL);
+    ASSERT_TRUE(mnd.events[0]->types[4]==NULL);
+    ASSERT_TRUE(mnd.events[0]->types[5]==NULL);
+    ASSERT_TRUE(mnd.events[0]->types[6]==NULL);
+    ASSERT_TRUE(mnd.events[0]->types[7]==NULL);
+    ASSERT_TRUE(mnd.events[0]->types[8]!=NULL);
+   
+    ASSERT_EQ(mnd.events[0]->types[0]->type(), VALUE_INT4);
+    ASSERT_EQ(mnd.events[0]->types[0]->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(mnd.events[0]->types[0]->is_primitive(), true);
+    
+    ASSERT_EQ(mnd.events[0]->types[3]->type(), VALUE_INT4);
+    ASSERT_EQ(mnd.events[0]->types[3]->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(mnd.events[0]->types[3]->is_primitive(), false);
+    
+    ASSERT_EQ(mnd.events[0]->types[8]->type(), VALUE_INT8);
+    ASSERT_EQ(mnd.events[0]->types[8]->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(mnd.events[0]->types[8]->is_primitive(), true);
+
+    ASSERT_EQ(mnd.events[5]->types.size(),9);
+    ASSERT_EQ(mnd.events[5]->types.occupied_size(),3);
+
+    ASSERT_TRUE(mnd.events[5]->types[0]!=NULL);
+    ASSERT_TRUE(mnd.events[5]->types[1]==NULL);
+    ASSERT_TRUE(mnd.events[5]->types[2]==NULL);
+    ASSERT_TRUE(mnd.events[5]->types[3]!=NULL);
+    ASSERT_TRUE(mnd.events[5]->types[4]==NULL);
+    ASSERT_TRUE(mnd.events[5]->types[5]==NULL);
+    ASSERT_TRUE(mnd.events[5]->types[6]==NULL);
+    ASSERT_TRUE(mnd.events[5]->types[7]==NULL);
+    ASSERT_TRUE(mnd.events[5]->types[8]!=NULL);
+    
+    ASSERT_EQ(mnd.events[5]->types[0]->type(), VALUE_INT4);
+    ASSERT_EQ(mnd.events[5]->types[0]->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(mnd.events[5]->types[0]->is_primitive(), true);
+    
+    ASSERT_EQ(mnd.events[5]->types[3]->type(), VALUE_INT4);
+    ASSERT_EQ(mnd.events[5]->types[3]->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(mnd.events[5]->types[3]->is_primitive(), false);
+    
+    ASSERT_EQ(mnd.events[5]->types[8]->type(), VALUE_INT8);
+    ASSERT_EQ(mnd.events[5]->types[8]->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(mnd.events[5]->types[8]->is_primitive(), true);
+
+    RelayNamespaceDescriptor rnd = mnd;
+
+    ASSERT_TRUE(rnd.events[0] != NULL);
+    ASSERT_TRUE(rnd.events[1] == NULL);
+    ASSERT_TRUE(rnd.events[2] == NULL);
+    ASSERT_TRUE(rnd.events[3] == NULL);
+    ASSERT_TRUE(rnd.events[4] == NULL);
+    ASSERT_TRUE(rnd.events[5] != NULL);
+ 
+    ASSERT_TRUE( rnd.events.EntryWithName("MonKey") != NULL);
+    ASSERT_TRUE( rnd.events.EntryWithName("HasSan") ==NULL);
+    ASSERT_TRUE( rnd.events.EntryWithName("eVeNt") !=NULL);
+
+    ASSERT_TRUE(rnd.events.EntryWithName("MonKey")->ordinal() == 5);
+    ASSERT_TRUE(rnd.events.EntryWithName("eVeNt")->ordinal() == 0);
+
+    ASSERT_EQ( typeid(rnd.events.EntryWithName("Monkey")->entry()) 
+        ,typeid(*new RelayEventDescriptor()) );
+
+    ASSERT_EQ(rnd.events[0]->types.size(),9);
+    ASSERT_EQ(rnd.events[0]->types.occupied_size(),3);
+
+    ASSERT_TRUE(rnd.events[0]->types[0]!=NULL);
+    ASSERT_TRUE(rnd.events[0]->types[1]==NULL);
+    ASSERT_TRUE(rnd.events[0]->types[2]==NULL);
+    ASSERT_TRUE(rnd.events[0]->types[3]!=NULL);
+    ASSERT_TRUE(rnd.events[0]->types[4]==NULL);
+    ASSERT_TRUE(rnd.events[0]->types[5]==NULL);
+    ASSERT_TRUE(rnd.events[0]->types[6]==NULL);
+    ASSERT_TRUE(rnd.events[0]->types[7]==NULL);
+    ASSERT_TRUE(rnd.events[0]->types[8]!=NULL);
+   
+    ASSERT_EQ(rnd.events[0]->types[0]->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.events[0]->types[0]->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(rnd.events[0]->types[0]->is_primitive(), true);
+    
+    ASSERT_EQ(rnd.events[0]->types[3]->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.events[0]->types[3]->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(rnd.events[0]->types[3]->is_primitive(), false);
+    
+    ASSERT_EQ(rnd.events[0]->types[8]->type(), VALUE_INT8);
+    ASSERT_EQ(rnd.events[0]->types[8]->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(rnd.events[0]->types[8]->is_primitive(), true);
+
+    ASSERT_EQ(rnd.events[5]->types.size(),9);
+    ASSERT_EQ(rnd.events[5]->types.occupied_size(),3);
+
+    ASSERT_TRUE(rnd.events[5]->types[0]!=NULL);
+    ASSERT_TRUE(rnd.events[5]->types[1]==NULL);
+    ASSERT_TRUE(rnd.events[5]->types[2]==NULL);
+    ASSERT_TRUE(rnd.events[5]->types[3]!=NULL);
+    ASSERT_TRUE(rnd.events[5]->types[4]==NULL);
+    ASSERT_TRUE(rnd.events[5]->types[5]==NULL);
+    ASSERT_TRUE(rnd.events[5]->types[6]==NULL);
+    ASSERT_TRUE(rnd.events[5]->types[7]==NULL);
+    ASSERT_TRUE(rnd.events[5]->types[8]!=NULL);
+    
+    ASSERT_EQ(rnd.events[5]->types[0]->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.events[5]->types[0]->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(rnd.events[5]->types[0]->is_primitive(), true);
+    
+    ASSERT_EQ(rnd.events[5]->types[3]->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.events[5]->types[3]->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(rnd.events[5]->types[3]->is_primitive(), false);
+    
+    ASSERT_EQ(rnd.events[5]->types[8]->type(), VALUE_INT8);
+    ASSERT_EQ(rnd.events[5]->types[8]->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(rnd.events[5]->types[8]->is_primitive(), true);
+
+    GeneratorNamespaceDescriptor gnd = rnd;
+
+    ASSERT_TRUE(gnd.events[0] != NULL);
+    ASSERT_TRUE(gnd.events[1] == NULL);
+    ASSERT_TRUE(gnd.events[2] == NULL);
+    ASSERT_TRUE(gnd.events[3] == NULL);
+    ASSERT_TRUE(gnd.events[4] == NULL);
+    ASSERT_TRUE(gnd.events[5] != NULL);
+ 
+    ASSERT_TRUE( gnd.events.EntryWithName("MonKey") != NULL);
+    ASSERT_TRUE( gnd.events.EntryWithName("HasSan") ==NULL);
+    ASSERT_TRUE( gnd.events.EntryWithName("eVeNt") !=NULL);
+
+    ASSERT_TRUE(gnd.events.EntryWithName("MonKey")->ordinal() == 5);
+    ASSERT_TRUE(gnd.events.EntryWithName("eVeNt")->ordinal() == 0);
+
+    ASSERT_EQ( typeid(gnd.events.EntryWithName("Monkey")->entry()) 
+        ,typeid(*new GeneratorEventDescriptor()) );
+
+    ASSERT_EQ(gnd.events[0]->types.size(),9);
+    ASSERT_EQ(gnd.events[0]->types.occupied_size(),3);
+
+    ASSERT_TRUE(gnd.events[0]->types[0]!=NULL);
+    ASSERT_TRUE(gnd.events[0]->types[1]==NULL);
+    ASSERT_TRUE(gnd.events[0]->types[2]==NULL);
+    ASSERT_TRUE(gnd.events[0]->types[3]!=NULL);
+    ASSERT_TRUE(gnd.events[0]->types[4]==NULL);
+    ASSERT_TRUE(gnd.events[0]->types[5]==NULL);
+    ASSERT_TRUE(gnd.events[0]->types[6]==NULL);
+    ASSERT_TRUE(gnd.events[0]->types[7]==NULL);
+    ASSERT_TRUE(gnd.events[0]->types[8]!=NULL);
+   
+    ASSERT_EQ(gnd.events[0]->types[0]->type(), VALUE_INT4);
+    ASSERT_EQ(gnd.events[0]->types[0]->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(gnd.events[0]->types[0]->is_primitive(), true);
+    
+    ASSERT_EQ(gnd.events[0]->types[3]->type(), VALUE_INT4);
+    ASSERT_EQ(gnd.events[0]->types[3]->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(gnd.events[0]->types[3]->is_primitive(), false);
+    
+    ASSERT_EQ(gnd.events[0]->types[8]->type(), VALUE_INT8);
+    ASSERT_EQ(gnd.events[0]->types[8]->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(gnd.events[0]->types[8]->is_primitive(), true);
+
+    ASSERT_EQ(gnd.events[5]->types.size(),9);
+    ASSERT_EQ(gnd.events[5]->types.occupied_size(),3);
+
+    ASSERT_TRUE(gnd.events[5]->types[0]!=NULL);
+    ASSERT_TRUE(gnd.events[5]->types[1]==NULL);
+    ASSERT_TRUE(gnd.events[5]->types[2]==NULL);
+    ASSERT_TRUE(gnd.events[5]->types[3]!=NULL);
+    ASSERT_TRUE(gnd.events[5]->types[4]==NULL);
+    ASSERT_TRUE(gnd.events[5]->types[5]==NULL);
+    ASSERT_TRUE(gnd.events[5]->types[6]==NULL);
+    ASSERT_TRUE(gnd.events[5]->types[7]==NULL);
+    ASSERT_TRUE(gnd.events[5]->types[8]!=NULL);
+    
+    ASSERT_EQ(gnd.events[5]->types[0]->type(), VALUE_INT4);
+    ASSERT_EQ(gnd.events[5]->types[0]->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(gnd.events[5]->types[0]->is_primitive(), true);
+    
+    ASSERT_EQ(gnd.events[5]->types[3]->type(), VALUE_INT4);
+    ASSERT_EQ(gnd.events[5]->types[3]->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(gnd.events[5]->types[3]->is_primitive(), false);
+    
+    ASSERT_EQ(gnd.events[5]->types[8]->type(), VALUE_INT8);
+    ASSERT_EQ(gnd.events[5]->types[8]->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(gnd.events[5]->types[8]->is_primitive(), true);
+
 }
 
 
