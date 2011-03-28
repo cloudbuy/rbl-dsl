@@ -164,12 +164,10 @@ namespace event_model
         operator RelayNamespaceDescriptor() const;
  
         const std::string & name() const ;
-        const MarshallEDC & events() const;
-
-        OidContainerSubscript<MarshallEDC> event;
+        
+        EventDescriptorContainer events;
     private:
         std::string name_;
-        EventDescriptorContainer events_;
     };
 ///////////////////////////////////////////////////////////////////////////////    
     class MarshallNamespaceDescriptorBuilder  

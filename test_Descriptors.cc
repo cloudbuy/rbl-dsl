@@ -73,7 +73,7 @@ TEST(testing_marshall_building, test_two)
     ASSERT_TRUE(mndb.events.occupied_size() == 0);
 
     MarshallEventDescriptorBuilder medb1;
-
+    MarshallEventDescriptorBuilder medb2;
     bool res;
     Oid one("monkey",0);
     Oid two("zebra",3);
@@ -87,38 +87,15 @@ TEST(testing_marshall_building, test_two)
                         res);
     ASSERT_TRUE(res);
     medb1.AddEventType(  two,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
                         res);
     ASSERT_TRUE(res);
     
     medb1.AddEventType(  three,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
                         res);
     ASSERT_TRUE(res);
     
-    std::cout << medb1.types.EntryAtordinal(0)->name().c_str() << std::endl;    
-    //std::cout << medb1.types().EntryAtordinal(1)->name().c_str() << std::endl;
-
-    ASSERT_TRUE( medb1.types[0] != NULL);
-    ASSERT_TRUE( medb1.types[1] == NULL); 
-    //ASSERT_TRUE( medb1.types().EntryAtordinal(0)->is_initialized() == true);
-   
-    EventTypeContainer test_copy_constructor(medb1.types);
-    ASSERT_TRUE( test_copy_constructor.EntryAtordinal(0) != NULL);
-    ASSERT_TRUE( test_copy_constructor.EntryAtordinal(1) == NULL); 
-
-    std::cout << test_copy_constructor.EntryAtordinal(0)->name().c_str() << std::endl;
- 
-    MarshallEventDescriptorBuilder medb2;
-    MarshallEventDescriptorBuilder init_return_false_damn_you;
-    
-    // test the downcast
-    MarshallEventDescriptor med = medb1;
-    ASSERT_TRUE( med.types[0] != NULL);
-    ASSERT_TRUE( med.types[1] == NULL); 
-
-
- 
     medb2.Init(Oid("monkey",5),mndb,res);
     ASSERT_TRUE(res);
 
@@ -127,22 +104,17 @@ TEST(testing_marshall_building, test_two)
                         res);
     ASSERT_TRUE(res);
     medb2.AddEventType(  two,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
                         res);
     ASSERT_TRUE(res);
     
     medb2.AddEventType(  three,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
                         res);
     ASSERT_TRUE(res);
 
     mndb.AddEventDescriptor(medb1,res);
     ASSERT_TRUE(res);
-
-    // following should be returning false
- //   init_return_false_damn_you.Init(Oid("eVent",5),mndb,res);
-   // ASSERT_FALSE(res);
-
     
     mndb.AddEventDescriptor(medb2,res);
     ASSERT_TRUE(res);
@@ -157,71 +129,63 @@ TEST(testing_marshall_building, test_two)
     ASSERT_TRUE(mndb.events[3] == NULL);
     ASSERT_TRUE(mndb.events[4] == NULL);
     ASSERT_TRUE(mndb.events[5] != NULL);
-//    ASSERT_TRUE(mndb.event[6] == NULL);
-    // then downcast to non-builder marshallnamespace and test
- 
-    ASSERT_EQ(mndb.events.EntryAtordinal(0)->entry().types.occupied_size(),3);
-    ASSERT_EQ(mndb.events.EntryAtordinal(0)->entry().types.size(),9);
+  
+    ASSERT_TRUE( mndb.events.EntryWithName("MonKey") != NULL);
+    ASSERT_TRUE( mndb.events.EntryWithName("HasSan") ==NULL);
+    ASSERT_TRUE( mndb.events.EntryWithName("eVeNt") !=NULL);
 
-    ASSERT_EQ(mndb.events.EntryAtordinal(5)->entry().types.occupied_size(),3);
-    ASSERT_EQ(mndb.events.EntryAtordinal(5)->entry().types.size(),9);
+    ASSERT_TRUE(mndb.events.EntryWithName("MonKey")->ordinal() == 5);
+    ASSERT_TRUE(mndb.events.EntryWithName("eVeNt")->ordinal() == 0);
+
+    ASSERT_EQ(mndb.events[0]->types.size(),9);
+    ASSERT_EQ(mndb.events[0]->types.occupied_size(),3);
 
     ASSERT_TRUE(mndb.events[0]->types[0]!=NULL);
-    ASSERT_TRUE(mndb.events[5]->types[0]!=NULL);
-    
-    ASSERT_TRUE(mndb.events.EntryAtordinal(0)->entry().types.EntryAtordinal(0) 
-        != NULL);
-
-    ASSERT_TRUE(mndb.events.EntryAtordinal(0)->entry().types.EntryAtordinal(1) 
-        == NULL);
-    ASSERT_TRUE(mndb.events.EntryAtordinal(0)->entry().types.EntryAtordinal(2) 
-        == NULL);
-    
-    std::cout << mndb.events.EntryAtordinal(0)->entry().types.EntryAtordinal(0)->name().c_str() << std::endl;
-    std::cout << mndb.events.EntryAtordinal(0)->entry().types.EntryAtordinal(3)->name().c_str() << std::endl;
-    std::cout << mndb.events.EntryAtordinal(0)->entry().types.EntryAtordinal(8)->name().c_str() << std::endl;
-
-
-    ASSERT_TRUE(mndb.events.EntryAtordinal(0)->entry().types.EntryAtordinal(1) 
-        == NULL);
-    
-    MarshallEventDescriptor grr= mndb.events.EntryAtordinal(0)->entry();
-//    ASSERT_TRUE(grr.type[1] == NULL);
-    const MarshallEventDescriptor * grr2 = mndb.events[0];
-    ASSERT_TRUE(grr2->types.EntryAtordinal(1) == NULL);
-    
-    ASSERT_TRUE(mndb.events[0]->types.EntryAtordinal(0)->entry().is_primitive()==true );
-    ASSERT_TRUE(mndb.events[0]->types.EntryAtordinal(1) == NULL);
-    ASSERT_TRUE(mndb.events[0]->types.EntryAtordinal(2) == NULL);
-    ASSERT_TRUE(mndb.events[0]->types.EntryAtordinal(3)->entry().is_primitive()==true );
-
-    ASSERT_TRUE(mndb.events[0]->types.EntryAtordinal(8)->entry().is_primitive()==true );
-    //ASSERT_TRUE(mndb.events().EntryAtordinal(0)->entry().types())  
-
-    ASSERT_TRUE(mndb.events[5]->types[1] == NULL);
-
-    //ASSERT_TRUE(mndb.event[0]->type[0]->type() == VALUE_INT4 ); 
-    //ASSERT_TRUE(mndb.event[0]->type[0]
-    /*
-    ASSERT_TRUE(mndb.event[0].type[0]
-    ASSERT_TRUE(mndb.event[0].type[0]
-    ASSERT_TRUE(mndb.event[0].type[0]
+    ASSERT_TRUE(mndb.events[0]->types[1]==NULL);
+    ASSERT_TRUE(mndb.events[0]->types[2]==NULL);
+    ASSERT_TRUE(mndb.events[0]->types[3]!=NULL);
+    ASSERT_TRUE(mndb.events[0]->types[4]==NULL);
+    ASSERT_TRUE(mndb.events[0]->types[5]==NULL);
+    ASSERT_TRUE(mndb.events[0]->types[6]==NULL);
+    ASSERT_TRUE(mndb.events[0]->types[7]==NULL);
+    ASSERT_TRUE(mndb.events[0]->types[8]!=NULL);
    
-    ASSERT_TRUE(mndb.event[0].type[3] 
-    ASSERT_TRUE(mndb.event[0].type[3]    
-    ASSERT_TRUE(mndb.event[0].type[3]
-    ASSERT_TRUE(mndb.event[0].type[3]
-    ASSERT_TRUE(mndb.event[0].type[3]
- 
-    ASSERT_TRUE(mndb.event[0].type[8]  
-    ASSERT_TRUE(mndb.event[0].type[8]
-    ASSERT_TRUE(mndb.event[0].type[8]
-    ASSERT_TRUE(mndb.event[0].type[8]
-    ASSERT_TRUE(mndb.event[0].type[8]
-    */
+    ASSERT_EQ(mndb.events[0]->types[0]->type(), VALUE_INT4);
+    ASSERT_EQ(mndb.events[0]->types[0]->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(mndb.events[0]->types[0]->is_primitive(), true);
+    
+    ASSERT_EQ(mndb.events[0]->types[3]->type(), VALUE_INT4);
+    ASSERT_EQ(mndb.events[0]->types[3]->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(mndb.events[0]->types[3]->is_primitive(), false);
+    
+    ASSERT_EQ(mndb.events[0]->types[8]->type(), VALUE_INT8);
+    ASSERT_EQ(mndb.events[0]->types[8]->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(mndb.events[0]->types[8]->is_primitive(), true);
 
-        
+    ASSERT_EQ(mndb.events[5]->types.size(),9);
+    ASSERT_EQ(mndb.events[5]->types.occupied_size(),3);
 
+    ASSERT_TRUE(mndb.events[5]->types[0]!=NULL);
+    ASSERT_TRUE(mndb.events[5]->types[1]==NULL);
+    ASSERT_TRUE(mndb.events[5]->types[2]==NULL);
+    ASSERT_TRUE(mndb.events[5]->types[3]!=NULL);
+    ASSERT_TRUE(mndb.events[5]->types[4]==NULL);
+    ASSERT_TRUE(mndb.events[5]->types[5]==NULL);
+    ASSERT_TRUE(mndb.events[5]->types[6]==NULL);
+    ASSERT_TRUE(mndb.events[5]->types[7]==NULL);
+    ASSERT_TRUE(mndb.events[5]->types[8]!=NULL);
+    
+    ASSERT_EQ(mndb.events[5]->types[0]->type(), VALUE_INT4);
+    ASSERT_EQ(mndb.events[5]->types[0]->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(mndb.events[5]->types[0]->is_primitive(), true);
+    
+    ASSERT_EQ(mndb.events[5]->types[3]->type(), VALUE_INT4);
+    ASSERT_EQ(mndb.events[5]->types[3]->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(mndb.events[5]->types[3]->is_primitive(), false);
+    
+    ASSERT_EQ(mndb.events[5]->types[8]->type(), VALUE_INT8);
+    ASSERT_EQ(mndb.events[5]->types[8]->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(mndb.events[5]->types[8]->is_primitive(), true);
 }
 
 

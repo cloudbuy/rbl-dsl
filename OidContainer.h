@@ -470,25 +470,6 @@ public:
     } 
 };
 
-template<typename TContainer>
-class OidContainerSubscript 
-{
-public:
-    typedef typename TContainer::entry_type                     entry_type;
-    typedef typename TContainer::entry_type::basic_entry_type   basic_entry_type;
-    typedef typename TContainer::identifier_type::name_type     name_type;
-    typedef typename TContainer::identifier_type::ordinal_type  ordinal_type;
-
-    explicit OidContainerSubscript(const TContainer & container)
-        : container_(container) {}
-    
-        OidContainerSubscript & operator=(const OidContainerSubscript & rhs)
-    {
-        return * this;
-    }
-private:
-    const TContainer & container_;
-};
 
 }
 }

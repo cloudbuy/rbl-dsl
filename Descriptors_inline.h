@@ -82,20 +82,17 @@ inline const std::string & RelayNamespaceDescriptor::name() const
 inline MarshallNamespaceDescriptor::MarshallNamespaceDescriptor(
     const std::string & name, 
     const MarshallEDC & EDC)
-        : name_(name), events_(EDC), event(events_) {}
+        : name_(name), events(EDC){}
 
 
 inline MarshallNamespaceDescriptor::operator RelayNamespaceDescriptor() const
 {
-    return RelayNamespaceDescriptor(name_,events_);
+    return RelayNamespaceDescriptor(name_,events);
 }
 
 inline const std::string & MarshallNamespaceDescriptor::name() const
     { return name_; }
 
-inline const MarshallNamespaceDescriptor::EventDescriptorContainer & 
-    MarshallNamespaceDescriptor::events() const
-        { return events_; }
 ///////////////////////////////////////////////////////////////////////////////
 inline MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder
     (const std::string & s) : name_(s)  { }
