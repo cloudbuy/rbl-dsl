@@ -28,8 +28,12 @@ inline void EventTypeDescriptor::serialize(SF::Archive & ar)
 ///////////////////////////////////////////////////////////////////////////////
 inline GeneratorEventDescriptor::GeneratorEventDescriptor()
     :  types() {}
+
 inline GeneratorEventDescriptor::GeneratorEventDescriptor
     ( const EventTypeContainer & etc) : types(etc) {}
+
+inline void GeneratorEventDescriptor::serialize(SF::Archive & ar)
+{ ar & types; }
 ///////////////////////////////////////////////////////////////////////////////
 inline RelayEventDescriptor::RelayEventDescriptor()
     :  types() {}
@@ -44,7 +48,8 @@ inline RelayEventDescriptor::RelayEventDescriptor
 inline RelayEventDescriptor::operator GeneratorEventDescriptor() const
     { return GeneratorEventDescriptor(types); }
 
-
+inline void RelayEventDescriptor::serialize(SF::Archive & ar)
+    { ar & types;}
 ///////////////////////////////////////////////////////////////////////////////
 inline MarshallEventDescriptor::MarshallEventDescriptor(const EventTypeContainer & etc)
    : types(etc) {}
@@ -64,14 +69,22 @@ inline MarshallEventDescriptorBuilder::operator MarshallEventDescriptor() const
 inline const Oid & MarshallEventDescriptorBuilder::oid() const
     { return self_oid_; }
 ///////////////////////////////////////////////////////////////////////////////
+inline GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor()
+    : name_(), events() {}
+
 inline GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor
     (const std::string & name, const RelayEDC & events)
         : name_(name), events(events) {}
+
+inline void GeneratorNamespaceDescriptor::serialize(SF::Archive & ar)
+    { ar & name_ & events; }
 
 inline const std::string & GeneratorNamespaceDescriptor::name() const
     { return name_; }
 
 ///////////////////////////////////////////////////////////////////////////////
+inline RelayNamespaceDescriptor::RelayNamespaceDescriptor()
+    : name_(), events() {}
 inline RelayNamespaceDescriptor::RelayNamespaceDescriptor
     (const std::string & name , const MarshallEDC & events) 
         : name_(name),  events(events) {}
@@ -79,7 +92,8 @@ inline RelayNamespaceDescriptor::operator GeneratorNamespaceDescriptor() const
 {
     return GeneratorNamespaceDescriptor(name_, events);
 }
-
+inline void RelayNamespaceDescriptor::serialize(SF::Archive & ar)
+    { ar & name_ & events;   }
 inline const std::string & RelayNamespaceDescriptor::name() const
     { return name_; }
 ///////////////////////////////////////////////////////////////////////////////

@@ -132,8 +132,7 @@ public:
  
     void serialize(SF::Archive & ar)
     {
-        ar & name_;
-        ar & ordinal_;
+        ar & name_ & ordinal_;
     }
     
     inline bool operator==(const OidType<str_type,size_type> & rhs) const
@@ -428,7 +427,8 @@ class SlicingContainer : public Base
 public:
     typedef Base    base_type;
     typedef Derived derived_type;
-    
+    SlicingContainer()
+        : Base() {}
     explicit SlicingContainer(const derived_type & d)
     {
         Base::name_index_.clear();
@@ -448,6 +448,10 @@ public:
             }
         }
         Base::regen_name_index_();
+    }
+    void serialize(SF::Archive & ar)
+    {
+        Base::serialize(ar);
     }
 };
 

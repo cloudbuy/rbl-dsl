@@ -126,6 +126,7 @@ namespace event_model
     public:
         typedef SlicingContainer<GeneratorEDC, RelayEDC> 
             EventDescriptorContainer;
+        GeneratorNamespaceDescriptor();
         explicit GeneratorNamespaceDescriptor(
             const std::string &, const RelayEDC &);
         void serialize(SF::Archive & ar);
@@ -145,6 +146,7 @@ namespace event_model
             EventDescriptorContainer;
         explicit RelayNamespaceDescriptor(
             const std::string &, const MarshallEDC &);
+        RelayNamespaceDescriptor();
         void serialize(SF::Archive & ar);
         const std::string & name() const ;
         operator GeneratorNamespaceDescriptor() const;
