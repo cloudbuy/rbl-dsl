@@ -19,6 +19,9 @@ namespace parser
     namespace phoenix = boost::phoenix;
 
     using qi::int_;
+    using qi::eol;
+    using qi::eoi;
+    using qi::omit;
     using ascii::char_;
     using qi::lit;
     using qi::_val;
@@ -67,32 +70,50 @@ namespace parser
 
             qi::rule<Iterator> start;
         };
-    
+      
+    template<typename Iterator>
+    struct IdentifierRules
+    {
+        qi::rule< Iterator,   std::string()> valid_char_str;
+        qi::rule< Iterator, std::string() > string_identifier;
+        qi::rule< Iterator, void(Oid &)> ordinal_string_identifier;
+
+        IdentifierRules()
+        {
+            valid_char_str.name("Data Name Identifier");
+            valid_char_str = + (char_("a","z") | char_("A","Z") | char_('_'));
+            
+            string_identifier = valid_char_str;
+            
+            ordinal_string_identifier = 
+                int_[bind(&Oid::set_ordinal,_r1,_1)] 
+                > ':' 
+                > valid_char_str[bind(&Oid::set_name,_r1,_1)]
+            ; 
+        } 
+    };
+    /* 
     template<typename Iterator>
     struct Rules
     {
+        
         swat_types_ swat_types;
 
-        qi::rule<   Iterator,   std::string()> data_name;
-
-        qi::rule<   Iterator,   void()> identifier_pair;
-
-        qi::rule<   Iterator,   void()> event_data_line;
+        
+        
+        qi::rule<   Iterator,   void(),ascii::space_type> event_data_line;
 
         qi::rule<   Iterator, void()> event_descriptor;
                                     
 
         Rules()
         {
-            data_name.name("Data Name Identifier");
-            data_name =
-               lexeme[ + (char_("a","z") | char_("A","Z") | char_('_'))];
+                        
+        
 
             identifier_pair.name("Data identifier pair (ordinal:name)");
-
             identifier_pair =
-                lexeme[int_  > ':' > data_name];
-            
+                int_  > ':' > valid_name;
             event_data_line = 
                 -(  no_case[lit("optional")]
                     | no_case[lit("required")]
@@ -108,8 +129,10 @@ namespace parser
                 > *(event_data_line)
                 > char_('}')
             ;
+        
         }
     };
+    */
 }
 }
 #endif
