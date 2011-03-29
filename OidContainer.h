@@ -103,9 +103,15 @@ private:
         strncpy(str_, str2.c_str(), length);
     }
 
-
     char str_[length];
 };
+
+template<unsigned length>
+std::ostream & operator<< (std::ostream & os, const OidConstrainedString<char,length> & oid)
+{
+    os << oid.c_str();
+    return os; 
+}
 
 template< typename str_type, typename size_type>
 class OidType
