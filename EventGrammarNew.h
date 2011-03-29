@@ -46,11 +46,11 @@ namespace parser
             using namespace event_model;
 
             add
-                ("int", SWAT_INT4)
-                ("int4", SWAT_INT4)
-                ("int8", SWAT_INT8)
-                ("bigint", SWAT_INT8)
-                ("string", SWAT_STRING)
+                ("int", VALUE_INT4)
+                ("int4", VALUE_INT4)
+                ("int8", VALUE_INT8)
+                ("bigint", VALUE_INT8)
+                ("string", VALUE_STRING)
             ;
         }
     };
