@@ -75,13 +75,11 @@ namespace parser
 
         qi::rule<   Iterator,   std::string()> data_name;
 
-        qi::rule<   Iterator,   void(oid_identifier &)> identifier_pair;
+        qi::rule<   Iterator,   void()> identifier_pair;
 
-        qi::rule<   Iterator,   void(EventDescriptorBuilder &), 
-            locals< EventDescriptorData,oid_identifier> > event_data_line;
+        qi::rule<   Iterator,   void()> event_data_line;
 
-        qi::rule<   Iterator, void(NamespaceDescriptorBuilder &),
-            locals< EventDescriptorBuilder, oid_identifier> > event_descriptor;
+        qi::rule<   Iterator, void()> event_descriptor;
                                     
 
         Rules()
@@ -93,24 +91,21 @@ namespace parser
             identifier_pair.name("Data identifier pair (ordinal:name)");
 
             identifier_pair =
-                lexeme[int_ [ bind(&oid_identifier::ordinal,_r1) = _1] 
-                > ':' > data_name [ bind(&oid_identifier::key,_r1) = _1]];
+                lexeme[int_  > ':' > data_name];
             
             event_data_line = 
                 -(  no_case[lit("optional")]
-                        [bind(&EventDescriptorData::qualifier,_a)= ENTRY_OPTIONAL] 
                     | no_case[lit("required")]
-                        [bind(&EventDescriptorData::qualifier, _a) = ENTRY_REQUIRED]
                 )
-                >> identifier_pair(_b)
-                > no_case[ swat_types [bind(&EventDescriptorData::type,_a) = _1]]
-                > char_(';') [ bind( &EventDescriptorBuilder::AddEventDescriptorLine, _r1,_b,_a,_pass) ];
+                >> identifier_pair
+                > no_case[ swat_types]
+                > char_(';');
                 
             event_descriptor = 
                 no_case[lit("event")]
-                > identifier_pair(_b) [ bind(&EventDescriptorBuilder::Init,_a,_b,_r1,_pass) ]
+                > identifier_pair 
                 > char_('{')
-                > *(event_data_line(_a))
+                > *(event_data_line)
                 > char_('}')
             ;
         }
