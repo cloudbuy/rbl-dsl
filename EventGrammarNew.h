@@ -107,7 +107,11 @@ namespace parser
         qi::rule<   Iterator, 
                     void(MarshallNamespaceDescriptorBuilder &), 
                     locals<Oid, MarshallEventDescriptorBuilder>,
-                    Skipper> event_descriptor;
+                    Skipper > event_descriptor;
+        
+        qi::rule<   Iterator,
+                    void(MarshallNamespaceDescriptorBuilder &),
+                    Skipper > namespace_descriptor;
 
         
         CompoundRules()
@@ -131,6 +135,15 @@ namespace parser
                 >   char_('}')  [   bind(&MarshallNamespaceDescriptorBuilder::
                                         AddEventDescriptor,_r1,_b,_pass) ]
             ;
+            
+            namespace_descriptor =
+                no_case[ lit("namespace")]
+                > identifier_rules.valid_char_str 
+                    [   bind(&MarshallNamespaceDescriptorBuilder::
+                            set_name,_r1,_1)]
+                > char_('{')
+                > *( event_descriptor(_r1))
+                > char_('}'); 
         }
     };
 

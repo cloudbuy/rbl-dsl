@@ -128,6 +128,9 @@ inline const std::string & MarshallNamespaceDescriptor::name() const
     { return name_; }
 
 ///////////////////////////////////////////////////////////////////////////////
+inline MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder()
+    : name_(),events() { }
+
 inline MarshallNamespaceDescriptorBuilder::MarshallNamespaceDescriptorBuilder
     (const std::string & s) : name_(s)  { }
 
@@ -150,7 +153,8 @@ inline MarshallNamespaceDescriptorBuilder::operator
 
 inline const std::string & MarshallNamespaceDescriptorBuilder::name() const
     { return name_; }
-
+inline void MarshallNamespaceDescriptorBuilder::set_name(std::string & _name)
+    { name_ = _name; }
 inline const OP_RESPONSE MarshallNamespaceDescriptorBuilder::ContainsEventIdentifier
     (const Oid & id) const{ return events.ContainsEither(id); }
 ///////////////////////////////////////////////////////////////////////////////

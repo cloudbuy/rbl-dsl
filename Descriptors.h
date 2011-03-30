@@ -183,7 +183,7 @@ namespace event_model
     {
     public:
         typedef ContainerBuilder<MarshallEDC> EventDescriptorContainer;
-
+        MarshallNamespaceDescriptorBuilder(); 
         MarshallNamespaceDescriptorBuilder(const std::string &);
 
         void AddEventDescriptor( const MarshallEventDescriptorBuilder & medb, 
@@ -192,6 +192,7 @@ namespace event_model
         operator MarshallNamespaceDescriptor() const;
 
         const std::string & name() const ;
+        void set_name(std::string & _name);
         const OP_RESPONSE ContainsEventIdentifier(const Oid & id) const;
         
         EventDescriptorContainer events;
