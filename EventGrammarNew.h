@@ -42,9 +42,9 @@ namespace parser
     using qi::eol;
     using qi::_pass;
 
-    struct swat_types_ : qi::symbols<char, unsigned>
+    struct MarshallTypes : qi::symbols<char, VALUE_TYPE>
     {
-        swat_types_()
+        MarshallTypes()
         {
             using namespace event_model;
 
@@ -92,6 +92,31 @@ namespace parser
             ; 
         } 
     };
+
+    template<typename Iterator, typename Skipper>
+    struct CompoundRules
+    {
+        MarshallTypes marshall_types; 
+        IdentifierRules<Iterator> identifier_rules;    
+    
+        qi::rule<   Iterator, 
+                    void(MarshallEventDescriptorBuilder &), 
+                    locals<Oid, EventTypeDescriptor>,
+                    Skipper> event_type_line;
+        
+        CompoundRules()
+        { 
+            event_type_line =
+                eps [bind(&EventTypeDescriptor::set_is_primitive,_b,true)] 
+                >> -(  no_case[lit("optional")[bind(&EventTypeDescriptor::set_qualifier,_b,ENTRY_OPTIONAL) ]]
+                        | no_case[lit("required")[bind(&EventTypeDescriptor::set_qualifier,_b,ENTRY_REQUIRED)]]
+                    )
+                >> identifier_rules.ordinal_string_identifier(_a)
+                > no_case[ marshall_types [bind(&EventTypeDescriptor::set_type,_b,_1)] ]
+                > char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r1,_a,_b,_pass)]; 
+        }
+    };
+
     /* 
     template<typename Iterator>
     struct Rules

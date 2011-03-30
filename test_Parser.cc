@@ -35,8 +35,8 @@ TEST(parser_test, identifier_pair)
     parser::IdentifierRules<c_s_it> rules;
     
     std::string identifier_pair_string = "1:hassan";
-    c_s_it beg = identifier_pair_string.begin();
-    c_s_it end = identifier_pair_string.end();
+    c_s_it      beg = identifier_pair_string.begin();
+    c_s_it      end = identifier_pair_string.end();
     
     Oid oid;    
 
@@ -45,26 +45,45 @@ TEST(parser_test, identifier_pair)
 
     ASSERT_EQ(oid.ordinal(),  1);
     ASSERT_EQ(oid.name(),"hassan") << oid.name();
-    //ASSERT_ANY_THROW( boost::spirit::qi::parse(beg,end,rules.identifier_pair));
+    
+    identifier_pair_string = "1hassan";
+    beg = identifier_pair_string.begin();
+    end = identifier_pair_string.end();
+    ASSERT_ANY_THROW( boost::spirit::qi::parse(beg,end,rules.ordinal_string_identifier(phoenix::ref(oid))));
 }
-/*
+
 TEST(parser_test, event_data_line)
 {
-    parser::Rules<c_s_it> rules;
-    
-    std::string data_line_string = "OPTIONAL 0:hassan INT4;";
+    parser::CompoundRules<c_s_it, ascii::space_type> compound_rules;
+     
+    std::string data_line_string = "OPTIONAL 1:hassan INT4;";
     c_s_it beg = data_line_string.begin();
     c_s_it end = data_line_string.end();
-    
-    bool res = qi::phrase_parse(beg,end,rules.event_data_line, ascii::space);
+        
+    bool res=true;
+    MarshallNamespaceDescriptorBuilder mndb("hassan");
+    MarshallEventDescriptorBuilder medb;
+    medb.Init( Oid("name", 0), mndb, res);
+    ASSERT_TRUE(res); 
+
+    res = qi::phrase_parse(
+        beg, end, 
+        compound_rules.event_type_line(phoenix::ref(medb)),
+        ascii::space
+    );
     ASSERT_TRUE(res);
+    
+    ASSERT_TRUE(medb.types[0] == NULL);
+    ASSERT_TRUE(medb.types[1] != NULL);
+    ASSERT_TRUE(medb.types[2] == NULL);
 
-    // data_line_string = "0hassan";
-    // beg = data_line_string.begin();
-    // end = data_line_string.end();
+    ASSERT_EQ(medb.types[1]->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(medb.types[1]->is_primitive(),true);
+    ASSERT_EQ(medb.types[1]->type(), VALUE_INT4);
 
+    ASSERT_EQ(medb.types.EntryAtordinal(1)->Id().name(), "hassan");
 }
-*/
+
 int main(int argc,char ** argv)
 {
     ::testing::InitGoogleTest(&argc,argv);
