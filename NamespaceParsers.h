@@ -1,18 +1,31 @@
 #ifndef _EM_NAMESPACE_PARSERS
 #define _EM_NAMESPACE_PARSERS
+#include "EventModelGrammar.h"
+#include <boost/shared_ptr.hpp>
+
+#include <string>
+
+namespace event_model
+{
+namespace parser
+{
+
+typedef boost::shared_ptr<MarshallNamespaceDescriptor> 
+    MarshallNamespaceDescriptor_shptr;
 
 class NamespaceFileParser
 {
 public:
-    NamespaceParser(const std::string & filename);
+    NamespaceFileParser(const std::string & filename);
     bool CanParse();
     bool Parse();
-    NamespaceDescriptor_shptr GetNamespaceDescriptor();
-
 private:
-    const std::string _filepath;
+    const std::string filepath_;
     bool canParse_;
     const char * error_message_;
+    MarshallNamespaceDescriptor_shptr mnd_;
 };
 
+}
+}
 #endif 
