@@ -43,6 +43,10 @@ namespace event_model
         const bool is_primitive() const;
         const EVENT_DESCRIPTOR_QUALIFIER qualifier() const;    
         const VALUE_TYPE type() const;
+        
+        void set_is_primitive(bool _is_primitive);
+        void set_qualifier(EVENT_DESCRIPTOR_QUALIFIER _qualifier);
+        void set_type(VALUE_TYPE _type);
  
         void serialize(SF::Archive & ar);
     private:

@@ -1,13 +1,3 @@
-inline const bool 
-EventTypeDescriptor::is_primitive() const {return primitive_; } 
-
-inline const EVENT_DESCRIPTOR_QUALIFIER 
-EventTypeDescriptor::qualifier() const
-    { return qualifier_; }
-
-inline const VALUE_TYPE 
-EventTypeDescriptor::type() const { return type_; }     
-
 inline EventTypeDescriptor::EventTypeDescriptor()
     :   qualifier_(ENTRY_UNINITIALIZED), 
         type_(VALUE_UNINITIALIZED), 
@@ -20,6 +10,32 @@ inline EventTypeDescriptor::EventTypeDescriptor(
 :   qualifier_(_qualifier),
     type_(_type),
     primitive_(primitive_in) {}
+
+inline const bool 
+EventTypeDescriptor::is_primitive() const {return primitive_; } 
+
+inline const EVENT_DESCRIPTOR_QUALIFIER 
+EventTypeDescriptor::qualifier() const
+    { return qualifier_; }
+
+inline const VALUE_TYPE 
+EventTypeDescriptor::type() const { return type_; }     
+
+
+inline void EventTypeDescriptor::set_is_primitive(bool _is_primitive)
+{
+    primitive_ = _is_primitive;
+}
+inline void EventTypeDescriptor::set_qualifier
+    (EVENT_DESCRIPTOR_QUALIFIER _qualifier)
+{
+    qualifier_ = _qualifier;
+}
+inline void EventTypeDescriptor::set_type(VALUE_TYPE _type)
+{
+    type_ = _type;
+}
+
 
 inline void EventTypeDescriptor::serialize(SF::Archive & ar)
 {
