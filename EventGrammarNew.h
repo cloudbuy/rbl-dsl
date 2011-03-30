@@ -103,6 +103,12 @@ namespace parser
                     void(MarshallEventDescriptorBuilder &), 
                     locals<Oid, EventTypeDescriptor>,
                     Skipper> event_type_line;
+
+        qi::rule<   Iterator, 
+                    void(MarshallNamespaceDescriptorBuilder &), 
+                    locals<Oid, MarshallEventDescriptorBuilder>,
+                    Skipper> event_descriptor;
+
         
         CompoundRules()
         { 
@@ -113,7 +119,18 @@ namespace parser
                     )
                 >> identifier_rules.ordinal_string_identifier(_a)
                 > no_case[ marshall_types [bind(&EventTypeDescriptor::set_type,_b,_1)] ]
-                > char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r1,_a,_b,_pass)]; 
+                > char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r1,_a,_b,_pass)];
+       
+            event_descriptor = 
+                    no_case[ lit("event")]
+                >   identifier_rules.ordinal_string_identifier(_a)
+                        [   bind(&MarshallEventDescriptorBuilder::
+                                Init,_b,_a,_r1,_pass)]
+                >   char_('{')
+                >   *( event_type_line(_b))
+                >   char_('}')  [   bind(&MarshallNamespaceDescriptorBuilder::
+                                        AddEventDescriptor,_r1,_b,_pass) ]
+            ;
         }
     };
 

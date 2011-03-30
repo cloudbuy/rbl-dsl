@@ -84,6 +84,48 @@ TEST(parser_test, event_data_line)
     ASSERT_EQ(medb.types.EntryAtordinal(1)->Id().name(), "hassan");
 }
 
+TEST(parser_test, event_descriptor)
+{
+    parser::CompoundRules<c_s_it, ascii::space_type> compound_rules;
+    
+    std::string data_line_string = "EVENT 1:hassan              \
+                                    {                           \
+                                        OPTIONAL 1:hassan INT4; \
+                                        REQUIRED 2:monkeys INT8;\
+                                    }";
+    c_s_it beg = data_line_string.begin();
+    c_s_it end = data_line_string.end();
+        
+    MarshallNamespaceDescriptorBuilder mndb("hassan");
+    
+    bool res =  qi::phrase_parse(
+                    beg,end,
+                    compound_rules.event_descriptor(phoenix::ref(mndb)),
+                    ascii::space
+                );
+    ASSERT_TRUE(res);
+    ASSERT_TRUE(mndb.events[1] != NULL);
+    EXPECT_EQ(mndb.events.occupied_size(),1);
+    EXPECT_EQ(mndb.events.size(), 2);
+    
+    ASSERT_TRUE(mndb.events[1]->types[0] == NULL);
+    ASSERT_TRUE(mndb.events[1]->types[1] != NULL); 
+    ASSERT_TRUE(mndb.events[1]->types[2] != NULL);
+    
+    EXPECT_EQ( mndb.events[1]->types.occupied_size(), 2);
+    EXPECT_EQ( mndb.events[1]->types.size(),3);
+    
+    EXPECT_EQ( mndb.events[1]->types.EntryAtordinal(1)->name(), "hassan");
+    EXPECT_EQ( mndb.events[1]->types[1]->is_primitive(), true);
+    EXPECT_EQ( mndb.events[1]->types[1]->qualifier(), ENTRY_OPTIONAL);
+    EXPECT_EQ( mndb.events[1]->types[1]->type(), VALUE_INT4);
+    
+    EXPECT_EQ( mndb.events[1]->types.EntryAtordinal(2)->name(), "monkeys");
+    EXPECT_EQ( mndb.events[1]->types[2]->is_primitive(), true);
+    EXPECT_EQ( mndb.events[1]->types[2]->qualifier(), ENTRY_REQUIRED);
+    EXPECT_EQ( mndb.events[1]->types[2]->type(), VALUE_INT8);
+}
+
 int main(int argc,char ** argv)
 {
     ::testing::InitGoogleTest(&argc,argv);
