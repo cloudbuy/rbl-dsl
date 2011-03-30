@@ -54,8 +54,9 @@ TEST(parser_test, identifier_pair)
 
 TEST(parser_test, event_data_line)
 {
-    parser::CompoundRules<c_s_it, ascii::space_type> compound_rules;
-     
+    parser::skipper<c_s_it> skipper;
+    parser::CompoundRules<c_s_it, parser::skipper<c_s_it> > compound_rules;
+         
     std::string data_line_string = "OPTIONAL 1:hassan INT4;";
     c_s_it beg = data_line_string.begin();
     c_s_it end = data_line_string.end();
@@ -69,7 +70,7 @@ TEST(parser_test, event_data_line)
     res = qi::phrase_parse(
         beg, end, 
         compound_rules.event_type_line(phoenix::ref(medb)),
-        ascii::space
+        skipper 
     );
     ASSERT_TRUE(res);
     
@@ -86,11 +87,14 @@ TEST(parser_test, event_data_line)
 
 TEST(parser_test, event_descriptor)
 {
-    parser::CompoundRules<c_s_it, ascii::space_type> compound_rules;
-    
+    parser::skipper<c_s_it> skipper;
+    parser::CompoundRules<c_s_it, parser::skipper<c_s_it> > compound_rules;
+
     std::string data_line_string = "EVENT 1:hassan              \
+                                    //comment               \n  \
                                     {                           \
                                         OPTIONAL 1:hassan INT4; \
+                                    // comment              \n  \
                                         REQUIRED 2:monkeys INT8;\
                                     }";
     c_s_it beg = data_line_string.begin();
@@ -101,7 +105,7 @@ TEST(parser_test, event_descriptor)
     bool res =  qi::phrase_parse(
                     beg,end,
                     compound_rules.event_descriptor(phoenix::ref(mndb)),
-                    ascii::space
+                   skipper 
                 );
     ASSERT_TRUE(res);
     ASSERT_TRUE(mndb.events[1] != NULL);
@@ -128,15 +132,18 @@ TEST(parser_test, event_descriptor)
 
 TEST(parser_test, namespace_descriptor)
 {
-    parser::CompoundRules<c_s_it, ascii::space_type> compound_rules;
+    parser::skipper<c_s_it> skipper;
+    parser::CompoundRules<c_s_it, parser::skipper<c_s_it> > compound_rules;
     
     std::string data_line_string = "namespace baboons               \
+                                    //comment \n                    \
                                     {                               \
-                                        EVENT 1:hassan              \
-                                        {                           \
+                                        EVENT 1:hassan //comment \n \
+                                        { //comment \n              \
                                             OPTIONAL 1:hassan INT4; \
                                             REQUIRED 2:monkeys INT8;\
                                         }                           \
+                                        //comment   \n              \
                                         EVENT 6:gorilla             \
                                         {                           \
                                             OPTIONAL 1:hassan INT4; \
@@ -151,7 +158,7 @@ TEST(parser_test, namespace_descriptor)
     bool res =  qi::phrase_parse(
                     beg,end,
                     compound_rules.namespace_descriptor(phoenix::ref(mndb)),
-                    ascii::space
+                    skipper 
                 );
     ASSERT_TRUE(res);
     ASSERT_TRUE(mndb.events[1] != NULL);
