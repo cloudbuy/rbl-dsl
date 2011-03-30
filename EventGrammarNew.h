@@ -146,48 +146,6 @@ namespace parser
                 > char_('}'); 
         }
     };
-
-    /* 
-    template<typename Iterator>
-    struct Rules
-    {
-        
-        swat_types_ swat_types;
-
-        
-        
-        qi::rule<   Iterator,   void(),ascii::space_type> event_data_line;
-
-        qi::rule<   Iterator, void()> event_descriptor;
-                                    
-
-        Rules()
-        {
-                        
-        
-
-            identifier_pair.name("Data identifier pair (ordinal:name)");
-            identifier_pair =
-                int_  > ':' > valid_name;
-            event_data_line = 
-                -(  no_case[lit("optional")]
-                    | no_case[lit("required")]
-                )
-                >> identifier_pair
-                > no_case[ swat_types]
-                > char_(';');
-                
-            event_descriptor = 
-                no_case[lit("event")]
-                > identifier_pair 
-                > char_('{')
-                > *(event_data_line)
-                > char_('}')
-            ;
-        
-        }
-    };
-    */
 }
 }
 #endif
