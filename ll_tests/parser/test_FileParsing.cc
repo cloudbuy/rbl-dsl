@@ -36,7 +36,7 @@ TEST(FileParserTesting, parse_correct_file)
     
      
     ASSERT_TRUE(file_parser.Parse());
-    parser::MarshallNamespaceDescriptor_shptr mnd_s = 
+    MarshallNamespaceDescriptor_shptr mnd_s = 
         file_parser.get_descriptor();
 
     ASSERT_EQ(mnd_s->name(), "baboons");

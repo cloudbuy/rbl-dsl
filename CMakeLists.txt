@@ -2,9 +2,21 @@ SET(    PARSER_COMPILE_FILES
             src/parser/Descriptors.cc
             src/parser/NamespaceParsers.cc )
 
+SET( SERVER_COMPILE_FILES
+        src/server/RelayToServer.cc)
+
+#SET( SERVER_COMPILE_FILES
+ #   src/server/main.cc)
+
 INCLUDE_DIRECTORIES("include")
 
 ADD_LIBRARY(    parser STATIC ${PARSER_COMPILE_FILES} )
+ADD_LIBRARY(    server STATIC ${SERVER_COMPILE_FILES})
+
+ADD_EXECUTABLE( test_server "src/server/test_server.cc")
+TARGET_LINK_LIBRARIES( test_server server parser ${Boost_LIBRARIES})
+
+
 
 ADD_EXECUTABLE( test_Grammar_ "ll_tests/parser/test_Grammar.cc")
 TARGET_LINK_LIBRARIES(test_Grammar_ parser ${RCF_LIB} ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread)

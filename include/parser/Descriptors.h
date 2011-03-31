@@ -5,6 +5,7 @@
 #include <RCF/Idl.hpp>
 #include <SF/Archive.hpp>
 #include "detail/OidContainer.h"
+#include <boost/shared_ptr.hpp>
 
 namespace event_model
 {
@@ -199,7 +200,11 @@ namespace event_model
     private:
         std::string name_;
     };
-///////////////////////////////////////////////////////////////////////////////   
+///////////////////////////////////////////////////////////////////////////////
+    typedef boost::shared_ptr<MarshallNamespaceDescriptor> 
+    MarshallNamespaceDescriptor_shptr;
+
+
     #include "detail/Descriptors_inline.h"
 }
 #endif
