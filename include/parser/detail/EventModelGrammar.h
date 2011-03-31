@@ -75,16 +75,14 @@ namespace parser
     struct IdentifierRules
     {
         qi::rule< Iterator,   std::string()> valid_char_str;
-        qi::rule< Iterator, std::string() > string_identifier;
         qi::rule< Iterator, void(Oid &)> ordinal_string_identifier;
 
         IdentifierRules()
         {
-            valid_char_str.name("Data Name Identifier");
+            valid_char_str.name("identifier");
             valid_char_str = + (char_("a","z") | char_("A","Z") | char_('_'));
-            
-            string_identifier = valid_char_str;
-            
+        
+            ordinal_string_identifier.name("ordinal-string identifier");
             ordinal_string_identifier = 
                 int_[bind(&Oid::set_ordinal,_r1,_1)] 
                 > ':' 
@@ -116,6 +114,7 @@ namespace parser
         
         CompoundRules()
         { 
+            event_type_line.name("event type entry line");
             event_type_line =
                 eps [bind(&EventTypeDescriptor::set_is_primitive,_b,true)] 
                 >> -(  no_case[lit("optional")[bind(&EventTypeDescriptor::set_qualifier,_b,ENTRY_OPTIONAL) ]]
@@ -124,7 +123,8 @@ namespace parser
                 >> identifier_rules.ordinal_string_identifier(_a)
                 > no_case[ marshall_types [bind(&EventTypeDescriptor::set_type,_b,_1)] ]
                 > char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r1,_a,_b,_pass)];
-       
+            
+            event_descriptor.name("event descriptor"); 
             event_descriptor = 
                     no_case[ lit("event")]
                 >   identifier_rules.ordinal_string_identifier(_a)

@@ -25,3 +25,5 @@ ADD_TEST(test_FileParsing test_FileParsing_ )
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_data)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/ll_tests/parser/test_data/namespace_correct  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test_data)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/ll_tests/parser/test_data/namespace_failbrace  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test_data)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/ll_tests/parser/test_data/namespace_spacein_id  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test_data)

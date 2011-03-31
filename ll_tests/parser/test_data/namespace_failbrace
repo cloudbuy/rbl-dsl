@@ -1,0 +1,16 @@
+namespace baboons               
+//comment
+                               
+    EVENT 1:hassan //comment
+    { //comment
+        OPTIONAL 1:hassan INT4; 
+        REQUIRED 2:monkeys INT8;
+    }                           
+    //comment
+    EVENT 6:gorilla             
+    {                           
+        OPTIONAL 1:hassan INT4; 
+        REQUIRED 2:monkeys INT8;
+    }
+}
+

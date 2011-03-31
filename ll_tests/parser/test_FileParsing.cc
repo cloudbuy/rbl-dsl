@@ -77,6 +77,37 @@ TEST(FileParserTesting, parse_correct_file)
     EXPECT_EQ( (*mnd_s).events[6]->types[2]->type(), VALUE_INT8);
 }
 
+TEST(FileParserTesting, parse_incorrect_files)
+{
+    std::string correct_namespace_file = test_data_dir;
+    correct_namespace_file.append("/namespace_failbrace");
+ 
+    parser::NamespaceFileParser file_parser(correct_namespace_file);
+    ASSERT_TRUE(file_parser.CanParse());
+    
+    try { ASSERT_FALSE(file_parser.Parse());}
+    catch(std::runtime_error & e)
+    {
+        std::cout << e.what();
+    }
+}
+
+TEST(FileParserTesting, parse_spacein_id)
+{
+    std::string correct_namespace_file = test_data_dir;
+    correct_namespace_file.append("/namespace_spacein_id");
+ 
+    parser::NamespaceFileParser file_parser(correct_namespace_file);
+    ASSERT_TRUE(file_parser.CanParse());
+    
+    try { ASSERT_FALSE(file_parser.Parse());}
+    catch(std::runtime_error & e)
+    {
+        std::cout << e.what();
+    }
+}
+
+
 int main(int argc,char ** argv)
 {
     namespace filesystem = boost::filesystem;

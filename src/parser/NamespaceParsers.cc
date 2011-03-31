@@ -2,6 +2,8 @@
 #define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem.hpp>
 #include <fstream>
+#include <iostream>
+#include <iomanip>
 #include <boost/spirit/include/support_multi_pass.hpp>
 #include <boost/spirit/include/classic_position_iterator.hpp>
 
@@ -83,27 +85,27 @@ namespace parser
         }
         catch (const expectation_failure<pos_iterator_type>& e)
         {
-            /*
+            
             const classic::file_position_base<std::string>& pos =
                 e.first.get_position();
             std::stringstream msg;
-            if(_creator.HasSpecificationError())
+/*            if(_creator.HasSpecificationError())
                 msg <<
-                 _creator.ErrorMsg() <<
+                 //_creator.ErrorMsg() <<
                 "\nError at : "<< pos.file << " line " << pos.line
                 << " column " << pos.column << std::endl << "'"
                 << e.first.get_currentline() << "'" << std::endl
                 << std::setw(pos.column) << " " << "^- here";
 
-            else
-            msg <<
-                "parse error at file " << pos.file << " line " << pos.line
+            else*/
+            msg << "parse error at file " << pos.file << " line " << pos.line
                 << " column " << pos.column << std::endl << "'"
                 << e.first.get_currentline() << "'" << std::endl
-                << std::setw(pos.column) << " " << "^- here";
-            */
-            //throw std::runtime_error(msg.str());
-            return false;
+                << std::setw(pos.column) << " " << "^- here" <<
+                " - expectation: " << e.what_ << std::endl;
+
+            
+            throw std::runtime_error(msg.str());
         }
 
         return true;
