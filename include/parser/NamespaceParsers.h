@@ -1,6 +1,6 @@
 #ifndef _EM_NAMESPACE_PARSERS
 #define _EM_NAMESPACE_PARSERS
-#include "EventModelGrammar.h"
+#include "detail/EventModelGrammar.h"
 #include <boost/shared_ptr.hpp>
 
 #include <string>

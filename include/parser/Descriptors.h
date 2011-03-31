@@ -4,7 +4,7 @@
 #include <boost/cstdint.hpp>
 #include <RCF/Idl.hpp>
 #include <SF/Archive.hpp>
-#include "OidContainer.h"
+#include "detail/OidContainer.h"
 
 namespace event_model
 {
@@ -200,6 +200,6 @@ namespace event_model
         std::string name_;
     };
 ///////////////////////////////////////////////////////////////////////////////   
-    #include "Descriptors_inline.h"
+    #include "detail/Descriptors_inline.h"
 }
 #endif

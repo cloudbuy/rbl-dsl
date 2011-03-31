@@ -1,4 +1,4 @@
-#include "EventModelGrammar.h"
+#include "parser/detail/EventModelGrammar.h"
 #include <gtest/gtest.h>
 #include <string>
 
