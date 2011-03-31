@@ -2,7 +2,10 @@
 #include <server/RelayToServer.h>
 #define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem.hpp>
-
+#include <RCF/Idl.hpp>
+#include <RCF/RcfServer.hpp>
+#include <RCF/TcpEndpoint.hpp>
+#include <iostream>
 
 std::string test_data_dir;
 
@@ -21,4 +24,13 @@ int main()
 
     NamespaceRepository nfp;
     nfp.AddNamespaceFromFile(test_file);
+    
+    RCF::RcfServer server( RCF::TcpEndpoint(50001));
+    server.bind<I_NamespaceRepository>(nfp);
+    server.start();
+
+    std::cout << "Test Server Running (enter = exit)" << std::endl;
+    std::cin.get();
+    
+    return 0;
 }

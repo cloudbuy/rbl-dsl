@@ -14,7 +14,7 @@ ADD_LIBRARY(    parser STATIC ${PARSER_COMPILE_FILES} )
 ADD_LIBRARY(    server STATIC ${SERVER_COMPILE_FILES})
 
 ADD_EXECUTABLE( test_server "src/server/test_server.cc")
-TARGET_LINK_LIBRARIES( test_server server parser ${Boost_LIBRARIES})
+TARGET_LINK_LIBRARIES( test_server server parser  ${RCF_LIB} ${Boost_LIBRARIES} -lpthread)
 
 
 
