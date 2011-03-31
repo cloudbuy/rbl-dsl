@@ -23,6 +23,7 @@ public:
     bool CanParse() const;
     bool Parse();
     const char * error() const;
+    const  MarshallNamespaceDescriptor_shptr get_descriptor() const ;
 private:
     void test_file_();
     std::string filepath_;

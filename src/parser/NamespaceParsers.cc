@@ -70,7 +70,6 @@ namespace parser
         namespace qi = boost::spirit::qi;
       
         MarshallNamespaceDescriptorBuilder mndb;        
-  
         try
         {
             qi::phrase_parse(
@@ -78,6 +77,9 @@ namespace parser
                 namespace_compound_rules.namespace_descriptor(ref(mndb)),
                 skipper
             );
+        
+            mnd_.reset(new MarshallNamespaceDescriptor(
+                mndb.name(), mndb.events));   
         }
         catch (const expectation_failure<pos_iterator_type>& e)
         {
@@ -101,6 +103,7 @@ namespace parser
                 << std::setw(pos.column) << " " << "^- here";
             */
             //throw std::runtime_error(msg.str());
+            return false;
         }
 
         return true;
@@ -110,5 +113,10 @@ namespace parser
     {
         return error_message_;
     } 
+    const  MarshallNamespaceDescriptor_shptr 
+    NamespaceFileParser::get_descriptor() const
+    {
+        return mnd_;
+    }
 }
 }
