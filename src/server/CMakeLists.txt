@@ -1,0 +1,4 @@
+SET( SERVER_COMPILE_FILES
+        ServerToRelay.cc)
+
+ADD_LIBRARY( server SHARED ${SERVER_COMPILE_FILES})
