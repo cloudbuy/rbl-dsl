@@ -1,5 +1,5 @@
 #include <interface/RelayToServerInterface.h>
-#include <server/RelayToServer.h>
+#include <server/ServerToRelay.h>
 #define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem.hpp>
 #include <RCF/Idl.hpp>

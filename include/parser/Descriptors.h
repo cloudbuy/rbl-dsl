@@ -2,8 +2,6 @@
 #define _EM_DESCRIPTORS_H
 
 #include <boost/cstdint.hpp>
-#include <RCF/Idl.hpp>
-#include <SF/Archive.hpp>
 #include "detail/OidContainer.h"
 #include <boost/shared_ptr.hpp>
 
