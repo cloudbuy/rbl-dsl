@@ -1,7 +1,3 @@
-#include "parser/detail/EventModelGrammar.h"
-#include <gtest/gtest.h>
-#include <string>
-
 typedef std::string::iterator c_s_it;
 
 using namespace event_model;
@@ -198,8 +194,3 @@ TEST(grammar_test, namespace_descriptor)
 
 }
 
-int main(int argc,char ** argv)
-{
-    ::testing::InitGoogleTest(&argc,argv);
-    return RUN_ALL_TESTS();
-}

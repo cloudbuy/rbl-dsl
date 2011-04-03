@@ -1,15 +1,6 @@
-#include "parser/detail/OidContainer.h"
-#include <gtest/gtest.h>
-#include <stdexcept>
-#include <sstream>
-#include <SF/OBinaryStream.hpp>
-#include <SF/IBinaryStream.hpp>
-#include <boost/cstdint.hpp>
-
 using namespace event_model::primitives;
 
 typedef OidConstrainedString<char,8> oid_str_type;
-
 
 TEST( oid_container_tests, constrained_str_comparison_op_tests)
 {
@@ -250,10 +241,4 @@ TEST(oid_container_tests , exchaustive_container_tests)
     ASSERT_TRUE( container2.EntryAtordinal(4) == NULL);
    
     // perhaps a operator == is needed ? 
-}
-
-int main(int argc, char ** argv)
-{
-    ::testing::InitGoogleTest(&argc,argv);
-    return RUN_ALL_TESTS();
 }

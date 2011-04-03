@@ -1,17 +1,3 @@
-#include "parser/Descriptors.h"
-#include <gtest/gtest.h>
-#include <stdexcept>
-#include <sstream>
-#include <SF/OBinaryStream.hpp>
-#include <SF/IBinaryStream.hpp>
-#include <boost/cstdint.hpp>
-
-#include <typeinfo>
-
-using namespace event_model;
-
-
-// test the serialization of the event type descriptor
 TEST(descriptor_building_and_serialization, event_entry_serialization_test)
 {
     EventTypeDescriptor etd_default_constructed;
@@ -757,8 +743,4 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
 
 }
 
-int main(int argc,char ** argv)
-{
-    ::testing::InitGoogleTest(&argc,argv);
-    return RUN_ALL_TESTS();
-}
+
