@@ -11,7 +11,7 @@ using namespace event_model::primitives;
 typedef OidConstrainedString<char,8> oid_str_type;
 
 
-TEST(OidConstrainedString_test, construction_tests)
+TEST( oid_container_tests, constrained_str_comparison_op_tests)
 {
     ASSERT_THROW(oid_str_type("lalalala"),std::length_error);
     ASSERT_NO_THROW(oid_str_type("lalalal"));
@@ -36,7 +36,7 @@ TEST(OidConstrainedString_test, construction_tests)
     ASSERT_TRUE(str1==std::string("gassan"));
 }
 
-TEST(OidConstrainedString_test, serialization_tests)
+TEST( oid_container_tests , str_serialization_tests)
 {
     std::stringstream ss;
     SF::OBinaryStream os(ss);
@@ -53,7 +53,7 @@ TEST(OidConstrainedString_test, serialization_tests)
 
 typedef OidType<oid_str_type, boost::uint8_t> oid;
 
-TEST(oid_identifier_test, serialization_tests)
+TEST( oid_container_tests , oid_serialization_tests)
 {
     std::stringstream ss;
     SF::OBinaryStream os(ss);
@@ -82,7 +82,7 @@ struct x
 typedef ContainerBuilder< OidContainer<oid,x> > test_container;
 
 
-TEST(oid_entry_test, serialization_tests)
+TEST(oid_container_tests, container_entry_test)
 {
     test_container::entry_type et1(oid("hassan",0),1);
         
@@ -99,7 +99,7 @@ TEST(oid_entry_test, serialization_tests)
     ASSERT_TRUE(et1==et2);
 }
 
-TEST(OidContainer_test, serialization_tests)
+TEST(oid_container_tests , exchaustive_container_tests)
 {
     test_container container;
    

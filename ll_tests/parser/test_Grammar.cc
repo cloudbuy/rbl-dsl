@@ -9,7 +9,7 @@ namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
 namespace phoenix = boost::phoenix;
 
-TEST(parser_test, valid_name)
+TEST(grammar_test, valid_name)
 {
     parser::IdentifierRules<c_s_it> rules;
     
@@ -30,7 +30,7 @@ TEST(parser_test, valid_name)
     ASSERT_FALSE(res);
 }
 
-TEST(parser_test, identifier_pair)
+TEST(grammar_test, identifier_pair)
 {
     parser::IdentifierRules<c_s_it> rules;
     
@@ -52,7 +52,7 @@ TEST(parser_test, identifier_pair)
     ASSERT_ANY_THROW( boost::spirit::qi::parse(beg,end,rules.ordinal_string_identifier(phoenix::ref(oid))));
 }
 
-TEST(parser_test, event_data_line)
+TEST(grammar_test, event_data_line)
 {
     parser::skipper<c_s_it> skipper;
     parser::CompoundRules<c_s_it, parser::skipper<c_s_it> > compound_rules;
@@ -85,7 +85,7 @@ TEST(parser_test, event_data_line)
     ASSERT_EQ(medb.types.EntryAtordinal(1)->Id().name(), "hassan");
 }
 
-TEST(parser_test, event_descriptor)
+TEST(grammar_test, event_descriptor)
 {
     parser::skipper<c_s_it> skipper;
     parser::CompoundRules<c_s_it, parser::skipper<c_s_it> > compound_rules;
@@ -130,7 +130,7 @@ TEST(parser_test, event_descriptor)
     EXPECT_EQ( mndb.events[1]->types[2]->type(), VALUE_INT8);
 }
 
-TEST(parser_test, namespace_descriptor)
+TEST(grammar_test, namespace_descriptor)
 {
     parser::skipper<c_s_it> skipper;
     parser::CompoundRules<c_s_it, parser::skipper<c_s_it> > compound_rules;
