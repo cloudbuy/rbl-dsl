@@ -74,5 +74,4 @@ file(MAKE_DIRECTORY TEST_DATA_DIR)
 
 
 ADD_SUBDIRECTORY(src modules)
-ADD_SUBDIRECTORY(ll_tests ll_tests)
 ADD_SUBDIRECTORY(tests)
