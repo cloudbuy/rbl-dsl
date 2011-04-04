@@ -4,6 +4,7 @@
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <event_model/Descriptors.h>
 
+
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_fusion.hpp>
 #include <boost/spirit/include/phoenix_stl.hpp>
@@ -41,22 +42,7 @@ namespace parser
     using qi::eol;
     using qi::_pass;
 
-    struct MarshallTypes : qi::symbols<char, VALUE_TYPE>
-    {
-        MarshallTypes()
-        {
-            using namespace event_model;
-
-            add
-                ("int", VALUE_INT4)
-                ("int4", VALUE_INT4)
-                ("int8", VALUE_INT8)
-                ("bigint", VALUE_INT8)
-                ("string", VALUE_STRING)
-            ;
-        }
-    };
-
+    
     template <typename Iterator>
         struct skipper : qi::grammar<Iterator>
         {

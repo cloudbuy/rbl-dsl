@@ -1,6 +1,6 @@
 #ifndef _EM_DESCRIPTORS_H
 #define _EM_DESCRIPTORS_H
-
+#include <event_model/Types.h>
 #include <boost/cstdint.hpp>
 #include "detail/OidContainer.h"
 #include <boost/shared_ptr.hpp>
@@ -13,14 +13,6 @@ namespace event_model
     typedef OidConstrainedString<char, 32> OidName;
     typedef OidType<OidName, boost::uint8_t> Oid;
     
-    enum VALUE_TYPE
-    {
-        VALUE_UNINITIALIZED,
-        VALUE_INT4,
-        VALUE_INT8,
-        VALUE_STRING
-    };
-
     enum EVENT_DESCRIPTOR_QUALIFIER
     {
         ENTRY_UNINITIALIZED = 0,
