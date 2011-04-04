@@ -22,9 +22,6 @@ ENDIF()
 
 SET(CMAKE_PREFIX_PATH ${GTEST_DIR};${BOOST_DIR};${CMAKE_PREFIX_PATH};${RCF_DIR};)
 find_package(GTest)
- 
-
-
 
 # Boost can autolink on windows
 IF(MSVC)

@@ -1,6 +1,5 @@
 #ifndef _SWAT_PARSER_DATA_ENTRY_H
 #define _SWAT_PARSER_DATA_ENTRY_H
-
 #include <boost/spirit/include/qi.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include "../Descriptors.h"
