@@ -2,7 +2,7 @@
 #define _RCF_INTERFACE_RELAY_TO_SERVER
 
 #include <RCF/Idl.hpp>
-#include <parser/Descriptors.h>
+#include <event_model/Descriptors.h>
 
 using event_model::RelayNamespaceDescriptor;
 

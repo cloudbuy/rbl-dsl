@@ -1,6 +1,6 @@
 #ifndef _EM_NAMESPACE_PARSERS
 #define _EM_NAMESPACE_PARSERS
-#include <parser/Descriptors.h>
+#include <event_model/Descriptors.h>
 
 #include <string>
 

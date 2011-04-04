@@ -1,5 +1,5 @@
 #include <interface/RelayToServerInterface.h>
-#include <parser/Descriptors.h>
+#include <event_model/Descriptors.h>
 #include <map>
 
 class NamespaceRepository
