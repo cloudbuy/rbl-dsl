@@ -94,7 +94,6 @@ namespace event_model
         operator RelayEventDescriptor() const;
 
         EventTypeContainer types;
-    
     };
 ///////////////////////////////////////////////////////////////////////////////
     class MarshallNamespaceDescriptorBuilder;
