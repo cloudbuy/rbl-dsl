@@ -1,11 +1,12 @@
 SET(    PARSER_COMPILE_FILES
             Descriptors.cc
-            NamespaceParsers.cc 
-            ../../include/parser/Descriptors.h
+            NamespaceParsers.cc
+            RowAndTable.cc
+            ../../include/event_model/Descriptors.h
             ../../include/parser/NamespaceParsers.h
-            ../../include/parser/detail/Descriptors_inline.h
+            ../../include/event_model/detail/Descriptors_inline.h
             ../../include/parser/detail/EventModelGrammar.h
-            ../../include/parser/detail/OidContainer.h)
+            ../../include/event_model/detail/OidContainer.h)
  
 
 ADD_LIBRARY(    parser SHARED ${PARSER_COMPILE_FILES} )
