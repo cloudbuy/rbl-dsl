@@ -1,6 +1,13 @@
 #ifndef _EM_TYPES_H
 #define _EM_TYPES_H
 #include <boost/spirit/include/qi_symbols.hpp>
+#include <boost/cstdint.hpp>
+#include <vector>
+#include <string>
+#include <boost/variant.hpp>
+
+using boost::uint32_t;
+using boost::uint64_t;
 
 namespace event_model
 {
