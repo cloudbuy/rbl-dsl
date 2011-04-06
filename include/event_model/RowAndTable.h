@@ -6,14 +6,33 @@
 
 namespace event_model
 {
-    typedef boost::variant< uint32_t, uint64_t, std::string> value_variant;
+    typedef boost::variant< int32_t, int64_t, std::string> value_variant;
     typedef std::vector<value_variant> value_variant_vector;
     typedef std::vector<std::string> vector_string;    
     typedef primitives::OidContainerEntryType<Oid,EventTypeContainer> table_descriptor;
     
     VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
-                            const uint32_t ordinal,bool & ok_);
- 
+                            const uint32_t ordinal);
+    
+    #define  ADD_ENTRY(TP,prefix)                                           \
+    void AddEntry_##prefix(      value_variant_vector & v, uint32_t ordinal, \
+                        TP entry, bool & ok_)                               \
+    {                                                                       \
+        ok_ = true;                                                         \
+        if( ordinal < v.size() )                                            \
+            v[ordinal] = entry;                                             \
+        else ok_ = false;                                                   \
+    }   
+    /*
+    void AddEntry(    value_variant_vector & v, uint32_t ordinal,   
+                        int32_t entry, bool & ok_)                     
+    {                                                               
+        ok_ = true;                                                 
+        if( ordinal < v.size() )                                    
+            v[ordinal] = entry;                                     
+        else ok_ = false;                                           
+    }*/
+
      
     class Row
     {
@@ -21,6 +40,7 @@ namespace event_model
         Row(const table_descriptor & row_descriptor);
         bool operator >>(std::string & str) const; 
         bool operator <<(const std::string & str);
+        const value_variant_vector & get_row_vector() const;
     private:
         value_variant_vector row_data_;
         const table_descriptor & td_;

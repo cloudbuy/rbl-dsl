@@ -6,8 +6,8 @@
 #include <string>
 #include <boost/variant.hpp>
 
-using boost::uint32_t;
-using boost::uint64_t;
+using boost::int32_t;
+using boost::int64_t;
 
 namespace event_model
 {
@@ -36,6 +36,6 @@ namespace event_model
                 ;
             }
         };
-    };
+    }; 
 }
 #endif

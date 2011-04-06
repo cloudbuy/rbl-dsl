@@ -70,16 +70,33 @@ TEST(row_table_test, test_one)
     ASSERT_EQ(td.entry().occupied_size(),4);
 
     Row row(td);
-    bool ok; 
-    ASSERT_NE(RowTypeAt(td,0,ok), VALUE_UNINITIALIZED);
-    ASSERT_EQ(RowTypeAt(td,1,ok), VALUE_UNINITIALIZED);
-    ASSERT_NE(RowTypeAt(td,2,ok), VALUE_UNINITIALIZED);
-    ASSERT_NE(RowTypeAt(td,3,ok), VALUE_UNINITIALIZED);
-    ASSERT_EQ(RowTypeAt(td,4,ok), VALUE_UNINITIALIZED);
-    ASSERT_NE(RowTypeAt(td,5,ok), VALUE_UNINITIALIZED);
- 
+    ASSERT_EQ(RowTypeAt(td,0), VALUE_INT4);
+    ASSERT_EQ(RowTypeAt(td,1), VALUE_UNINITIALIZED);
+    ASSERT_NE(RowTypeAt(td,2), VALUE_UNINITIALIZED);
+    ASSERT_EQ(RowTypeAt(td,3), VALUE_INT8);
+    ASSERT_EQ(RowTypeAt(td,4), VALUE_UNINITIALIZED);
+    ASSERT_NE(RowTypeAt(td,5), VALUE_UNINITIALIZED);
+    
+    std::string test_string("0(0=5 , 3=12423)");    
     //const std::string test_string("0(0=5, 2=\"jungle fever\", 3=124234, 5=\"boring\")");
-    //EXPECT_FALSE(row << test_string); 
+    EXPECT_TRUE(row << test_string);
+    const value_variant_vector & v = row.get_row_vector(); 
+    
+    ASSERT_EQ( boost::get<int32_t>( v[0]),5);
+    ASSERT_EQ( boost::get<int64_t>( v[3]),12423);
+
+    test_string ="0(0=2147483647 , 3=12423)";
+    EXPECT_TRUE(row << test_string);
+
+    test_string ="0(0=5, 3=9223372036854775807)";
+    EXPECT_TRUE(row << test_string);
+
+    test_string ="0(0=2147483648, 3=12423)";
+    EXPECT_FALSE(row << test_string);
+
+    test_string ="0(0=5, 3=9223372036854775808)";
+    EXPECT_FALSE(row << test_string);
+
 }
 
 int main(int argc,char ** argv)
