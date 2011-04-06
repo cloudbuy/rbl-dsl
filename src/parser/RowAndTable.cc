@@ -14,12 +14,10 @@ namespace event_model
 
         std::string::const_iterator beg = str.begin();
         std::string::const_iterator end = str.end();
-    
-        row_parse_grammar rpg;
         
         bool res = qi::phrase_parse(
             beg, end, 
-            rpg( phoenix::ref(row_data_),phoenix::cref(td_)), 
+            rpg_( phoenix::ref(row_data_),phoenix::cref(td_)), 
             ascii::space);
 
         return res;

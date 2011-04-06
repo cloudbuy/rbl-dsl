@@ -14,6 +14,15 @@ namespace event_model
         bool operator >>(std::string & str) const; 
         bool operator <<(const std::string & str);
         const value_variant_vector & get_row_vector() const;
+    
+        const bool parsing_error() const 
+            { return rpg_.has_error; } 
+        const bool was_parsing_value() const 
+            { return rpg_.was_parsing_value; }
+        const uint16_t was_parsing_ordinal() const 
+            { return rpg_.current_ordinal; }
+        const uint32_t parsing_value_type() const 
+            { return rpg_.current_value_type; }
     private:
         
         value_variant_vector row_data_;
