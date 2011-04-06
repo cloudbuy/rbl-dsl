@@ -2,17 +2,11 @@
 #define _EM_ROW_AND_TABLE_H
 #include "Types.h"
 #include "Descriptors.h"
-#include "detail/OidContainer.h"    
+#include <parser/detail/row_parser.h>
 
 namespace event_model
 {
-    typedef boost::variant< int32_t, int64_t, std::string> value_variant;
-    typedef std::vector<value_variant> value_variant_vector;
-    typedef std::vector<std::string> vector_string;    
-    typedef primitives::OidContainerEntryType<Oid,EventTypeContainer> table_descriptor;
     
-    VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
-                            const uint32_t ordinal);   
     class Row
     {
     public:
@@ -21,8 +15,10 @@ namespace event_model
         bool operator <<(const std::string & str);
         const value_variant_vector & get_row_vector() const;
     private:
+        
         value_variant_vector row_data_;
         const table_descriptor & td_;
+        row_parse_grammar rpg_;
     };
     
     

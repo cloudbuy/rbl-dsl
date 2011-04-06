@@ -2,6 +2,7 @@ SET(    PARSER_COMPILE_FILES
             Descriptors.cc
             NamespaceParsers.cc
             RowAndTable.cc
+            row_parser.cc
             ../../include/event_model/Descriptors.h
             ../../include/parser/NamespaceParsers.h
             ../../include/event_model/detail/Descriptors_inline.h

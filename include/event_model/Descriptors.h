@@ -193,6 +193,7 @@ namespace event_model
     typedef boost::shared_ptr<MarshallNamespaceDescriptor> 
     MarshallNamespaceDescriptor_shptr;
 
+    typedef primitives::OidContainerEntryType<Oid,EventTypeContainer> table_descriptor;
 
     #include "detail/Descriptors_inline.h"
 }
