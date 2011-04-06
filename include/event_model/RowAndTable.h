@@ -11,6 +11,10 @@ namespace event_model
     typedef std::vector<std::string> vector_string;    
     typedef primitives::OidContainerEntryType<Oid,EventTypeContainer> table_descriptor;
     
+    VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
+                            const uint32_t ordinal,bool & ok_);
+ 
+     
     class Row
     {
     public:

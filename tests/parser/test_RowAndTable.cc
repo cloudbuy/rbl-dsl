@@ -70,9 +70,16 @@ TEST(row_table_test, test_one)
     ASSERT_EQ(td.entry().occupied_size(),4);
 
     Row row(td);
-    
-    const std::string test_string("0(0=5, 2=\"jungle fever\", 3=124234, 5=\"boring\")");
-    EXPECT_FALSE(row << test_string); 
+    bool ok; 
+    ASSERT_NE(RowTypeAt(td,0,ok), VALUE_UNINITIALIZED);
+    ASSERT_EQ(RowTypeAt(td,1,ok), VALUE_UNINITIALIZED);
+    ASSERT_NE(RowTypeAt(td,2,ok), VALUE_UNINITIALIZED);
+    ASSERT_NE(RowTypeAt(td,3,ok), VALUE_UNINITIALIZED);
+    ASSERT_EQ(RowTypeAt(td,4,ok), VALUE_UNINITIALIZED);
+    ASSERT_NE(RowTypeAt(td,5,ok), VALUE_UNINITIALIZED);
+ 
+    //const std::string test_string("0(0=5, 2=\"jungle fever\", 3=124234, 5=\"boring\")");
+    //EXPECT_FALSE(row << test_string); 
 }
 
 int main(int argc,char ** argv)

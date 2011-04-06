@@ -14,6 +14,8 @@ namespace event_model
     {
         namespace qi = boost::spirit::qi;
         namespace ascii = boost::spirit::ascii;
+        namespace phoenix = boost::phoenix;
+
 
         using qi::_1;
         using qi::_a;
@@ -23,26 +25,27 @@ namespace event_model
         using qi::_r2;
         
         qi::rule<   std::string::const_iterator,
-                    void(value_variant_vector &,const table_descriptor &),
+                    void(value_variant_vector &, const table_descriptor &),
                     qi::locals<uint8_t, uint32_t>,
                     ascii::space_type>  
-        event_entry( qi::int_
-         //   qi::ushort_[_a=_1] > '=' >   
-           // (       eps(_a == VALUE_INT4)
-             //   |   eps(_a == VALUE_INT8)
-               // |   eps(_a == VALUE_STRING)
-            //)
+        event_entry(
+            qi::ushort_[_a=_1] > '=' > 
+//            eps(_b = phoenix::bind(RowTypeAt(
+            (   eps(_b == VALUE_INT4)
+              | eps(_b == VALUE_INT8)
+              | eps(_b == VALUE_STRING)
+            )
         );
 
         qi::rule<   std::string::const_iterator, 
-                    void(value_variant_vector &,const table_descriptor &),
+                    void(value_variant_vector &, const table_descriptor &),
                     qi::locals<uint8_t>,
                     ascii::space_type> 
         event_row_rule(
-            qi::ushort_ //> '(' 
-//            >   event_entry(_r1,_r2) 
-  //          > *(',' > event_entry(_r1,_r2))
-    //        > ')'
+            qi::ushort_ > '(' 
+            >   event_entry(_r1,_r2) 
+            > *(',' > event_entry(_r1,_r2))
+            > ')'
         );
     }
 
@@ -56,6 +59,7 @@ namespace event_model
         std::string::const_iterator beg = str.begin();
         std::string::const_iterator end = str.end();
 
+
         bool res = qi::phrase_parse(
             beg, end, 
             event_row_rule( phoenix::ref(row_data_),phoenix::cref(td_)), 
@@ -64,6 +68,20 @@ namespace event_model
         return true;
     }
     
+    VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
+                            uint32_t ordinal, bool & ok_)
+    {
+        const EventTypeContainer::entry_type * etd_e = td_.entry().EntryAtordinal(ordinal);
+        ok_ = true; 
+        if( etd_e == NULL)
+        {
+            ok_ = false;
+            return VALUE_UNINITIALIZED;
+        }
+        else return etd_e->entry().type();
+        
+    }
+ 
     Table::Table(const table_descriptor & row_descriptor)
         : td_(row_descriptor), table_data_() {}
 };
