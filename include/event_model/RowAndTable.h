@@ -12,28 +12,7 @@ namespace event_model
     typedef primitives::OidContainerEntryType<Oid,EventTypeContainer> table_descriptor;
     
     VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
-                            const uint32_t ordinal);
-    
-    #define  ADD_ENTRY(TP,prefix)                                           \
-    void AddEntry_##prefix(      value_variant_vector & v, uint32_t ordinal, \
-                        TP entry, bool & ok_)                               \
-    {                                                                       \
-        ok_ = true;                                                         \
-        if( ordinal < v.size() )                                            \
-            v[ordinal] = entry;                                             \
-        else ok_ = false;                                                   \
-    }   
-    /*
-    void AddEntry(    value_variant_vector & v, uint32_t ordinal,   
-                        int32_t entry, bool & ok_)                     
-    {                                                               
-        ok_ = true;                                                 
-        if( ordinal < v.size() )                                    
-            v[ordinal] = entry;                                     
-        else ok_ = false;                                           
-    }*/
-
-     
+                            const uint32_t ordinal);   
     class Row
     {
     public:
