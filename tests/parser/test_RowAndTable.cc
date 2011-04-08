@@ -94,14 +94,14 @@ TEST(row_table_test, test_one)
     test_string ="0(0=2147483648, 3=12423)";
     EXPECT_FALSE(row << test_string);
     EXPECT_TRUE(row.parsing_error());
-    //EXPECT_TRUE(row.was_parsing_value());
+    EXPECT_TRUE(row.was_parsing_value());
     EXPECT_EQ(row.was_parsing_ordinal(),0);
     EXPECT_EQ(row.parsing_value_type(),VALUE_INT4);
 
     test_string ="0(0=5, 3=9223372036854775808)";
     EXPECT_FALSE(row << test_string);
     EXPECT_TRUE(row.parsing_error());
-    //EXPECT_TRUE(row.was_parsing_value());
+    EXPECT_TRUE(row.was_parsing_value());
     EXPECT_EQ(row.was_parsing_ordinal(),3);
     EXPECT_EQ(row.parsing_value_type(),VALUE_INT8);
 }

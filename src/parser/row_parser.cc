@@ -68,19 +68,18 @@ namespace event_model
             eps [_CVT = phoenix::bind(&RowTypeAt, _r2, _CO)] >>
             eps [_WPV = true] >>
             (  ( eps( _CVT == VALUE_INT4) >> p_int32_t )
-                    [phoenix::bind(&AddEntry_i32, _r1,_CO, _1, _pass)] 
-            | ( eps( _CVT == VALUE_INT8) >> p_int64_t )
-                [phoenix::bind(&AddEntry_i64, _r1,_CO, _1, _pass)]
-            | ( eps( _CVT == VALUE_STRING) ) 
+                 [ phoenix::bind(&AddEntry_i32, _r1,_CO, _1, _pass)] 
+            |  ( eps( _CVT == VALUE_INT8) >> p_int64_t )
+                 [ phoenix::bind(&AddEntry_i64, _r1,_CO, _1, _pass)]
+            |  ( eps( _CVT == VALUE_STRING) ) 
             )
-            >> eps [_WPV = false]
+            > (qi::char_(',') | ')') > eps [_WPV = false]
+
         ;
         
         row_rule = 
             qi::ushort_ > '(' 
-            >   row_entry(_r1,_r2) 
-            > *(',' > row_entry(_r1,_r2))
-            > ')'
+            >   *row_entry(_r1,_r2);
         ;
         
         qi::on_error<qi::fail>(row_rule, _HAS_ERROR=true);
