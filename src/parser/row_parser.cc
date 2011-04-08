@@ -30,6 +30,7 @@ namespace event_model
     using qi::_1;
     using qi::_a;
     using qi::_b;
+    using qi::_c;
     using qi::eps;
     using qi::_r1;
     using qi::_r2;
@@ -55,8 +56,8 @@ namespace event_model
         #define _HAS_ERROR\
         phoenix::bind(&row_parse_grammar::has_error, * this)
 
-        #define _VALUE \
-        *phoenix::bind(  &row_parse_grammar::GetValuePtrAt, \
+        #define _VALUE_PTR \
+        phoenix::bind(  &row_parse_grammar::GetValuePtrAt, \
                         *this,_r1,_CO,_pass)
         
 
@@ -65,9 +66,7 @@ namespace event_model
             eps [_CVT = phoenix::bind(&RowTypeAt, _r2, _CO)] >>
             eps [_WPV = true] >>
             (    ( eps( _CVT == VALUE_INT4) >> p_int32_t )
-                     [ _VALUE = _1] 
               |  ( eps( _CVT == VALUE_INT8) >> p_int64_t )
-                     [ _VALUE = _1]
               |  ( eps( _CVT == VALUE_STRING) ) 
             )
             > (qi::char_(',') | ')') > eps [_WPV = false]
