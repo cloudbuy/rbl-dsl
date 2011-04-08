@@ -10,6 +10,7 @@ namespace event_model
 {
     VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
                             const uint32_t ordinal);   
+    
     template<typename MATCHED_TYPE> 
     class type_test : boost::static_visitor<>
     {
@@ -33,6 +34,37 @@ namespace event_model
             void(value_variant_vector &,const table_descriptor &),
             boost::spirit::qi::ascii::space_type> 
     {
+        value_variant * GetValuePtrAt (
+            value_variant_vector & v, 
+            uint32_t ordinal, 
+            bool & ok_)
+        {
+            ok_ = true;                                                     
+            if( ordinal < v.size() ) 
+            {                                      
+                if(boost::apply_visitor(type_test<undefined>(), v[ordinal]))
+                {                                                           
+                    ok_ = true;       
+                    std::cout << "good " << &v[ordinal] << std::endl;
+                    return &v[ordinal];
+                }
+                else
+                {                                                       
+                    double_assignment = true;
+                    ok_ = false;
+                    std::cout << "1 null" << std::endl;
+                    return NULL;
+                }                                                           
+            }                                                               
+            else 
+            {                                                          
+                out_of_range = true;                                        
+                ok_ = false;
+                std::cout << "2 null" << std::endl;
+                return NULL;            
+            }                                                               
+        }
+
         boost::spirit::qi::int_parser< int32_t,  10, 1,10>  p_int32_t;
         boost::spirit::qi::int_parser< int64_t, 10, 1, 19>  p_int64_t;
             
@@ -43,35 +75,6 @@ namespace event_model
         boost::spirit::qi::rule<   std::string::const_iterator, 
                     void(value_variant_vector &, const table_descriptor &),
                     boost::spirit::ascii::space_type> row_rule;
-
-        
-
-        #define  ADD_ENTRY_FUNCTION(TP,prefix)                              \
-        void AddEntry_##prefix( value_variant_vector & v, uint32_t ordinal, \
-                            TP entry, bool & ok_)                           \
-        {                                                                   \
-            ok_ = true;                                                     \
-            if( ordinal < v.size() ) {                                      \
-                if(boost::apply_visitor(type_test<undefined>(), v[ordinal]))\
-                {                                                           \
-                    v[ordinal] = entry;                                     \
-                    ok_ = true;                                             \
-                    return;                                                 \
-                }                                                           \
-                else{                                                       \
-                    double_assignment = true;                               \
-                }                                                           \
-            }                                                               \
-            else {                                                          \
-                out_of_range = true;                                        \
-                ok_ = false;                                                \
-            }                                                               \
-        }
-        
-        ADD_ENTRY_FUNCTION(int32_t,i32);
-        ADD_ENTRY_FUNCTION(int64_t,i64);
-
-
 
         uint16_t current_ordinal;
         uint16_t current_value_type;

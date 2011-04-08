@@ -55,9 +55,9 @@ namespace event_model
         #define _HAS_ERROR\
         phoenix::bind(&row_parse_grammar::has_error, * this)
 
-        #define _AE_CALL(prefix)\
-        phoenix::bind(  &row_parse_grammar::AddEntry_##prefix, \
-                        *this,_r1,_CO,_1,_pass)
+        #define _VALUE \
+        *phoenix::bind(  &row_parse_grammar::GetValuePtrAt, \
+                        *this,_r1,_CO,_pass)
         
 
         row_entry = 
@@ -65,9 +65,9 @@ namespace event_model
             eps [_CVT = phoenix::bind(&RowTypeAt, _r2, _CO)] >>
             eps [_WPV = true] >>
             (    ( eps( _CVT == VALUE_INT4) >> p_int32_t )
-                     [ _AE_CALL(i32) ]
+                     [ _VALUE = _1] 
               |  ( eps( _CVT == VALUE_INT8) >> p_int64_t )
-                     [ _AE_CALL(i64) ]
+                     [ _VALUE = _1]
               |  ( eps( _CVT == VALUE_STRING) ) 
             )
             > (qi::char_(',') | ')') > eps [_WPV = false]
