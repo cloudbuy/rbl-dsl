@@ -34,34 +34,38 @@ namespace event_model
             void(value_variant_vector &,const table_descriptor &),
             boost::spirit::qi::ascii::space_type> 
     {
-        value_variant * GetValuePtrAt (
+        void set_value (
             value_variant_vector & v, 
-            uint32_t ordinal, 
+            uint32_t ordinal,
+            value_variant & v_in,
             bool & ok_)
         {
             ok_ = true;                                                     
             if( ordinal < v.size() ) 
             {                                      
                 if(boost::apply_visitor(type_test<undefined>(), v[ordinal]))
-                {                                                           
-                    ok_ = true;       
-                    std::cout << "good " << &v[ordinal] << std::endl;
-                    return &v[ordinal];
+                {
+                    ok_ = true;
+                    v[ordinal] = v_in;
+                    //std::cout << ordinal << std::endl;
+
+//                    if(ordinal == 0)
+  //                      std::cout << boost::get<int32_t>( v_in);
+                    //if(ordinal == 3)
+                      //  std::cout << boost::get<int64_t>( v[3])
                 }
                 else
                 {                                                       
                     double_assignment = true;
                     ok_ = false;
-                    std::cout << "1 null" << std::endl;
-                    return NULL;
+                    return;
                 }                                                           
             }                                                               
             else 
             {                                                          
                 out_of_range = true;                                        
                 ok_ = false;
-                std::cout << "2 null" << std::endl;
-                return NULL;            
+                return;
             }                                                               
         }
 
@@ -70,6 +74,7 @@ namespace event_model
             
         boost::spirit::qi::rule<   std::string::const_iterator,
                     void(value_variant_vector &, const table_descriptor &),
+                    boost::spirit::qi::locals<value_variant>,
                     boost::spirit::ascii::space_type>  row_entry;
 
         boost::spirit::qi::rule<   std::string::const_iterator, 

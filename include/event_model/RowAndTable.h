@@ -14,7 +14,9 @@ namespace event_model
         bool operator >>(std::string & str) const; 
         bool operator <<(const std::string & str);
         const value_variant_vector & get_row_vector() const;
-    
+   
+        void reset();
+ 
         const bool parsing_error() const 
             { return rpg_.has_error; } 
         const bool was_parsing_value() const 

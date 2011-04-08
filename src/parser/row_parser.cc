@@ -9,6 +9,13 @@
 
 #include <boost/variant/apply_visitor.hpp>
 
+// the following header doesn't feature in any of the exmaples of
+// the qi library, however in order to chain multiple statements 
+// in the semantic actions using a comma, this file needs to have
+// been included.
+#include <boost/spirit/home/phoenix/statement/sequence.hpp>
+
+
 namespace event_model
 {
     VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
@@ -56,20 +63,22 @@ namespace event_model
         #define _HAS_ERROR\
         phoenix::bind(&row_parse_grammar::has_error, * this)
 
-        #define _VALUE_PTR \
-        phoenix::bind(  &row_parse_grammar::GetValuePtrAt, \
-                        *this,_r1,_CO,_pass)
+        #define _SET_VALUE \
+        phoenix::bind(  &row_parse_grammar::set_value, \
+                        *this,_r1,_CO,_a,_pass)
         
 
         row_entry = 
             qi::ushort_[ _CO=_1] > '=' > 
             eps [_CVT = phoenix::bind(&RowTypeAt, _r2, _CO)] >>
             eps [_WPV = true] >>
-            (    ( eps( _CVT == VALUE_INT4) >> p_int32_t )
-              |  ( eps( _CVT == VALUE_INT8) >> p_int64_t )
-              |  ( eps( _CVT == VALUE_STRING) ) 
+            (       ( eps( _CVT == VALUE_INT4) >> p_int32_t 
+                        [ _a = _1, _SET_VALUE ])
+                |   ( eps( _CVT == VALUE_INT8) >> p_int64_t 
+                        [ _a = _1, _SET_VALUE ])
+                |   ( eps( _CVT == VALUE_STRING) ) 
             )
-            > (qi::char_(',') | ')') > eps [_WPV = false]
+            > ( qi::char_(',') | ')' ) > eps [ _WPV = false ]
 
         ;
         

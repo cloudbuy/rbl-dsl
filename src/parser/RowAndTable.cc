@@ -5,7 +5,18 @@ namespace event_model
 {
     Row::Row(const table_descriptor & row_descriptor)
         : td_(row_descriptor), row_data_(row_descriptor.entry().size()) {}
-    
+   
+    void Row::reset()
+    {
+        row_data_.assign(td_.entry().size(), undefined());
+        rpg_.has_error = false;
+        rpg_.was_parsing_value = false;
+        rpg_.current_ordinal = 0;
+        rpg_.current_value_type = 0; 
+        rpg_.out_of_range = false;
+        rpg_.double_assignment = false;
+    }
+ 
     bool Row::operator << (const std::string & str)
     { 
         namespace phoenix = boost::phoenix;

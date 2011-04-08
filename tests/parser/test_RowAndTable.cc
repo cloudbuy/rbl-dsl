@@ -85,11 +85,17 @@ TEST(row_table_test, test_one)
     ASSERT_EQ( boost::get<int32_t>( v[0]),5);
     ASSERT_EQ( boost::get<int64_t>( v[3]),12423);
 
+    row.reset();
+
     test_string ="0(0=2147483647 , 3=12423)";
     EXPECT_TRUE(row << test_string);
 
+    row.reset();
+
     test_string ="0(0=5, 3=9223372036854775807)";
     EXPECT_TRUE(row << test_string);
+
+    row.reset();
 
     test_string ="0(0=2147483648, 3=12423)";
     EXPECT_FALSE(row << test_string);
@@ -97,6 +103,8 @@ TEST(row_table_test, test_one)
     EXPECT_TRUE(row.was_parsing_value());
     EXPECT_EQ(row.was_parsing_ordinal(),0);
     EXPECT_EQ(row.parsing_value_type(),VALUE_INT4);
+
+    row.reset();
 
     test_string ="0(0=5, 3=9223372036854775808)";
     EXPECT_FALSE(row << test_string);
