@@ -7,6 +7,8 @@
 #include <boost/spirit/include/phoenix_object.hpp>
 #include <boost/spirit/include/phoenix_bind.hpp>
 
+#include <boost/variant/apply_visitor.hpp>
+
 namespace event_model
 {
     VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
@@ -19,7 +21,6 @@ namespace event_model
             return VALUE_UNINITIALIZED;
         }
         else return etd_e->entry().type();
-        
     }
  
     namespace qi = boost::spirit::qi;
@@ -34,22 +35,13 @@ namespace event_model
     using qi::_r2;
     using qi::_pass;
 
-    #define  ADD_ENTRY(TP,prefix)                                       \
-    void AddEntry_##prefix( value_variant_vector & v, uint32_t ordinal, \
-                            TP entry, bool & ok_)                       \
-    {                                                                   \
-        ok_ = true;                                                     \
-        if( ordinal < v.size() )                                        \
-        v[ordinal] = entry;                                             \
-        else ok_ = false;                                               \
-    }
-    ADD_ENTRY(int32_t,i32);
-    ADD_ENTRY(int64_t,i64);
-
+    
     row_parse_grammar::row_parse_grammar() 
             :   row_parse_grammar::base_type(row_rule, "row_rule"),
                 was_parsing_value(false),
-                has_error(false)
+                has_error(false),
+                double_assignment(false),
+                out_of_range(false)
     {  
         #define _CO \
         phoenix::bind(&row_parse_grammar::current_ordinal,*this)
@@ -63,15 +55,20 @@ namespace event_model
         #define _HAS_ERROR\
         phoenix::bind(&row_parse_grammar::has_error, * this)
 
+        #define _AE_CALL(prefix)\
+        phoenix::bind(  &row_parse_grammar::AddEntry_##prefix, \
+                        *this,_r1,_CO,_1,_pass)
+        
+
         row_entry = 
             qi::ushort_[ _CO=_1] > '=' > 
             eps [_CVT = phoenix::bind(&RowTypeAt, _r2, _CO)] >>
             eps [_WPV = true] >>
-            (  ( eps( _CVT == VALUE_INT4) >> p_int32_t )
-                 [ phoenix::bind(&AddEntry_i32, _r1,_CO, _1, _pass)] 
-            |  ( eps( _CVT == VALUE_INT8) >> p_int64_t )
-                 [ phoenix::bind(&AddEntry_i64, _r1,_CO, _1, _pass)]
-            |  ( eps( _CVT == VALUE_STRING) ) 
+            (    ( eps( _CVT == VALUE_INT4) >> p_int32_t )
+                     [ _AE_CALL(i32) ]
+              |  ( eps( _CVT == VALUE_INT8) >> p_int64_t )
+                     [ _AE_CALL(i64) ]
+              |  ( eps( _CVT == VALUE_STRING) ) 
             )
             > (qi::char_(',') | ')') > eps [_WPV = false]
 

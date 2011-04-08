@@ -36,8 +36,9 @@ namespace event_model
                 ;
             }
         };
-    }; 
-    typedef boost::variant< int32_t, int64_t, std::string> value_variant;
+    };
+    struct undefined {} ;
+    typedef boost::variant< undefined ,int32_t, int64_t, std::string> value_variant;
     typedef std::vector<value_variant> value_variant_vector;
     typedef std::vector<std::string> vector_string;    
 }
