@@ -71,20 +71,20 @@ namespace event_model
         row_entry = 
             qi::ushort_[ _CO=_1] > '=' > 
             eps [_CVT = phoenix::bind(&RowTypeAt, _r2, _CO)] >>
-            eps [_WPV = true] >>
             (       ( eps( _CVT == VALUE_INT4) >> p_int32_t 
                         [ _a = _1, _SET_VALUE ])
                 |   ( eps( _CVT == VALUE_INT8) >> p_int64_t 
                         [ _a = _1, _SET_VALUE ])
                 |   ( eps( _CVT == VALUE_STRING) ) 
             )
-            > ( qi::char_(',') | ')' ) > eps [ _WPV = false ]
-
-        ;
+        ; 
         
         row_rule = 
-            qi::ushort_ > '(' 
-            >   *row_entry(_r1,_r2);
+            qi::ushort_ > '(' >
+            *(  eps [_WPV = true] 
+                >> row_entry(_r1,_r2)
+                > ( qi::char_(',') | ')' ) [ _WPV = false ]
+            )
         ;
         
         qi::on_error<qi::fail>(row_rule, _HAS_ERROR=true);
