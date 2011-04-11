@@ -71,7 +71,11 @@ namespace event_model
 
         boost::spirit::qi::int_parser< int32_t,  10, 1,10>  p_int32_t;
         boost::spirit::qi::int_parser< int64_t, 10, 1, 19>  p_int64_t;
-            
+
+        boost::spirit::qi::rule< 
+            std::string::const_iterator,std::string(), 
+            boost::spirit::ascii::space_type > quoted_string;
+ 
         boost::spirit::qi::rule<   std::string::const_iterator,
                     void(value_variant_vector &, const table_descriptor &),
                     boost::spirit::qi::locals<value_variant>,

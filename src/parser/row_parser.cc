@@ -42,8 +42,11 @@ namespace event_model
     using qi::_r1;
     using qi::_r2;
     using qi::_pass;
-
-    
+    using qi::lexeme;
+    using qi::char_;   
+    using qi::_val;
+    using qi::lit;
+ 
     row_parse_grammar::row_parse_grammar() 
             :   row_parse_grammar::base_type(row_rule, "row_rule"),
                 was_parsing_value(false),
@@ -66,7 +69,12 @@ namespace event_model
         #define _SET_VALUE \
         phoenix::bind(  &row_parse_grammar::set_value, \
                         *this,_r1,_CO,_a,_pass)
-        
+       
+
+        quoted_string =  
+            char_('"') > 
+            lexeme[ *( (char_ - '"') [_val+=_1] | lit("\"\"")[_val+='"'] ) ]
+             > char_('"');
 
         row_entry = 
             qi::ushort_[ _CO=_1] > '=' > 
@@ -75,7 +83,8 @@ namespace event_model
                         [ _a = _1, _SET_VALUE ])
                 |   ( eps( _CVT == VALUE_INT8) >> p_int64_t 
                         [ _a = _1, _SET_VALUE ])
-                |   ( eps( _CVT == VALUE_STRING) ) 
+                |   ( eps( _CVT == VALUE_STRING) >> quoted_string
+                        [ _a = _1, _SET_VALUE] )
             )
         ; 
         
