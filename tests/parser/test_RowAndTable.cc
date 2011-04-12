@@ -77,13 +77,14 @@ TEST(row_table_test, test_one)
     ASSERT_EQ(RowTypeAt(td,4), VALUE_UNINITIALIZED);
     ASSERT_NE(RowTypeAt(td,5), VALUE_UNINITIALIZED);
     
-    std::string test_string("0(0=5 , 3=12423)");    
-    //const std::string test_string("0(0=5, 2=\"jungle fever\", 3=124234, 5=\"boring\")");
+    std::string test_string("0(0=5, 2=\"jungle fever\", 3=12423, 5=\"boring\")");
     EXPECT_TRUE(row << test_string);
     const value_variant_vector & v = row.get_row_vector(); 
     
     ASSERT_EQ( boost::get<int32_t>( v[0]),5);
     ASSERT_EQ( boost::get<int64_t>( v[3]),12423);
+    ASSERT_EQ( boost::get<std::string>( v[2]), "jungle fever");
+    ASSERT_EQ( boost::get<std::string>( v[5]), "boring");
 
     row.reset();
 
@@ -112,6 +113,19 @@ TEST(row_table_test, test_one)
     EXPECT_TRUE(row.was_parsing_value());
     EXPECT_EQ(row.was_parsing_ordinal(),3);
     EXPECT_EQ(row.parsing_value_type(),VALUE_INT8);
+    
+    row.reset();
+    
+    test_string = "0(0=5, 2=\"jungle \"\" fever\", 3=12423, 5=\"bo\"\"ring\")";
+    EXPECT_TRUE(row << test_string);
+
+    
+    ASSERT_EQ( boost::get<int32_t>( v[0]),5);
+    ASSERT_EQ( boost::get<int64_t>( v[3]),12423);
+    
+    ASSERT_EQ( boost::get<std::string>( v[2]), "jungle \" fever");
+    ASSERT_EQ( boost::get<std::string>( v[5]), "bo\"ring");
+
 }
 
 int main(int argc,char ** argv)
