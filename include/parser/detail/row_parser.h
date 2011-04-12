@@ -8,24 +8,6 @@
 
 namespace event_model
 {
-    template<typename MATCHED_TYPE> 
-    class type_test : boost::static_visitor<>
-    {
-    public:   
-        typedef bool result_type;
-        
-        result_type operator()(MATCHED_TYPE & mt) const
-        {
-            return true;
-        }
-        
-        template<typename UNMATCHED_TYPE>
-        result_type operator()(UNMATCHED_TYPE & ut) const
-        {
-            return false;
-        }
-    };
-
     struct row_parser_error_descriptor
     {
         row_parser_error_descriptor()
@@ -65,7 +47,8 @@ namespace event_model
             ok_ = true;                                                     
             if( ordinal < v.size() ) 
             {                                      
-                if(boost::apply_visitor(type_test<undefined>(), v[ordinal]))
+                if(boost::apply_visitor( 
+                        type_test_variant_visitor<undefined>(), v[ordinal]))
                 {
                     ok_ = true;
                     v[ordinal] = v_in;

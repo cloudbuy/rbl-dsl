@@ -38,7 +38,40 @@ namespace event_model
         };
     };
     struct undefined {} ;
-    typedef boost::variant< undefined ,int32_t, int64_t, std::string> value_variant;
+    typedef boost::variant< 
+                    undefined ,int32_t, int64_t, std::string> value_variant;
     typedef std::vector<value_variant> value_variant_vector;
+///////////////////////////////////////////////////////////////////////////////
+    template<typename MATCHED_TYPE> 
+    class type_test_variant_visitor : boost::static_visitor<>
+    {
+    public:   
+        typedef bool result_type;
+        
+        result_type operator()(MATCHED_TYPE & mt) const
+        {
+            return true;
+        }
+        
+        template<typename UNMATCHED_TYPE>
+        result_type operator()(UNMATCHED_TYPE & ut) const
+        {
+            return false;
+        }
+    };
+///////////////////////////////////////////////////////////////////////////////    
+    class get_type_variant_visitor : boost::static_visitor<>
+    {
+    public:
+        typedef VALUE_TYPE result_type;
+        
+        result_type operator()(std::string)    const { return VALUE_STRING;}
+        result_type operator()(boost::int32_t) const { return VALUE_INT4; }
+        result_type operator()(boost::int64_t) const { return VALUE_INT8; }
+
+        template<typename UNMATCHED_TYPE>
+        result_type operator()(UNMATCHED_TYPE & um) const 
+                                { return VALUE_UNINITIALIZED; }
+    };
 }
 #endif
