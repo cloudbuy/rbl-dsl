@@ -48,6 +48,17 @@ namespace event_model
  
     typedef OidContainer<Oid, EventTypeDescriptor> EventTypeContainer;
 ///////////////////////////////////////////////////////////////////////////////
+    class table_descriptor : 
+        public primitives::OidContainerEntryType<Oid,EventTypeContainer>
+    {
+    public:
+        typedef primitives::
+                    OidContainerEntryType<Oid,EventTypeContainer> base;
+        
+        table_descriptor(const Oid & oid, const EventTypeContainer & etc);
+        const VALUE_TYPE RowTypeAt(const uint32_t ordinal) const;
+    };
+///////////////////////////////////////////////////////////////////////////////
     class RelayEventDescriptor;
 
     class GeneratorEventDescriptor
@@ -193,7 +204,6 @@ namespace event_model
     typedef boost::shared_ptr<MarshallNamespaceDescriptor> 
     MarshallNamespaceDescriptor_shptr;
 
-    typedef primitives::OidContainerEntryType<Oid,EventTypeContainer> table_descriptor;
 
     #include "detail/Descriptors_inline.h"
 }

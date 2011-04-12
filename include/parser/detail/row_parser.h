@@ -8,9 +8,6 @@
 
 namespace event_model
 {
-    VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
-                            const uint32_t ordinal);   
-    
     template<typename MATCHED_TYPE> 
     class type_test : boost::static_visitor<>
     {

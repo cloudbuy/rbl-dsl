@@ -18,18 +18,6 @@
 
 namespace event_model
 {
-    VALUE_TYPE RowTypeAt(   const table_descriptor & td_,
-                            uint32_t ordinal)
-    {
-        const EventTypeContainer::entry_type * etd_e = 
-            td_.entry().EntryAtordinal(ordinal);
-        if( etd_e == NULL)
-        {
-            return VALUE_UNINITIALIZED;
-        }
-        else return etd_e->entry().type();
-    }
- 
     namespace qi = boost::spirit::qi;
     namespace ascii = boost::spirit::ascii;
     namespace phoenix = boost::phoenix;
@@ -80,7 +68,7 @@ namespace event_model
 
         row_entry = 
             qi::ushort_[ _CO=_1] > '=' > 
-            eps [_CVT = phoenix::bind(&RowTypeAt, _r2, _CO)] >>
+            eps [_CVT = phoenix::bind(&table_descriptor::RowTypeAt, _r2, _CO)] >>
             (       ( eps( _CVT == VALUE_INT4) >> p_int32_t 
                         [ _a = _1, _SET_VALUE ])
                 |   ( eps( _CVT == VALUE_INT8) >> p_int64_t 

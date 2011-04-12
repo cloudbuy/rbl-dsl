@@ -70,12 +70,12 @@ TEST(row_table_test, test_one)
     ASSERT_EQ(td.entry().occupied_size(),4);
 
     Row row(td);
-    ASSERT_EQ(RowTypeAt(td,0), VALUE_INT4);
-    ASSERT_EQ(RowTypeAt(td,1), VALUE_UNINITIALIZED);
-    ASSERT_NE(RowTypeAt(td,2), VALUE_UNINITIALIZED);
-    ASSERT_EQ(RowTypeAt(td,3), VALUE_INT8);
-    ASSERT_EQ(RowTypeAt(td,4), VALUE_UNINITIALIZED);
-    ASSERT_NE(RowTypeAt(td,5), VALUE_UNINITIALIZED);
+    ASSERT_EQ(td.RowTypeAt(0), VALUE_INT4);
+    ASSERT_EQ(td.RowTypeAt(1), VALUE_UNINITIALIZED);
+    ASSERT_NE(td.RowTypeAt(2), VALUE_UNINITIALIZED);
+    ASSERT_EQ(td.RowTypeAt(3), VALUE_INT8);
+    ASSERT_EQ(td.RowTypeAt(4), VALUE_UNINITIALIZED);
+    ASSERT_NE(td.RowTypeAt(5), VALUE_UNINITIALIZED);
     
     std::string test_string("0(0=5, 2=\"jungle fever\", 3=12423, 5=\"boring\")");
     EXPECT_TRUE(row << test_string);

@@ -7,7 +7,6 @@
 
 namespace event_model
 {
-    
     class Row
     {
     public:
@@ -27,7 +26,6 @@ namespace event_model
                 return NULL;
         }
     private:
-        
         value_variant_vector row_data_;
         const table_descriptor & td_;
 
