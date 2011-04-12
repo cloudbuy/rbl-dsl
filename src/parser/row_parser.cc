@@ -48,23 +48,25 @@ namespace event_model
     using qi::lit;
  
     row_parse_grammar::row_parse_grammar() 
-            :   row_parse_grammar::base_type(row_rule, "row_rule"),
-                was_parsing_value(false),
-                has_error(false),
-                double_assignment(false),
-                out_of_range(false)
-    {  
+            :   row_parse_grammar::base_type(row_rule, "row_rule")
+    { 
+        rped_.reset();
+     
         #define _CO \
-        phoenix::bind(&row_parse_grammar::current_ordinal,*this)
+        phoenix::bind(  &row_parser_error_descriptor::current_ordinal,      \
+                        this->rped_)
 
         #define _CVT\
-        phoenix::bind(&row_parse_grammar::current_value_type,*this)
+        phoenix::bind(  &row_parser_error_descriptor::current_value_type,   \
+                        this->rped_)
 
         #define _WPV\
-        phoenix::bind(&row_parse_grammar::was_parsing_value, * this)
+        phoenix::bind(  &row_parser_error_descriptor::was_parsing_value,    \
+                        this->rped_)
     
         #define _HAS_ERROR\
-        phoenix::bind(&row_parse_grammar::has_error, * this)
+        phoenix::bind(  &row_parser_error_descriptor::has_error, \
+                        this->rped_)
 
         #define _SET_VALUE \
         phoenix::bind(  &row_parse_grammar::set_value, \

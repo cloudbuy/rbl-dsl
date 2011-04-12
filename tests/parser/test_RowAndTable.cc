@@ -80,45 +80,37 @@ TEST(row_table_test, test_one)
     std::string test_string("0(0=5, 2=\"jungle fever\", 3=12423, 5=\"boring\")");
     EXPECT_TRUE(row << test_string);
     const value_variant_vector & v = row.get_row_vector(); 
-    
+    const row_parser_error_descriptor * e_d = row.get_row_parser_error_descriptor();
+    ASSERT_TRUE(e_d!=NULL);    
+ 
     ASSERT_EQ( boost::get<int32_t>( v[0]),5);
     ASSERT_EQ( boost::get<int64_t>( v[3]),12423);
     ASSERT_EQ( boost::get<std::string>( v[2]), "jungle fever");
     ASSERT_EQ( boost::get<std::string>( v[5]), "boring");
 
-    row.reset();
 
     test_string ="0(0=2147483647 , 3=12423)";
     EXPECT_TRUE(row << test_string);
 
-    row.reset();
-
     test_string ="0(0=5, 3=9223372036854775807)";
     EXPECT_TRUE(row << test_string);
 
-    row.reset();
-
     test_string ="0(0=2147483648, 3=12423)";
     EXPECT_FALSE(row << test_string);
-    EXPECT_TRUE(row.parsing_error());
-    EXPECT_TRUE(row.was_parsing_value());
-    EXPECT_EQ(row.was_parsing_ordinal(),0);
-    EXPECT_EQ(row.parsing_value_type(),VALUE_INT4);
-
-    row.reset();
-
+    EXPECT_TRUE(e_d->has_error);
+    EXPECT_TRUE(e_d->was_parsing_value);
+    EXPECT_EQ(e_d->current_ordinal,0);
+    EXPECT_EQ(e_d->current_value_type,VALUE_INT4);
+    
     test_string ="0(0=5, 3=9223372036854775808)";
     EXPECT_FALSE(row << test_string);
-    EXPECT_TRUE(row.parsing_error());
-    EXPECT_TRUE(row.was_parsing_value());
-    EXPECT_EQ(row.was_parsing_ordinal(),3);
-    EXPECT_EQ(row.parsing_value_type(),VALUE_INT8);
-    
-    row.reset();
+    EXPECT_TRUE(e_d->has_error);
+    EXPECT_TRUE(e_d->was_parsing_value);
+    EXPECT_EQ(e_d->current_ordinal,3);
+    EXPECT_EQ(e_d->current_value_type,VALUE_INT8);
     
     test_string = "0(0=5, 2=\"jungle \"\" fever\", 3=12423, 5=\"bo\"\"ring\")";
     EXPECT_TRUE(row << test_string);
-
     
     ASSERT_EQ( boost::get<int32_t>( v[0]),5);
     ASSERT_EQ( boost::get<int64_t>( v[3]),12423);

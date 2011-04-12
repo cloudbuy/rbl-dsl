@@ -5,16 +5,17 @@ namespace event_model
 {
     Row::Row(const table_descriptor & row_descriptor)
         : td_(row_descriptor), row_data_(row_descriptor.entry().size()) {}
-   
-    void Row::reset()
+  
+    void Row::reset_row()
     {
         row_data_.assign(td_.entry().size(), undefined());
-        rpg_.has_error = false;
-        rpg_.was_parsing_value = false;
-        rpg_.current_ordinal = 0;
-        rpg_.current_value_type = 0; 
-        rpg_.out_of_range = false;
-        rpg_.double_assignment = false;
+    }
+ 
+    void Row::reset_parser()
+    {
+        reset_row();
+        if(rpg_scptr_!=NULL)
+            rpg_scptr_->reset();
     }
  
     bool Row::operator << (const std::string & str)
@@ -23,12 +24,17 @@ namespace event_model
         namespace qi = boost::spirit::qi;
         namespace ascii = boost::spirit::ascii;
 
+        if( rpg_scptr_ == NULL)
+            rpg_scptr_.reset(new row_parse_grammar()); 
+        else
+            reset_parser();
+    
         std::string::const_iterator beg = str.begin();
         std::string::const_iterator end = str.end();
         
         bool res = qi::phrase_parse(
             beg, end, 
-            rpg_( phoenix::ref(row_data_),phoenix::cref(td_)), 
+            (*rpg_scptr_)( phoenix::ref(row_data_),phoenix::cref(td_)), 
             ascii::space);
 
         return res;
@@ -41,5 +47,5 @@ namespace event_model
 
  
     Table::Table(const table_descriptor & row_descriptor)
-        : td_(row_descriptor), table_data_() {}
+        : td_(row_descriptor), rows_() {}
 };

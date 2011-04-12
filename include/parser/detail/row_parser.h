@@ -29,6 +29,31 @@ namespace event_model
         }
     };
 
+    struct row_parser_error_descriptor
+    {
+        row_parser_error_descriptor()
+            { reset(); }
+        
+        void reset()
+        {
+            has_error = false;
+            was_parsing_value = false;
+            current_ordinal = 0;
+            current_value_type = 0; 
+            out_of_range = false;
+            double_assignment = false;
+        }
+
+        uint16_t current_ordinal;
+        uint16_t current_value_type;
+        bool was_parsing_value;
+
+        bool has_error;
+        bool double_assignment;
+
+        bool out_of_range; 
+    };
+
     struct row_parse_grammar : 
         boost::spirit::qi::grammar< std::string::const_iterator, 
             void(value_variant_vector &,const table_descriptor &),
@@ -47,23 +72,17 @@ namespace event_model
                 {
                     ok_ = true;
                     v[ordinal] = v_in;
-                    //std::cout << ordinal << std::endl;
-
-//                    if(ordinal == 0)
-  //                      std::cout << boost::get<int32_t>( v_in);
-                    //if(ordinal == 3)
-                      //  std::cout << boost::get<int64_t>( v[3])
                 }
                 else
                 {                                                       
-                    double_assignment = true;
+                    rped_.double_assignment = true;
                     ok_ = false;
                     return;
                 }                                                           
             }                                                               
             else 
             {                                                          
-                out_of_range = true;                                        
+                rped_.out_of_range = true;                                        
                 ok_ = false;
                 return;
             }                                                               
@@ -84,15 +103,11 @@ namespace event_model
         boost::spirit::qi::rule<   std::string::const_iterator, 
                     void(value_variant_vector &, const table_descriptor &),
                     boost::spirit::ascii::space_type> row_rule;
-
-        uint16_t current_ordinal;
-        uint16_t current_value_type;
-        bool was_parsing_value;
-
-        bool has_error;
-        bool double_assignment;
-
-        bool out_of_range; 
+    
+        row_parser_error_descriptor rped_;
+        
+        void reset() { rped_.reset(); }
+        
         row_parse_grammar();
     };
 
