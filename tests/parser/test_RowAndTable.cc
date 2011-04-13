@@ -24,7 +24,7 @@
 
 using namespace event_model;
 
-TEST(row_table_test, test_one)
+TEST(event_table_test, test_one)
 {
     ContainerBuilder<EventTypeContainer> container_builder;
     typedef ContainerBuilder<EventTypeContainer>::entry_type et;
@@ -71,7 +71,7 @@ TEST(row_table_test, test_one)
     ASSERT_EQ(td.entry().size(), 6);
     ASSERT_EQ(td.entry().occupied_size(),4);
 
-    Row row(td);
+    Event event(td);
     ASSERT_EQ(td.RowTypeAt(0), VALUE_INT4);
     ASSERT_EQ(td.RowTypeAt(1), VALUE_UNINITIALIZED);
     ASSERT_EQ(td.RowTypeAt(2), VALUE_STRING);
@@ -80,9 +80,9 @@ TEST(row_table_test, test_one)
     ASSERT_EQ(td.RowTypeAt(5), VALUE_STRING);
  
     std::string test_string("0(0=5, 2=\"jungle fever\", 3=12423, 5=\"boring\")");
-    EXPECT_TRUE(row << test_string);
-    const value_variant_vector & v = row.get_row_vector(); 
-    const row_parser_error_descriptor * e_d = row.get_row_parser_error_descriptor();
+    EXPECT_TRUE(event << test_string);
+    const value_variant_vector & v = event.get_event_vector(); 
+    const event_parser_error_descriptor * e_d = event.get_event_parser_error_descriptor();
     ASSERT_TRUE(e_d!=NULL);    
  
     ASSERT_EQ( boost::get<int32_t>( v[0]),5);
@@ -107,27 +107,27 @@ TEST(row_table_test, test_one)
 
 
     test_string ="0(0=2147483647 , 3=12423)";
-    EXPECT_TRUE(row << test_string);
+    EXPECT_TRUE(event << test_string);
 
     test_string ="0(0=5, 3=9223372036854775807)";
-    EXPECT_TRUE(row << test_string);
+    EXPECT_TRUE(event << test_string);
 
     test_string ="0(0=2147483648, 3=12423)";
-    EXPECT_FALSE(row << test_string);
+    EXPECT_FALSE(event << test_string);
     EXPECT_TRUE(e_d->has_error);
     EXPECT_TRUE(e_d->was_parsing_value);
     EXPECT_EQ(e_d->current_ordinal,0);
     EXPECT_EQ(e_d->current_value_type,VALUE_INT4);
     
     test_string ="0(0=5, 3=9223372036854775808)";
-    EXPECT_FALSE(row << test_string);
+    EXPECT_FALSE(event << test_string);
     EXPECT_TRUE(e_d->has_error);
     EXPECT_TRUE(e_d->was_parsing_value);
     EXPECT_EQ(e_d->current_ordinal,3);
     EXPECT_EQ(e_d->current_value_type,VALUE_INT8);
     
     test_string = "0(0=5, 2=\"jungle \"\" fever\", 3=12423, 5=\"bo\"\"ring\")";
-    EXPECT_TRUE(row << test_string);
+    EXPECT_TRUE(event << test_string);
     
     ASSERT_EQ( boost::get<int32_t>( v[0]),5);
     ASSERT_EQ( boost::get<int64_t>( v[3]),12423);

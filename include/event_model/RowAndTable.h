@@ -7,45 +7,45 @@
 
 namespace event_model
 {
-    class Row
+    class Event
     {
     public:
-        Row(const EventDescriptor & row_descriptor);
+        Event(const EventDescriptor & event_descriptor);
         bool operator >>(std::string & str) const; 
         bool operator <<(const std::string & str);
-        const value_variant_vector & get_row_vector() const;
+        const value_variant_vector & get_event_vector() const;
    
-        void reset_row(); 
+        void reset_event(); 
 
-        const row_parser_error_descriptor * 
-            get_row_parser_error_descriptor() const 
+        const event_parser_error_descriptor * 
+            get_event_parser_error_descriptor() const 
         { 
-            if(rpg_scptr_ != NULL)
-                return &rpg_scptr_->rped_; 
+            if(epg_scptr_ != NULL)
+                return &epg_scptr_->rped_; 
             else
                 return NULL;
         }
     private:
-        value_variant_vector row_data_;
-        const EventDescriptor & td_;
+        value_variant_vector event_data_;
+        const EventDescriptor & ed_;
 
-        boost::scoped_ptr<row_parse_grammar> rpg_scptr_;
+        boost::scoped_ptr<event_parse_grammar> epg_scptr_;
         void reset_parser();
     };
    
      
     
-    class Table
+    class EventSet
     {
     public:
-        Table(const EventDescriptor & row_descriptor);
+        EventSet(const EventDescriptor & event_descriptor);
 
-        bool push(const Row & row);
-        bool pop(Row & row) const;
-        typedef std::vector<value_variant_vector> row_vector;
+        bool push(const Event & event);
+        bool pop(Event & event) const;
+        typedef std::vector<value_variant_vector> event_vector;
     private:
-        row_vector rows_;
-        const EventDescriptor & td_;
+        event_vector events_;
+        const EventDescriptor & ed_;
         
     };
 };

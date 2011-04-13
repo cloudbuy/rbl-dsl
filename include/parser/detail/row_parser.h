@@ -8,9 +8,9 @@
 
 namespace event_model
 {
-    struct row_parser_error_descriptor
+    struct event_parser_error_descriptor
     {
-        row_parser_error_descriptor()
+        event_parser_error_descriptor()
             { reset(); }
         
         void reset()
@@ -33,7 +33,7 @@ namespace event_model
         bool out_of_range; 
     };
 
-    struct row_parse_grammar : 
+    struct event_parse_grammar : 
         boost::spirit::qi::grammar< std::string::const_iterator, 
             void(value_variant_vector & , const EventDescriptor &),
             boost::spirit::qi::ascii::space_type> 
@@ -78,17 +78,17 @@ namespace event_model
         boost::spirit::qi::rule<   std::string::const_iterator,
                     void(value_variant_vector &, const EventDescriptor &),
                     boost::spirit::qi::locals<value_variant>,
-                    boost::spirit::ascii::space_type>  row_entry;
+                    boost::spirit::ascii::space_type>  event_entry;
 
         boost::spirit::qi::rule<   std::string::const_iterator, 
                     void(value_variant_vector &, const EventDescriptor &),
-                    boost::spirit::ascii::space_type> row_rule;
+                    boost::spirit::ascii::space_type> event_rule;
     
-        row_parser_error_descriptor rped_;
+        event_parser_error_descriptor rped_;
         
         void reset() { rped_.reset(); }
         
-        row_parse_grammar();
+        event_parse_grammar();
     };
 
     }

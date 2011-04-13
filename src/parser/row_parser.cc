@@ -35,29 +35,29 @@ namespace event_model
     using qi::_val;
     using qi::lit;
  
-    row_parse_grammar::row_parse_grammar() 
-            :   row_parse_grammar::base_type(row_rule, "row_rule")
+    event_parse_grammar::event_parse_grammar() 
+            :   event_parse_grammar::base_type(event_rule, "event_rule")
     { 
         rped_.reset();
      
         #define _CO \
-        phoenix::bind(  &row_parser_error_descriptor::current_ordinal,      \
+        phoenix::bind(  &event_parser_error_descriptor::current_ordinal,    \
                         this->rped_)
 
         #define _CVT\
-        phoenix::bind(  &row_parser_error_descriptor::current_value_type,   \
+        phoenix::bind(  &event_parser_error_descriptor::current_value_type,   \
                         this->rped_)
 
         #define _WPV\
-        phoenix::bind(  &row_parser_error_descriptor::was_parsing_value,    \
+        phoenix::bind(  &event_parser_error_descriptor::was_parsing_value,    \
                         this->rped_)
     
         #define _HAS_ERROR\
-        phoenix::bind(  &row_parser_error_descriptor::has_error, \
+        phoenix::bind(  &event_parser_error_descriptor::has_error, \
                         this->rped_)
 
         #define _SET_VALUE \
-        phoenix::bind(  &row_parse_grammar::set_value, \
+        phoenix::bind(  &event_parse_grammar::set_value, \
                         *this,_r1,_CO,_a,_pass)
        
 
@@ -66,7 +66,7 @@ namespace event_model
             lexeme[ *( (char_ - '"') [_val+=_1] | lit("\"\"")[_val+='"'] ) ]
              > char_('"');
 
-        row_entry = 
+        event_entry = 
             qi::ushort_[ _CO=_1] > '=' > 
             eps [_CVT = phoenix::bind(&EventDescriptor::RowTypeAt, _r2, _CO)] >>
             (       ( eps( _CVT == VALUE_INT4) >> p_int32_t 
@@ -78,14 +78,14 @@ namespace event_model
             )
         ; 
         
-        row_rule = 
+        event_rule = 
             qi::ushort_ > '(' >
             *(  eps [_WPV = true] 
-                >> row_entry(_r1,_r2)
+                >> event_entry(_r1,_r2)
                 > ( qi::char_(',') | ')' ) [ _WPV = false ]
             )
         ;
         
-        qi::on_error<qi::fail>(row_rule, _HAS_ERROR=true);
+        qi::on_error<qi::fail>(event_rule, _HAS_ERROR=true);
     }
 }
