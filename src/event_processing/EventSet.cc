@@ -1,4 +1,4 @@
-#include <event_model/RowAndTable.h>
+#include <event_processing/EventSet.h>
 #include <boost/spirit/include/qi.hpp>
 
 namespace event_model

@@ -18,7 +18,7 @@
 #define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem.hpp>
 
-#include <event_model/RowAndTable.h>
+#include <event_processing/EventSet.h>
 
 #include <boost/variant/apply_visitor.hpp>
 

@@ -1,8 +1,8 @@
 #ifndef _EM_ROW_AND_TABLE_H
 #define _EM_ROW_AND_TABLE_H
-#include "Types.h"
-#include "Descriptors.h"
-#include <parser/detail/row_parser.h>
+#include <event_model/Types.h>
+#include <event_model/Descriptors.h>
+#include "detail/event_string_parser.h"
 #include <boost/scoped_ptr.hpp>
 
 namespace event_model
