@@ -137,6 +137,48 @@ TEST(event_table_test, test_one)
 
 }
 
+TEST(event_table_test, test_two)
+{
+    ContainerBuilder<EventTypeContainer> container_builder;
+    typedef ContainerBuilder<EventTypeContainer>::entry_type et;
+
+    Oid oid0("monkey",0);
+    Oid oid2("zebra",2);
+    Oid oid3("donkey",3);
+    Oid oid5("baboon",5);
+   
+    EventTypeDescriptor type_d0; 
+    EventTypeDescriptor type_d2;
+    EventTypeDescriptor type_d3;
+    EventTypeDescriptor type_d5;
+
+    type_d0.set_is_primitive(true);
+    type_d0.set_qualifier(ENTRY_REQUIRED);
+    type_d0.set_type(VALUE_INT4);
+    
+    type_d2.set_is_primitive(true);
+    type_d2.set_qualifier(ENTRY_REQUIRED);
+    type_d2.set_type(VALUE_STRING);
+    
+    type_d3.set_is_primitive(true);
+    type_d3.set_qualifier(ENTRY_REQUIRED);
+    type_d3.set_type(VALUE_INT8);
+
+    type_d5.set_is_primitive(true);
+    type_d5.set_qualifier(ENTRY_REQUIRED);
+    type_d5.set_type(VALUE_STRING);
+
+    container_builder.SetEntry(et(oid0,type_d0));
+    container_builder.SetEntry(et(oid2,type_d2));
+    container_builder.SetEntry(et(oid3,type_d3));
+    container_builder.SetEntry(et(oid5,type_d5)); 
+    
+    ASSERT_EQ(container_builder.size(), 6);
+    ASSERT_EQ(container_builder.occupied_size(),4);
+
+    EventTypeContainer cont = container_builder;
+}
+
 int main(int argc,char ** argv)
 {
     ::testing::InitGoogleTest(&argc,argv);

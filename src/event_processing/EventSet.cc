@@ -1,5 +1,6 @@
 #include <event_processing/EventSet.h>
 #include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/karma.hpp>
 
 namespace event_model
 {
@@ -16,6 +17,23 @@ namespace event_model
         reset_event();
         if(epg_scptr_!=NULL)
             epg_scptr_->reset();
+    }
+
+    bool Event::operator >> (std::string & str) const 
+    {
+        namespace phoenix = boost::phoenix;
+
+        std::back_insert_iterator<std::string> sink(str);
+        
+        if(epgg_scptr_ == NULL)
+            epgg_scptr_.reset(new event_string_generator_grammar());
+
+        // reset something ? 
+
+        return boost::spirit::karma::generate(
+            sink,
+            (*epgg_scptr_)(phoenix::cref(ed_),phoenix::cref(event_data_)),
+            event_data_);
     }
  
     bool Event::operator << (const std::string & str)

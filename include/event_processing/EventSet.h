@@ -3,11 +3,23 @@
 #include <event_model/Types.h>
 #include <event_model/Descriptors.h>
 #include "detail/event_string_parser.h"
+#include "detail/event_string_generator.h"
 #include <boost/scoped_ptr.hpp>
+#include <boost/utility.hpp>
 
-namespace event_model
-{
-    class Event
+/// \todo   add a verify function, and wire it up to the parser this also 
+///         involves adding the failure case to the error struct.
+
+/// \todo   implement logic to specify to the generator weather it uses
+///         ordinals or identifiers. And the string parser needs to be able to 
+///         handle both.
+
+/// \todo   verify uin8_t ordinal use is sane with regards to the callee's
+///         -- i.e., the uint32_t API that calls it, the callee's need to 
+///         test for overflows
+
+namespace event_model {
+    class Event : boost::noncopyable
     {
     public:
         Event(const EventDescriptor & event_descriptor);
@@ -30,12 +42,12 @@ namespace event_model
         const EventDescriptor & ed_;
 
         boost::scoped_ptr<event_parse_grammar> epg_scptr_;
+        mutable boost::scoped_ptr<event_string_generator_grammar> epgg_scptr_;
+
         void reset_parser();
     };
-   
-     
     
-    class EventSet
+    class EventSet : boost::noncopyable
     {
     public:
         EventSet(const EventDescriptor & event_descriptor);
