@@ -20,6 +20,8 @@
 
 #include <event_model/RowAndTable.h>
 
+#include <boost/variant/apply_visitor.hpp>
+
 using namespace event_model;
 
 TEST(row_table_test, test_one)
@@ -65,18 +67,18 @@ TEST(row_table_test, test_one)
     ASSERT_EQ(cont.size(), 6);
     ASSERT_EQ(cont.occupied_size(),4);
 
-    table_descriptor td( Oid("test",0), cont);
+    EventDescriptor td( Oid("test",0), cont);
     ASSERT_EQ(td.entry().size(), 6);
     ASSERT_EQ(td.entry().occupied_size(),4);
 
     Row row(td);
     ASSERT_EQ(td.RowTypeAt(0), VALUE_INT4);
     ASSERT_EQ(td.RowTypeAt(1), VALUE_UNINITIALIZED);
-    ASSERT_NE(td.RowTypeAt(2), VALUE_UNINITIALIZED);
+    ASSERT_EQ(td.RowTypeAt(2), VALUE_STRING);
     ASSERT_EQ(td.RowTypeAt(3), VALUE_INT8);
     ASSERT_EQ(td.RowTypeAt(4), VALUE_UNINITIALIZED);
-    ASSERT_NE(td.RowTypeAt(5), VALUE_UNINITIALIZED);
-    
+    ASSERT_EQ(td.RowTypeAt(5), VALUE_STRING);
+ 
     std::string test_string("0(0=5, 2=\"jungle fever\", 3=12423, 5=\"boring\")");
     EXPECT_TRUE(row << test_string);
     const value_variant_vector & v = row.get_row_vector(); 
@@ -87,6 +89,21 @@ TEST(row_table_test, test_one)
     ASSERT_EQ( boost::get<int64_t>( v[3]),12423);
     ASSERT_EQ( boost::get<std::string>( v[2]), "jungle fever");
     ASSERT_EQ( boost::get<std::string>( v[5]), "boring");
+
+    ASSERT_EQ(  boost::apply_visitor( get_type_variant_visitor(),v[0]), 
+                VALUE_INT4);
+    ASSERT_EQ(  boost::apply_visitor( get_type_variant_visitor(),v[1]), 
+                VALUE_UNINITIALIZED);
+    ASSERT_EQ(  boost::apply_visitor( get_type_variant_visitor(),v[2]), 
+                VALUE_STRING);
+    ASSERT_EQ(  boost::apply_visitor( get_type_variant_visitor(),v[3]), 
+                VALUE_INT8);
+    ASSERT_EQ(  boost::apply_visitor( get_type_variant_visitor(),v[4]), 
+                VALUE_UNINITIALIZED);
+    ASSERT_EQ(  boost::apply_visitor( get_type_variant_visitor(),v[5]), 
+                VALUE_STRING);
+
+
 
 
     test_string ="0(0=2147483647 , 3=12423)";

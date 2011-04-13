@@ -42,21 +42,21 @@ inline void EventTypeDescriptor::serialize(SF::Archive & ar)
     ar & qualifier_ & type_ & primitive_;
 }
 ///////////////////////////////////////////////////////////////////////////////
-inline table_descriptor::table_descriptor( const Oid & oid, 
+inline EventDescriptor::EventDescriptor( const Oid & oid, 
                                     const EventTypeContainer & etc)
     : base(oid,etc) {}
 
-inline const VALUE_TYPE table_descriptor::
-                        RowTypeAt(const uint32_t ordinal) const
+inline const VALUE_TYPE 
+EventDescriptor::RowTypeAt(const uint32_t ordinal) const
 {
     const EventTypeContainer::entry_type * etd_e = 
         entry().EntryAtordinal(ordinal);
+    
     if( etd_e == NULL)
     {
         return VALUE_UNINITIALIZED;
     }
     else return etd_e->entry().type();
-
 }
 ///////////////////////////////////////////////////////////////////////////////
 inline GeneratorEventDescriptor::GeneratorEventDescriptor()

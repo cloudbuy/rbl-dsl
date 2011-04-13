@@ -3,7 +3,7 @@
 
 namespace event_model
 {
-    Row::Row(const table_descriptor & row_descriptor)
+    Row::Row(const EventDescriptor & row_descriptor)
         : td_(row_descriptor), row_data_(row_descriptor.entry().size()) {}
   
     void Row::reset_row()
@@ -46,6 +46,6 @@ namespace event_model
     }
 
  
-    Table::Table(const table_descriptor & row_descriptor)
+    Table::Table(const EventDescriptor & row_descriptor)
         : td_(row_descriptor), rows_() {}
 };

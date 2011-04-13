@@ -10,7 +10,7 @@ namespace event_model
     class Row
     {
     public:
-        Row(const table_descriptor & row_descriptor);
+        Row(const EventDescriptor & row_descriptor);
         bool operator >>(std::string & str) const; 
         bool operator <<(const std::string & str);
         const value_variant_vector & get_row_vector() const;
@@ -27,7 +27,7 @@ namespace event_model
         }
     private:
         value_variant_vector row_data_;
-        const table_descriptor & td_;
+        const EventDescriptor & td_;
 
         boost::scoped_ptr<row_parse_grammar> rpg_scptr_;
         void reset_parser();
@@ -38,14 +38,14 @@ namespace event_model
     class Table
     {
     public:
-        Table(const table_descriptor & row_descriptor);
+        Table(const EventDescriptor & row_descriptor);
 
         bool push(const Row & row);
         bool pop(Row & row) const;
         typedef std::vector<value_variant_vector> row_vector;
     private:
         row_vector rows_;
-        const table_descriptor & td_;
+        const EventDescriptor & td_;
         
     };
 };

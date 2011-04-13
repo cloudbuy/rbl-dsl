@@ -48,14 +48,14 @@ namespace event_model
  
     typedef OidContainer<Oid, EventTypeDescriptor> EventTypeContainer;
 ///////////////////////////////////////////////////////////////////////////////
-    class table_descriptor : 
+    class EventDescriptor : 
         public primitives::OidContainerEntryType<Oid,EventTypeContainer>
     {
     public:
         typedef primitives::
-                    OidContainerEntryType<Oid,EventTypeContainer> base;
+        OidContainerEntryType<Oid,EventTypeContainer> base;
         
-        table_descriptor(const Oid & oid, const EventTypeContainer & etc);
+        EventDescriptor(const Oid & oid, const EventTypeContainer & etc);
         const VALUE_TYPE RowTypeAt(const uint32_t ordinal) const;
     };
 ///////////////////////////////////////////////////////////////////////////////

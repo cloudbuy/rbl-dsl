@@ -11,6 +11,7 @@ using boost::int64_t;
 
 namespace event_model
 {
+///////////////////////////////////////////////////////////////////////////////
     enum VALUE_TYPE
     {
         VALUE_UNINITIALIZED=0,
@@ -18,7 +19,7 @@ namespace event_model
         VALUE_INT8,
         VALUE_STRING
     };
-    
+///////////////////////////////////////////////////////////////////////////////    
     namespace parser
     {
         struct MarshallTypes : boost::spirit::qi::symbols<char, VALUE_TYPE>
@@ -37,6 +38,7 @@ namespace event_model
             }
         };
     };
+///////////////////////////////////////////////////////////////////////////////
     struct undefined {} ;
     typedef boost::variant< 
                     undefined ,int32_t, int64_t, std::string> value_variant;
@@ -59,7 +61,7 @@ namespace event_model
             return false;
         }
     };
-///////////////////////////////////////////////////////////////////////////////    
+////////////////////////////////////////////////////////////////////////////////
     class get_type_variant_visitor : boost::static_visitor<>
     {
     public:
@@ -74,4 +76,5 @@ namespace event_model
                                 { return VALUE_UNINITIALIZED; }
     };
 }
+///////////////////////////////////////////////////////////////////////////////
 #endif

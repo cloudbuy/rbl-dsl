@@ -35,7 +35,7 @@ namespace event_model
 
     struct row_parse_grammar : 
         boost::spirit::qi::grammar< std::string::const_iterator, 
-            void(value_variant_vector &,const table_descriptor &),
+            void(value_variant_vector & , const EventDescriptor &),
             boost::spirit::qi::ascii::space_type> 
     {
         void set_value (
@@ -76,12 +76,12 @@ namespace event_model
             boost::spirit::ascii::space_type > quoted_string;
  
         boost::spirit::qi::rule<   std::string::const_iterator,
-                    void(value_variant_vector &, const table_descriptor &),
+                    void(value_variant_vector &, const EventDescriptor &),
                     boost::spirit::qi::locals<value_variant>,
                     boost::spirit::ascii::space_type>  row_entry;
 
         boost::spirit::qi::rule<   std::string::const_iterator, 
-                    void(value_variant_vector &, const table_descriptor &),
+                    void(value_variant_vector &, const EventDescriptor &),
                     boost::spirit::ascii::space_type> row_rule;
     
         row_parser_error_descriptor rped_;

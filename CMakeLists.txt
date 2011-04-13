@@ -29,9 +29,9 @@ IF(MSVC)
 
 ELSEIF(UNIX)
     find_library(RCF_LIB RCF)
+ 
+    #SET(CMAKE_CXX_FLAGS "-pg") #for gprof dumps
 
-    
-    
     find_library(GTEST_STATIC_LIB libgtest.a) 
     if(GTEST_STATIC_LIB-NOTFOUND) 
         message(FATAL_ERROR "gtest static library not found") 
