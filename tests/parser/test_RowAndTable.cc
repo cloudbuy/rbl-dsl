@@ -183,9 +183,16 @@ TEST(event_table_test, test_two)
     Event event(td);
 
     std::string test_string("0(0=5, 2=\"jungle fever\", 3=12423, 5=\"boring\")");
-
     EXPECT_TRUE(event << test_string);
-    
+    const value_variant_vector & v = event.get_event_vector();   
+    EXPECT_TRUE(event << test_string);
+
+    ASSERT_EQ( boost::get<int32_t>( v[0]),5);
+    ASSERT_EQ( boost::get<int64_t>( v[3]),12423);
+
+    ASSERT_EQ( boost::get<std::string>( v[2]), "jungle fever");
+    ASSERT_EQ( boost::get<std::string>( v[5]), "boring");
+ 
     std::string string2;
     
     EXPECT_TRUE(event >> string2);

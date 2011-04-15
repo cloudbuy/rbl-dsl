@@ -6,10 +6,7 @@
 #include <string>
 #include <ostream>
 
-inline std::ostream & operator<< (std::ostream & out, event_model::undefined const & undef)
-{
-    return out;
-}
+
 
 typedef boost::variant<event_model::undefined,std::string, int32_t, int64_t> temp3;
 
@@ -18,7 +15,7 @@ typedef boost::variant<std::string, int32_t, int64_t> temp2;
 #define BASE_RULE_SIGNATURE std::back_insert_iterator<std::string>,     \
         void(   const event_model::EventDescriptor &,                   \
                 const event_model::value_variant_vector &),             \
-        boost::spirit::karma::locals<uint32_t,temp3>
+        boost::spirit::karma::locals<uint32_t,event_model::value_variant>
                 
 
 struct event_string_generator_grammar : 

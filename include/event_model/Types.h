@@ -7,6 +7,9 @@
 #include <boost/variant.hpp>
 #include <ostream>
 
+#include <boost/spirit/include/karma_eps.hpp>
+#include <boost/spirit/include/karma_auto.hpp>
+
 using boost::int32_t;
 using boost::int64_t;
 
@@ -41,6 +44,19 @@ namespace event_model
     };
 ///////////////////////////////////////////////////////////////////////////////
     struct undefined {} ; //to enable an empty slot in the event
+ 
+    inline std::ostream & operator<< 
+    (std::ostream & out, event_model::undefined & undef)
+    {
+        std::cout <<" hjaha" << std::endl;
+        return out;
+    }
+    inline std::ostream & operator<< 
+    (std::ostream & out, const event_model::undefined & undef)
+    {
+        std::cout << " const haha"<< std::endl;
+        return out;
+    }
     typedef boost::variant< 
                     undefined ,int32_t, int64_t, std::string> value_variant;
     typedef std::vector<value_variant> value_variant_vector;
@@ -78,11 +94,24 @@ namespace event_model
     };
 ///////////////////////////////////////////////////////////////////////////////
 }
+// GLOBAL NAMESPACE ///////////////////////////////////////////////////////////
+
 ///////////////////////////////////////////////////////////////////////////////
 // no op to enable the boost::variant to be "output streamable"
-inline std::ostream & operator<< (std::ostream & out, event_model::undefined & undef)
+
+///////////////////////////////////////////////////////////////////////////////
+namespace boost { namespace spirit { namespace traits
 {
-    return out;
-}
+    template <>
+    struct create_generator<event_model::undefined>
+    {
+        typedef spirit::karma::eps_type type;
+
+        static type call()
+        {
+            return spirit::karma::eps;
+        }
+    };
+}}}
 ///////////////////////////////////////////////////////////////////////////////
 #endif

@@ -32,8 +32,8 @@ namespace event_model
 
         return boost::spirit::karma::generate(
             sink,
-            (*epgg_scptr_)(phoenix::cref(ed_),phoenix::cref(event_data_)),
-            event_data_);
+            (*epgg_scptr_)(phoenix::cref(ed_),phoenix::cref(event_data_))
+            );
     }
  
     bool Event::operator << (const std::string & str)

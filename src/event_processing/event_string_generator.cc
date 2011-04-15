@@ -5,6 +5,13 @@
 namespace karma = boost::spirit::karma;
 namespace phoenix = boost::phoenix;
 
+
+const event_model::value_variant & GetValueFromVariantAtOrdinal
+(const event_model::value_variant_vector & v, uint32_t ordinal)
+{
+    return v[ordinal];
+}
+
 event_string_generator_grammar::event_string_generator_grammar()
     : event_string_generator_grammar::base_type(base_rule),
       current_value_type(event_model::VALUE_UNINITIALIZED),
@@ -32,7 +39,9 @@ event_string_generator_grammar::event_string_generator_grammar()
     
     #define _CVT_LOCAL                                                      \
     phoenix::bind(&event_string_generator_grammar::current_value_type,*this)
-    
+   
+    #define _CV_CURRENT(ordinal)                                            \
+    phoenix::bind(&::GetValueFromVariantAtOrdinal,_r2, ordinal)
 
     base_rule = 
         eps  [ _a = phoenix::bind(&value_variant_vector::size, _r2)] <<
@@ -40,22 +49,15 @@ event_string_generator_grammar::event_string_generator_grammar()
         char_('(') <<
         repeat(_a) [
             eps[_CVT_LOCAL = _CVT_CURRENT(_CO)]  << 
-            ( eps( _CVT_LOCAL != VALUE_UNINITIALIZED) <<
-              int_[_1=_CO] << char_("=") << 
+            ( ( eps( _CVT_LOCAL != VALUE_UNINITIALIZED) <<
                 (
-                     (  eps(_CVT_LOCAL == VALUE_INT4)
-                        //<< int_[phoenix::val(1)];
-                     )
-                   | (  eps(_CVT_LOCAL == VALUE_INT8)
-                     )
-                   | (  eps(_CVT_LOCAL == VALUE_STRING)
-                     )
-                 )
-              | eps
+                    int_[_1=_CO] << char_("=") << 
+                    eps[ _b = _CV_CURRENT(_CO)]  <<
+                    karma::stream(_b)                    
+               )
+              ) | eps
             )
             << eps[ _CO = _CO+1 ]
-            << karma::auto_(_b)
-        ] <<
-        char_(')')
+        ] << char_(')')
     ;
 }
