@@ -173,10 +173,23 @@ TEST(event_table_test, test_two)
     container_builder.SetEntry(et(oid3,type_d3));
     container_builder.SetEntry(et(oid5,type_d5)); 
     
+   
     ASSERT_EQ(container_builder.size(), 6);
     ASSERT_EQ(container_builder.occupied_size(),4);
 
     EventTypeContainer cont = container_builder;
+    EventDescriptor td( Oid("test",0), cont);
+
+    Event event(td);
+
+    std::string test_string("0(0=5, 2=\"jungle fever\", 3=12423, 5=\"boring\")");
+
+    EXPECT_TRUE(event << test_string);
+    
+    std::string string2;
+    
+    EXPECT_TRUE(event >> string2);
+    std::cout << string2 << std::endl;
 }
 
 int main(int argc,char ** argv)

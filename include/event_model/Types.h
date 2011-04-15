@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <boost/variant.hpp>
+#include <ostream>
 
 using boost::int32_t;
 using boost::int64_t;
@@ -39,7 +40,7 @@ namespace event_model
         };
     };
 ///////////////////////////////////////////////////////////////////////////////
-    struct undefined {} ;
+    struct undefined {} ; //to enable an empty slot in the event
     typedef boost::variant< 
                     undefined ,int32_t, int64_t, std::string> value_variant;
     typedef std::vector<value_variant> value_variant_vector;
@@ -75,6 +76,13 @@ namespace event_model
         result_type operator()(UNMATCHED_TYPE & um) const 
                                 { return VALUE_UNINITIALIZED; }
     };
+///////////////////////////////////////////////////////////////////////////////
+}
+///////////////////////////////////////////////////////////////////////////////
+// no op to enable the boost::variant to be "output streamable"
+inline std::ostream & operator<< (std::ostream & out, event_model::undefined & undef)
+{
+    return out;
 }
 ///////////////////////////////////////////////////////////////////////////////
 #endif
