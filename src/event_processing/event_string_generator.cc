@@ -51,9 +51,15 @@ event_string_generator_grammar::event_string_generator_grammar()
             eps[_CVT_LOCAL = _CVT_CURRENT(_CO)]  << 
             ( ( eps( _CVT_LOCAL != VALUE_UNINITIALIZED) <<
                 (
+                    ( ( eps(_CO !=0) << char_(',') ) | eps) <<
+                    ( ( eps( _CVT_LOCAL == VALUE_STRING) << char_('\"')
+                        ) | eps ) <<
                     int_[_1=_CO] << char_("=") << 
                     eps[ _b = _CV_CURRENT(_CO)]  <<
-                    karma::stream(_b)                    
+                    karma::stream(_b)           <<
+                    ( ( eps( _CVT_LOCAL == VALUE_STRING) << char_('\"')
+                        ) | eps )
+                    
                )
               ) | eps
             )
