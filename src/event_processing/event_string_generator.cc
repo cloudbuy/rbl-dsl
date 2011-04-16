@@ -5,14 +5,15 @@
 namespace karma = boost::spirit::karma;
 namespace phoenix = boost::phoenix;
 
-
-const event_model::value_variant & GetValueFromVariantAtOrdinal
-(const event_model::value_variant_vector & v, uint32_t ordinal)
+void event_string_generator_grammar::
+SetLocalValuePtrAtOrdinal(  const event_model::value_variant_vector & vvv, 
+                            uint32_t ordinal)
 {
-    return v[ordinal];
-}
+    current_value_ptr = & vvv[ordinal];
+} 
 
-event_string_generator_grammar::event_string_generator_grammar()
+event_string_generator_grammar::
+event_string_generator_grammar()
     : event_string_generator_grammar::base_type(base_rule),
       current_value_type(event_model::VALUE_UNINITIALIZED),
       current_ordinal(0)
@@ -23,13 +24,11 @@ event_string_generator_grammar::event_string_generator_grammar()
     using karma::_1;
     using karma::_r1;
     using karma::_r2;
-    using karma::_a;
-    using karma::_b;
+    using karma::ascii::space;
     using karma::repeat;
     using event_model::value_variant_vector;
     using event_model::EventDescriptor;
     using namespace event_model; 
-//    entry_rule = 
    
     #define _CO                                                             \
     phoenix::bind(&event_string_generator_grammar::current_ordinal,*this)
@@ -40,30 +39,47 @@ event_string_generator_grammar::event_string_generator_grammar()
     #define _CVT_LOCAL                                                      \
     phoenix::bind(&event_string_generator_grammar::current_value_type,*this)
    
-    #define _CV_CURRENT(ordinal)                                            \
-    phoenix::bind(&::GetValueFromVariantAtOrdinal,_r2, ordinal)
+    #define _SET_CV_LOCAL(ordinal)                                          \
+    phoenix::bind(  &event_string_generator_grammar::                       \
+                    SetLocalValuePtrAtOrdinal, *this, _r2,ordinal)
+
+    #define _CV_LOCAL                                                       \
+    phoenix::bind(  &event_string_generator_grammar::                       \
+                    current_value_ptr,*this)                   
+    
+    #define _VVV_SIZE                                                       \
+    phoenix::bind( &value_variant_vector::size,                             \
+                   _r2 )
 
     base_rule = 
-        eps  [ _a = phoenix::bind(&value_variant_vector::size, _r2)] <<
-        int_ [ _1 = phoenix::bind(&EventDescriptor::ordinal, _r1) ] <<
-        char_('(') <<
-        repeat(_a) [
-            eps[_CVT_LOCAL = _CVT_CURRENT(_CO)]  << 
-            ( ( eps( _CVT_LOCAL != VALUE_UNINITIALIZED) <<
+        int_ [ _1 = phoenix::bind(&EventDescriptor::ordinal, _r1) ]         <<
+        space << char_('(') << space                                        <<
+        repeat(_VVV_SIZE) [
+            eps[_CVT_LOCAL = _CVT_CURRENT(_CO)]                             << 
+            eps[_SET_CV_LOCAL(_CO)]                                         << 
+            ( ( eps( _CVT_LOCAL != VALUE_UNINITIALIZED)                     <<
                 (
-                    ( ( eps(_CO !=0) << char_(',') ) | eps) <<
-                    ( ( eps( _CVT_LOCAL == VALUE_STRING) << char_('\"')
-                        ) | eps ) <<
-                    int_[_1=_CO] << char_("=") << 
-                    eps[ _b = _CV_CURRENT(_CO)]  <<
-                    karma::stream(_b)           <<
-                    ( ( eps( _CVT_LOCAL == VALUE_STRING) << char_('\"')
-                        ) | eps )
-                    
-               )
+                    (   ( eps(_CO !=0) << space << char_(',') << space)     
+                        | eps)                                              <<
+                    int_[_1=_CO] << char_("=")                              <<
+                    (   quoted_type_rule(*_CV_LOCAL) 
+                        | terminal_type_rule(*_CV_LOCAL) )
+                )
               ) | eps
-            )
-            << eps[ _CO = _CO+1 ]
-        ] << char_(')')
+            )                                                               <<
+            eps[ _CO = _CO+1 ]                                              
+        ]                                                                   <<
+        space << char_(')')
+    ;
+
+    quoted_type_rule = 
+        eps( _CVT_LOCAL == VALUE_STRING)                                    << 
+        char_('\"')                                                         <<
+        karma::stream(_r1)                                                  <<
+        char_('\"')
+    ;
+
+    terminal_type_rule  = 
+        karma::stream(_r1)
     ;
 }

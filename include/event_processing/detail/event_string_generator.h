@@ -6,32 +6,34 @@
 #include <string>
 #include <ostream>
 
-
-
-typedef boost::variant<event_model::undefined,std::string, int32_t, int64_t> temp3;
-
-typedef boost::variant<std::string, int32_t, int64_t> temp2;
-
 #define BASE_RULE_SIGNATURE std::back_insert_iterator<std::string>,     \
         void(   const event_model::EventDescriptor &,                   \
                 const event_model::value_variant_vector &),             \
-        boost::spirit::karma::locals<uint32_t,event_model::value_variant>
+        boost::spirit::karma::locals<uint32_t>
                 
 
 struct event_string_generator_grammar : 
     boost::spirit::karma::grammar<BASE_RULE_SIGNATURE>
 {
-//    boost::spirit::karma::rule < 
-//        std::back_insert_iterator<std::string>,
-//        void(   const event_model::EventDescriptor &,     
-//                const event_model::value_variant_vector &),
-//         
-//    > entry_rule;
-
+    // state //////////////////////////////////////////////////////////////////
     uint16_t current_value_type;
     uint16_t current_ordinal;
-    boost::spirit::karma::rule<BASE_RULE_SIGNATURE> base_rule; 
+    const event_model::value_variant * current_value_ptr;
+    // local functions ////////////////////////////////////////////////////////
+    void SetLocalValuePtrAtOrdinal( const event_model::value_variant_vector &, 
+                                    uint32_t ordinal);
+    // Grammar ////////////////////////////////////////////////////////////////
+    boost::spirit::karma::rule
+        <   BASE_RULE_SIGNATURE                         >   base_rule; 
     
+    boost::spirit::karma::rule
+        <   std::back_insert_iterator<std::string>, 
+            void(   const event_model::value_variant &) >   quoted_type_rule;  
+    
+    boost::spirit::karma::rule
+        <   std::back_insert_iterator<std::string>, 
+            void(   const event_model::value_variant &) >   terminal_type_rule;
+   // Constructor ///////////////////////////////////////////////////////////// 
     event_string_generator_grammar();
 };
 
