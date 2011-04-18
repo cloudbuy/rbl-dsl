@@ -24,6 +24,8 @@
 
 using namespace event_model;
 
+/// \todo   This should be moved to event_processing directory
+
 TEST(event_table_test, test_one)
 {
     ContainerBuilder<EventTypeContainer> container_builder;
