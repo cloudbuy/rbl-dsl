@@ -6,6 +6,7 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 
 namespace karma = boost::spirit::karma;
+namespace phoenix = boost::phoenix;
 
 #define TYPE_CONTAINER_BASE_RULE_SIGNATURE              \
     iterator,                                           \
@@ -25,7 +26,7 @@ struct EventTypeContainerGenerator:
         using karma::eps;
         using karma::_r1;
    
-        base_rule =
+        base_rule = 
             eps
         ;
     }
@@ -45,17 +46,25 @@ struct  EventDescriptorGenerator
 {
     karma::rule<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE> base_rule;
 
-    #define _EVENT_ORDINAL phoenix::bind(&EventDescriptor::ordinal,_r1)
-    #define _EVENT_NAME    phoenix::bind(&EventDescriptor::name,_r1)
+    #define _EVENT_ORDINAL                                          \
+    phoenix::bind(&event_model::EventDescriptor::ordinal,_r1)
+    
+    #define _EVENT_NAME                                             \
+    phoenix::bind(&event_model::EventDescriptor::name,_r1)
 
     EventDescriptorGenerator() 
         : EventDescriptorGenerator::base_type(base_rule)
     {
         using karma::eps;
         using karma::_r1;
+        using karma::char_;
+        using karma::stream;
+        using karma::eol;
 
         base_rule = 
-            eps
+            int_ (_EVENT_ORDINAL) << char_(':') << stream(_EVENT_NAME) << eol 
+            << char_('{') << 
+            char_('}')
         ;    
     }
 };
