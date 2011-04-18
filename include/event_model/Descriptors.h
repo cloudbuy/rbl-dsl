@@ -48,6 +48,12 @@ namespace event_model
  
     typedef OidContainer<Oid, EventTypeDescriptor> EventTypeContainer;
 ///////////////////////////////////////////////////////////////////////////////
+// The node-specific descriptors that follow the class below are meant to carry
+// more then just the data that describes an event. They also do not contain 
+// a backreference to their containers, hence do not have access to their name,
+// or ordinal. The EventDescriptor class is meant only to describe the raw 
+// structure of an in-transit event.
+///////////////////////////////////////////////////////////////////////////////
     class EventDescriptor : 
         public primitives::OidContainerEntryType<Oid,EventTypeContainer>
     {
