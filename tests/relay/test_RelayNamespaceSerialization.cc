@@ -2,7 +2,7 @@
 #include <RCF/Idl.hpp>
 #include <RCF/TcpEndpoint.hpp>
 #include <interface/RelayToServerInterface.h>
-#include <parser/Descriptors.h>
+#include <event_model/Descriptors.h>
 
 
 TEST(relay_tests, namespace_serializaton)
