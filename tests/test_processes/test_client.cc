@@ -9,7 +9,7 @@ int main()
     std::string test;
     std::back_insert_iterator<std::string> bii(test);
 
-    EventTypeContainerGenerator<
+    EventDescriptorGenerator<
         std::back_insert_iterator<std::string> > etgg;
 
     RcfClient<I_NamespaceRepository> MarshNsRepoClient(RCF::TcpEndpoint(50001));

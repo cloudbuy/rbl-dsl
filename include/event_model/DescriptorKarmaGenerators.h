@@ -2,6 +2,8 @@
 #define _EM_DESCRIPTOR_KARMA_GENERATORS
 #include "Descriptors.h"
 #include <boost/spirit/include/karma.hpp>
+#include <boost/spirit/include/phoenix_bind.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
 
 namespace karma = boost::spirit::karma;
 
@@ -15,7 +17,6 @@ template<typename iterator>
 struct EventTypeContainerGenerator: 
     boost::spirit::karma::grammar<TYPE_CONTAINER_BASE_RULE_SIGNATURE>
 {
-    
     boost::spirit::karma::rule <TYPE_CONTAINER_BASE_RULE_SIGNATURE> base_rule;
     
     EventTypeContainerGenerator() : 
@@ -42,21 +43,25 @@ template<typename iterator>
 struct  EventDescriptorGenerator 
     : boost::spirit::karma::grammar<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE>
 {
-    
     karma::rule<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE> base_rule;
-    
+
+    #define _EVENT_ORDINAL phoenix::bind(&EventDescriptor::ordinal,_r1)
+    #define _EVENT_NAME    phoenix::bind(&EventDescriptor::name,_r1)
+
     EventDescriptorGenerator() 
         : EventDescriptorGenerator::base_type(base_rule)
     {
         using karma::eps;
         using karma::_r1;
 
-        base_rule =
+        base_rule = 
             eps
         ;    
     }
 };
 
+#undef _EVENT_ORDINAL
+#undef _EVENT_NAME
 #undef  EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE
 
 #endif //_EM_DESCRIPTOR_KARMA_GENERATORS
