@@ -1,29 +1,6 @@
-#include "parser/detail/OidContainer.h"
-#include <gtest/gtest.h>
-#include <stdexcept>
-#include <sstream>
-#include <SF/OBinaryStream.hpp>
-#include <SF/IBinaryStream.hpp>
-#include <boost/cstdint.hpp>
-#include "parser/detail/EventModelGrammar.h"
-#include <gtest/gtest.h>
-#include <string>
-#include <parser/NamespaceParsers.h>
-#include "parser/Descriptors.h"
-#include <gtest/gtest.h>
-#include <boost/cstdint.hpp>
-#include "parser/detail/OidContainer.h"
+#include "test_includes.h"
 
-#include <typeinfo>
-#define BOOST_FILESYSTEM_VERSION 3
-#include <boost/filesystem.hpp>
-
-
-#include "test_FileParsing.cc"
-#include "test_Grammar.cc"
-#include "test_Descriptors.cc"
-#include "test_OidContainer.cc"
-
+extern std::string test_data_dir;
 
 int main(int argc,char ** argv)
 {
@@ -38,3 +15,4 @@ int main(int argc,char ** argv)
     ::testing::InitGoogleTest(&argc,argv);
     return RUN_ALL_TESTS();
 }
+

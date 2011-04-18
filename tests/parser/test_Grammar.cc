@@ -1,3 +1,5 @@
+#include "test_includes.h"
+
 typedef std::string::iterator c_s_it;
 
 using namespace event_model;

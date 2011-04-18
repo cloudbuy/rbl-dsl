@@ -1,3 +1,5 @@
+#include "test_includes.h"
+
 std::string test_data_dir;
 
 using namespace event_model;
