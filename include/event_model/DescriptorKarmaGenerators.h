@@ -5,23 +5,58 @@
 
 namespace karma = boost::spirit::karma;
 
-#define BASE_RULE_SIGNATURE                             \
+#define TYPE_CONTAINER_BASE_RULE_SIGNATURE              \
     iterator,                                           \
     void (const event_model::EventTypeDescriptor &),    \
     boost::spirit::karma::locals<uint32_t>
- 
-template<typename iterator>
-struct EventTypeGeneratorGrammar : 
-    boost::spirit::karma::grammar<BASE_RULE_SIGNATURE>
-{
-    boost::spirit::karma::rule <BASE_RULE_SIGNATURE> base_rule;
 
-    EventTypeGeneratorGrammar() : EventTypeGeneratorGrammar::base_type(base_rule)
+
+template<typename iterator>
+struct EventTypeContainerGenerator: 
+    boost::spirit::karma::grammar<TYPE_CONTAINER_BASE_RULE_SIGNATURE>
+{
+    
+    boost::spirit::karma::rule <TYPE_CONTAINER_BASE_RULE_SIGNATURE> base_rule;
+    
+    EventTypeContainerGenerator() : 
+        EventTypeContainerGenerator::base_type(base_rule)
     {
-        base_rule = karma::eps;
+        using karma::eps;
+        using karma::_r1;
+   
+        base_rule =
+            eps
+        ;
     }
 };
 
-#undef  BASE_RULE_SIGNATURE
+#undef TYPE_CONTAINER_BASE_RULE_SIGNATURE 
+
+#define EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE            \
+    iterator,                                           \
+    void (const event_model::EventDescriptor &),        \
+    boost::spirit::karma::locals<uint32_t>
+
+
+template<typename iterator>
+struct  EventDescriptorGenerator 
+    : boost::spirit::karma::grammar<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE>
+{
+    
+    karma::rule<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE> base_rule;
+    
+    EventDescriptorGenerator() 
+        : EventDescriptorGenerator::base_type(base_rule)
+    {
+        using karma::eps;
+        using karma::_r1;
+
+        base_rule =
+            eps
+        ;    
+    }
+};
+
+#undef  EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE
 
 #endif //_EM_DESCRIPTOR_KARMA_GENERATORS
