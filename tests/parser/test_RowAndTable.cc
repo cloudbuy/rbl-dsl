@@ -24,6 +24,8 @@
 
 using namespace event_model;
 
+/// \todo   This should be moved to event_processing directory
+
 TEST(event_table_test, test_one)
 {
     ContainerBuilder<EventTypeContainer> container_builder;
@@ -197,10 +199,4 @@ TEST(event_table_test, test_two)
     
     EXPECT_TRUE(event >> string2);
     std::cout << string2 << std::endl;
-}
-
-int main(int argc,char ** argv)
-{
-    ::testing::InitGoogleTest(&argc,argv);
-    return RUN_ALL_TESTS();
 }

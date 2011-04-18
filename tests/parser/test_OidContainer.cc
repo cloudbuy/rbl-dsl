@@ -1,3 +1,5 @@
+#include "test_includes.h"
+
 using namespace event_model::primitives;
 
 typedef OidConstrainedString<char,8> oid_str_type;

@@ -1,3 +1,7 @@
+#include "test_includes.h"
+
+using namespace event_model;
+
 TEST(descriptor_building_and_serialization, event_entry_serialization_test)
 {
     EventTypeDescriptor etd_default_constructed;
