@@ -1,4 +1,8 @@
-#include "test_includes.h"
+#include "marshall/DescriptorBuilders.h"
+#include <gtest/gtest.h>
+
+#include <SF/OBinaryStream.hpp>
+#include <SF/IBinaryStream.hpp>
 
 using namespace event_model;
 
@@ -164,8 +168,8 @@ TEST(descriptor_building_and_serialization, exhaustive_mndb_building_test)
     ASSERT_TRUE(mndb.events.EntryWithName("MonKey")->ordinal() == 5);
     ASSERT_TRUE(mndb.events.EntryWithName("eVeNt")->ordinal() == 0);
 
-    ASSERT_EQ(mndb.events[0]->types.size(),9);
-    ASSERT_EQ(mndb.events[0]->types.occupied_size(),3);
+    ASSERT_EQ(mndb.events[0].size(),9);
+    ASSERT_EQ(mndb.events[0].occupied_size(),3);
 
     ASSERT_TRUE(mndb.events[0]->types[0]!=NULL);
     ASSERT_TRUE(mndb.events[0]->types[1]==NULL);
@@ -747,4 +751,10 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
 
 }
 
-
+#ifdef ISOLATED_GTEST_COMPILE
+int main(int argc,char ** argv)
+{
+    ::testing::InitGoogleTest(&argc,argv);
+    return RUN_ALL_TESTS();
+}
+#endif

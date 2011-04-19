@@ -7,10 +7,11 @@
 namespace event_model
 {
     using namespace primitives;
-   
+    
+    typedef boost::uint8_t ordinal_type; 
     // Common 
     typedef OidConstrainedString<char, 32> OidName;
-    typedef OidType<OidName, boost::uint8_t> Oid;
+    typedef OidType<OidName, ordinal_type> Oid;
     
     enum EVENT_DESCRIPTOR_QUALIFIER
     {
@@ -49,13 +50,50 @@ namespace event_model
     
     typedef OidContainerEntryType<Oid,EventTypeContainer> 
                                                     EventDescriptorPair;
+    //TODO I have to get rid of size_t and replace it with 2^8-1 limit
+    //respecting operations and types, this involves changing stuff
+    //in OidContainer.h and the unit tests.
     class EventDescriptorBase
     {
-        EventDescriptorPair oid_type_pair;
-        
-        EventTypeContainer & types();
-        Oid & oid();
+    public:
+        EventDescriptorBase( Oid & oid, 
+                             ordinal_type ordinal_, EventTypecontainer & etc);
+        const Oid & oid() const;
+        const ordinal_type namespace_ordinal() const;
+
+        const std::size_t size() const ;
+        const std::size_t occupied_size() const;
+    protected:
+        EventDescriptorPair oid_type_pair_;
+        ordinal_type namespace_ordinal_;
     };
+    
+    template<class EventDescriptorContainer>
+    class NamespaceDescriptorBase 
+    {
+        const std::string & name();
+        const ordinal_type ordinal();
+    private:
+        std::string name_;
+        ordinal_type ordinal_;
+        EventDescriptorContainer EDC;
+    };
+// inline definitions /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    inline const Oid & EventDescriptorBase::oid() const
+    {
+        return oid_type_pair_.Id();
+    }
+    inline const std::size_t EventDescriptorBase::size() const
+    {
+        return oid_type_pair_.entry().size();        
+    }
+    inline const std::size_t EventDescriptorBase::occupied_size() const
+    {
+        return oid_type_pair_.entry().occupied_size();
+    }
+    ///////////////////////////////////////////////////////////////////////////
+
 }
 #endif 
 

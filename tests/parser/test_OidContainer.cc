@@ -1,4 +1,8 @@
-#include "test_includes.h"
+#include "event_model/detail/OidContainer.h"
+#include "gtest/gtest.h"
+
+#include <SF/OBinaryStream.hpp>
+#include <SF/IBinaryStream.hpp>
 
 using namespace event_model::primitives;
 
@@ -244,3 +248,11 @@ TEST(oid_container_tests , exchaustive_container_tests)
    
     // perhaps a operator == is needed ? 
 }
+
+#ifdef ISOLATED_GTEST_COMPILE
+int main(int argc,char ** argv)
+{
+    ::testing::InitGoogleTest(&argc,argv);
+    return RUN_ALL_TESTS();
+}
+#endif
