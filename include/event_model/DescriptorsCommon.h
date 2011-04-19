@@ -46,7 +46,16 @@ namespace event_model
     };
     
     typedef OidContainer<Oid, EventTypeDescriptor>  EventTypeContainer;
-    typedef OidContainerEntryType<Oid,EventTypeContainer> EventDescriptorBase;
+    
+    typedef OidContainerEntryType<Oid,EventTypeContainer> 
+                                                    EventDescriptorPair;
+    class EventDescriptorBase
+    {
+        EventDescriptorPair oid_type_pair;
+        
+        EventTypeContainer & types();
+        Oid & oid();
+    };
 }
 #endif 
 
