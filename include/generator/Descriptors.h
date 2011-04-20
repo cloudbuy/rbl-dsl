@@ -7,7 +7,6 @@ namespace event_model
     class GeneratorEventDescriptor : public EventDescriptorBase
     {
     };
-    typedef OidContainer<Oid,GeneratorEventDescriptor>  GeneratorEDC;
 
     class GeneratorNamespaceDescriptor
     {

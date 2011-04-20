@@ -22,13 +22,13 @@ TEST(descriptor_building_and_serialization, event_entry_serialization_test)
     ASSERT_TRUE(etd_default_constructed.type() == VALUE_INT4);
     ASSERT_TRUE(etd_default_constructed.is_primitive() == false);
 }
-#if 0
+
 TEST(descriptor_building_and_serialization, identifier_collision_tests)
 {
-    MarshallNamespaceDescriptorBuilder mndb("testing");
+    MarshallNamespaceDescriptorBuilder mndb("testing",0);
     ASSERT_TRUE(mndb.name() == "testing");
-    ASSERT_TRUE(mndb.events.size() == 0); 
-    ASSERT_TRUE(mndb.events.occupied_size() == 0);
+    ASSERT_TRUE(mndb.event_container_size() == 0); 
+    ASSERT_TRUE(mndb.event_container_occupied_size() == 0);
 
     MarshallEventDescriptorBuilder medb;
 
@@ -59,7 +59,7 @@ TEST(descriptor_building_and_serialization, identifier_collision_tests)
     ASSERT_FALSE(res);
 //    medb.
 }
-// 
+#if 0
 TEST(descriptor_building_and_serialization, event_descriptor_building_test)
 {
     MarshallNamespaceDescriptorBuilder mndb("testing");

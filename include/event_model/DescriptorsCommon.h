@@ -61,8 +61,8 @@ namespace event_model
          
         const ordinal_type namespace_ordinal() const;
 
-        const std::size_t event_container_size() const ;
-        const std::size_t event_container_occupied_size() const;
+        const std::size_t type_container_size() const ;
+        const std::size_t type_container_occupied_size() const;
     protected:
         EventDescriptorPair event_oid_type_pair_;
         ordinal_type namespace_ordinal_;
@@ -71,17 +71,24 @@ namespace event_model
     template<class EventDescriptorContainer>
     class NamespaceDescriptorBase 
     {
+    public:
+        NamespaceDescriptorBase();
+        NamespaceDescriptorBase( const std::string & name_in,
+                                 const ordinal_type ordinal);
+
         const std::string & name();
         const ordinal_type ordinal();
-    private:
+        const std::size_t event_container_size() const;
+        const std::size_t event_container_occupied_size() const;
+        const OP_RESPONSE ContainsEventIdentifier(const Oid & oid) const;
+    protected:
         std::string name_;
         ordinal_type ordinal_;
-        EventDescriptorContainer EDC;
+        OidContainer<Oid,EventDescriptorContainer> events_;
     };
 //---------------------------------------------------------------------------//
 // inline definitions                                                        //
 //---------------------------------------------------------------------------//
-
     // EventTypeDescriptor ////////////////////////////////////////////////////
     inline EventTypeDescriptor::EventTypeDescriptor()
     :   qualifier_(ENTRY_UNINITIALIZED), 
@@ -127,20 +134,65 @@ namespace event_model
     //-----------------------------------------------------------------------//
 
     ///////////////////////////////////////////////////////////////////////////
-    inline const Oid & EventDescriptorBase::oid() const
+    inline const std::size_t EventDescriptorBase::type_container_size() const
     {
-        return oid_type_pair_.Id();
+        return event_oid_type_pair_.entry().size();        
     }
-    inline const std::size_t EventDescriptorBase::size() const
+    inline const std::size_t EventDescriptorBase::
+    type_container_occupied_size() const
     {
-        return oid_type_pair_.entry().size();        
+        return event_oid_type_pair_.entry().occupied_size();
     }
-    inline const std::size_t EventDescriptorBase::occupied_size() const
-    {
-        return oid_type_pair_.entry().occupied_size();
-    }
-    ///////////////////////////////////////////////////////////////////////////
+    //-----------------------------------------------------------------------//
+    
 
+    // NamespaceDescriptorBase ////////////////////////////////////////////////
+    template<class EventDescriptorContainer>
+    inline NamespaceDescriptorBase<EventDescriptorContainer>
+    ::NamespaceDescriptorBase()
+    {
+
+    }
+    template<class EventDescriptorContainer> 
+    inline NamespaceDescriptorBase<EventDescriptorContainer>::
+    NamespaceDescriptorBase( const std::string & name_in,
+                             const ordinal_type ordinal)
+        : name_(name_in), ordinal_(ordinal)
+    {
+    }
+
+    template<class EventDescriptorContainer>
+    inline const std::string & NamespaceDescriptorBase<EventDescriptorContainer>
+    ::name()
+    {
+        return name_;
+    }
+    template<class EventDescriptorContainer>
+    inline const ordinal_type NamespaceDescriptorBase<EventDescriptorContainer>
+    ::ordinal()
+    {
+        return ordinal_;
+    }
+
+    template<class EventDescriptorContainer>
+    inline const std::size_t NamespaceDescriptorBase<EventDescriptorContainer>::
+    event_container_size() const
+    {
+        return events_.size();
+    }
+    template<class EventDescriptorContainer>
+    inline const std::size_t NamespaceDescriptorBase<EventDescriptorContainer>::
+    event_container_occupied_size() const
+    {
+        return  events_.occupied_size();    
+    }
+    template<class EventDescriptorContainer>
+    inline const OP_RESPONSE NamespaceDescriptorBase<EventDescriptorContainer>::
+    ContainsEventIdentifier(const Oid & oid) const
+    {
+        return events_.ContainsEither(oid); 
+    }
+    //-----------------------------------------------------------------------//
 }
 #endif 
 

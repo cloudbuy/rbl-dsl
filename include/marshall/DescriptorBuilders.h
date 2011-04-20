@@ -22,7 +22,7 @@ namespace event_model
     // Downcast To The Descriptor /////////////////////////////////////////////
         operator MarshallEventDescriptor() const;
     // type container, used directly by parser ////////////////////////////////
-        ContainerBuilder<EventTypeContainer> types;
+        EventTypeContainer types;
     private:
         Oid self_oid_;      
         MarshallNamespaceDescriptorBuilder * mndb_;
@@ -30,25 +30,22 @@ namespace event_model
     //-----------------------------------------------------------------------//
     
     // MarshallNamespaceDescriptor ////////////////////////////////////////////
-    class MarshallNamespaceDescriptorBuilder
+    class MarshallNamespaceDescriptorBuilder : 
+        public MarshallNamespaceDescriptor
     {
     public:
-        typedef ContainerBuilder<MarshallEDC> EventDescriptorContainer;
         MarshallNamespaceDescriptorBuilder(); 
-        MarshallNamespaceDescriptorBuilder(const std::string &);
+        MarshallNamespaceDescriptorBuilder( const std::string & name_in, 
+                                            const ordinal_type ordinal_in);
 
         void AddEventDescriptor( const MarshallEventDescriptorBuilder & medb, 
                                  bool & ok);
     
         operator MarshallNamespaceDescriptor() const;
 
-        const std::string & name() const ;
         void set_name(std::string & _name);
-        const OP_RESPONSE ContainsEventIdentifier(const Oid & id) const;
         
-        EventDescriptorContainer events;
     private:
-        std::string name_;
     };
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
@@ -56,6 +53,13 @@ namespace event_model
 //---------------------------------------------------------------------------//
 // Inline Definitions                                                        //
 //---------------------------------------------------------------------------//
+    // MarshallEventDescriptorBuilder /////////////////////////////////////////
+    inline MarshallEventDescriptorBuilder::MarshallEventDescriptorBuilder()
+    : types() {}
+
+    inline const Oid & MarshallEventDescriptorBuilder::oid() const
+    { return self_oid_; }
+
     inline void MarshallEventDescriptorBuilder::Init(   
         const Oid & oid, 
         MarshallNamespaceDescriptorBuilder & mndb,
@@ -72,6 +76,7 @@ namespace event_model
         ok = false;
         return;
     }
+
     inline void MarshallEventDescriptorBuilder::AddEventType
         (const Oid & oid, const EventTypeDescriptor & type, bool & ok)
     {
@@ -83,5 +88,24 @@ namespace event_model
         }
         ok = false;
     }
+    //-----------------------------------------------------------------------//
+
+
+
+    // MarshallNamespaceDescriptorBuilder /////////////////////////////////////
+    inline MarshallNamespaceDescriptorBuilder::
+    MarshallNamespaceDescriptorBuilder()
+        : MarshallNamespaceDescriptor() 
+    { 
+    }
+
+    inline MarshallNamespaceDescriptorBuilder::
+    MarshallNamespaceDescriptorBuilder( const std::string & name_in,
+                                          const ordinal_type ordinal_in) 
+        : MarshallNamespaceDescriptor( name_in , ordinal_in ) 
+    { 
+    }
+    //-----------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
 }
 #endif

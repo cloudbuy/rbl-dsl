@@ -9,8 +9,6 @@ namespace event_model
     {
     };
 
-    typedef OidContainer<Oid,RelayEventDescriptor>      RelayEDC;
-
     class RelayNamespaceDescriptor 
     {
     };
