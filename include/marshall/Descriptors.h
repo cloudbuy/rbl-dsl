@@ -4,6 +4,7 @@
 
 namespace event_model
 {
+    // MarshallEventDescriptor ////////////////////////////////////////////////
     class MarshallEventDescriptor : public EventDescriptorBase
     {
     public:
@@ -11,7 +12,9 @@ namespace event_model
         MarshallEventDescriptor( const Oid & oid, const ordinal_type ordinal_, 
                                  const EventTypeContainer & etc);
     };
+    //-----------------------------------------------------------------------//
     
+    // MarshallNamespaceDescriptor ////////////////////////////////////////////
     class MarshallNamespaceDescriptor : 
         public NamespaceDescriptorBase<MarshallEventDescriptor>
     {
@@ -20,7 +23,9 @@ namespace event_model
         MarshallNamespaceDescriptor( const  std::string & name_in,
                                      const  ordinal_type ordinal_in);
     };
+    //-----------------------------------------------------------------------// 
     
+    // MarshallNamespaceDescriptor ////////////////////////////////////////////
     MarshallNamespaceDescriptor::MarshallNamespaceDescriptor()
         : NamespaceDescriptorBase<MarshallEventDescriptor>()
     {
@@ -30,6 +35,9 @@ namespace event_model
         : NamespaceDescriptorBase<MarshallEventDescriptor>(name_in, ordinal_in)
     {
     }
+    //-----------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
+
 //---------------------------------------------------------------------------//
 // Inline Definitions                                                        //
 //---------------------------------------------------------------------------//

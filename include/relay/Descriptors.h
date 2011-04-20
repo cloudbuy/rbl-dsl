@@ -5,12 +5,22 @@
 
 namespace event_model
 {
+    // RelayEventDescriptor ///////////////////////////////////////////////////
     class RelayEventDescriptor : public EventDescriptorBase
     {
     };
-
-    class RelayNamespaceDescriptor 
+    //-----------------------------------------------------------------------//
+    
+    // RelayNamespaceDescriptor ///////////////////////////////////////////////
+    class RelayNamespaceDescriptor : 
+        public  NamespaceDescriptorBase<RelayEventDescriptor>
     {
     };
+    //-----------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------//
+// Inline Definitions                                                        //
+//---------------------------------------------------------------------------//
 }
 #endif
