@@ -59,7 +59,6 @@ TEST(descriptor_building_and_serialization, identifier_collision_tests)
     ASSERT_FALSE(res);
 //    medb.
 }
-#if 0
 TEST(descriptor_building_and_serialization, event_descriptor_building_test)
 {
     MarshallNamespaceDescriptorBuilder mndb("testing");
@@ -95,6 +94,7 @@ TEST(descriptor_building_and_serialization, event_descriptor_building_test)
                         res);
     ASSERT_FALSE(res);
 }
+#if 0
 
 TEST(descriptor_building_and_serialization, exhaustive_mndb_building_test)
 {
