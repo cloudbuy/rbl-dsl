@@ -25,6 +25,22 @@ namespace event_model
     };
     //-----------------------------------------------------------------------// 
     
+
+//---------------------------------------------------------------------------//
+// Inline Definitions                                                        //
+//---------------------------------------------------------------------------//
+    // MarshallEvenDescriptor ////////////////////////////////////////////////
+    inline MarshallEventDescriptor::MarshallEventDescriptor()
+        :  EventDescriptorBase()
+    {
+    }
+    inline MarshallEventDescriptor::MarshallEventDescriptor
+    (const Oid & oid, const ordinal_type ordinal_, const EventTypeContainer & etc)
+        : EventDescriptorBase(oid,ordinal_,etc)
+    {
+    }
+    //-----------------------------------------------------------------------//
+
     // MarshallNamespaceDescriptor ////////////////////////////////////////////
     MarshallNamespaceDescriptor::MarshallNamespaceDescriptor()
         : NamespaceDescriptorBase<MarshallEventDescriptor>()
@@ -36,19 +52,6 @@ namespace event_model
     {
     }
     //-----------------------------------------------------------------------//
-//---------------------------------------------------------------------------//
 
-//---------------------------------------------------------------------------//
-// Inline Definitions                                                        //
-//---------------------------------------------------------------------------//
-    inline MarshallEventDescriptor::MarshallEventDescriptor()
-        :  EventDescriptorBase()
-    {
-    }
-    inline MarshallEventDescriptor::MarshallEventDescriptor
-    (const Oid & oid, const ordinal_type ordinal_, const EventTypeContainer & etc)
-        : EventDescriptorBase(oid,ordinal_,etc)
-    {
-    }
 }
 #endif
