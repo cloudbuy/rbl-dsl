@@ -8,7 +8,7 @@ namespace event_model
 {
     using namespace primitives;
     
-    typedef boost::uint8_t ordinal_type; 
+    typedef boost::uint16_t ordinal_type; 
     // Common 
     typedef OidConstrainedString<char, 32> OidName;
     typedef OidType<OidName, ordinal_type> Oid;
@@ -57,14 +57,14 @@ namespace event_model
     {
     public:
         EventDescriptorBase( Oid & oid, 
-                             ordinal_type ordinal_, EventTypecontainer & etc);
-        const Oid & oid() const;
+                             ordinal_type ordinal_, EventTypeContainer & etc);
+         
         const ordinal_type namespace_ordinal() const;
 
-        const std::size_t size() const ;
-        const std::size_t occupied_size() const;
+        const std::size_t event_container_size() const ;
+        const std::size_t event_container_occupied_size() const;
     protected:
-        EventDescriptorPair oid_type_pair_;
+        EventDescriptorPair event_oid_type_pair_;
         ordinal_type namespace_ordinal_;
     };
     
@@ -78,7 +78,54 @@ namespace event_model
         ordinal_type ordinal_;
         EventDescriptorContainer EDC;
     };
-// inline definitions /////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------//
+// inline definitions                                                        //
+//---------------------------------------------------------------------------//
+
+    // EventTypeDescriptor ////////////////////////////////////////////////////
+    inline EventTypeDescriptor::EventTypeDescriptor()
+    :   qualifier_(ENTRY_UNINITIALIZED), 
+        type_(VALUE_UNINITIALIZED), 
+        primitive_(false) {} 
+
+    inline EventTypeDescriptor::EventTypeDescriptor( 
+        EVENT_DESCRIPTOR_QUALIFIER _qualifier, 
+        VALUE_TYPE _type,
+        bool primitive_in)
+        : qualifier_(_qualifier),
+          type_(_type),
+          primitive_(primitive_in) {}
+
+    inline const bool 
+    EventTypeDescriptor::is_primitive() const {return primitive_; } 
+
+    inline const EVENT_DESCRIPTOR_QUALIFIER 
+    EventTypeDescriptor::qualifier() const
+        { return qualifier_; }
+
+    inline const VALUE_TYPE 
+    EventTypeDescriptor::type() const { return type_; }     
+
+    inline void EventTypeDescriptor::set_is_primitive(bool _is_primitive)
+    {
+        primitive_ = _is_primitive;
+    }
+    inline void EventTypeDescriptor::set_qualifier
+        (EVENT_DESCRIPTOR_QUALIFIER _qualifier)
+    {
+        qualifier_ = _qualifier;
+    }
+    inline void EventTypeDescriptor::set_type(VALUE_TYPE _type)
+    {
+        type_ = _type;
+    }
+
+    inline void EventTypeDescriptor::serialize(SF::Archive & ar)
+    {
+        ar & qualifier_ & type_ & primitive_;
+    }
+    //-----------------------------------------------------------------------//
+
     ///////////////////////////////////////////////////////////////////////////
     inline const Oid & EventDescriptorBase::oid() const
     {

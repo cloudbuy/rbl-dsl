@@ -76,7 +76,7 @@ struct x
         ar & y;
     }
 };
-typedef ContainerBuilder< OidContainer<oid,x> > test_container;
+typedef OidContainer<oid,x> test_container;
 
 
 TEST(oid_container_tests, container_entry_test)

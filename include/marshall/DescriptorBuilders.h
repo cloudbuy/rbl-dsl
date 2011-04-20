@@ -1,6 +1,6 @@
 #ifndef _MARSHALL_DESCRIPTOR_BUILDER
 #define _MARSHALL_DESCRIPTOR_BUILDER
-#include "Descriptors.h"
+#include "marshall/Descriptors.h"
 namespace event_model
 {
 // Class Declarations /////////////////////////////////////////////////////////
@@ -27,7 +27,9 @@ namespace event_model
         Oid self_oid_;      
         MarshallNamespaceDescriptorBuilder * mndb_;
     };
-    ///////////////////////////////////////////////////////////////////////////
+    //-----------------------------------------------------------------------//
+    
+    // MarshallNamespaceDescriptor ////////////////////////////////////////////
     class MarshallNamespaceDescriptorBuilder
     {
     public:
@@ -48,7 +50,12 @@ namespace event_model
     private:
         std::string name_;
     };
-// Inline Definitions /////////////////////////////////////////////////////////
+    //-----------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------//
+// Inline Definitions                                                        //
+//---------------------------------------------------------------------------//
     inline void MarshallEventDescriptorBuilder::Init(   
         const Oid & oid, 
         MarshallNamespaceDescriptorBuilder & mndb,

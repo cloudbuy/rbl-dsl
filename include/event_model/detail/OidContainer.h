@@ -374,6 +374,20 @@ public:
         }
         else return NULL;
     }
+    
+    OP_RESPONSE SetEntry(const entry_type & entry)
+    {
+        resize_if_needed_(entry.ordinal() );
+
+        OP_RESPONSE ret = ContainsEither(entry.Id());
+        if (ret != OP_NO_ERROR)
+            return ret;
+        
+        entries_.at(entry.ordinal()) = entry;
+        name_index_.insert( entries_.at( entry.ordinal() )); 
+        
+        return OP_NO_ERROR;
+    } 
 
 protected:
     typedef intrusive::set< entry_type > name_index_set;    
@@ -426,7 +440,7 @@ protected:
     std::vector<entry_type> entries_;
     name_index_set name_index_;
 };
-
+#if 0
 template <typename Base, typename Derived>
 class SlicingContainer : public Base
 {
@@ -479,7 +493,7 @@ public:
         return OP_NO_ERROR;
     } 
 };
-
+#endif 
 
 }
 }
