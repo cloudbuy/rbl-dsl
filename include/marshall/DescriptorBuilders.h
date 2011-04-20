@@ -19,8 +19,6 @@ namespace event_model
                             const EventTypeDescriptor & type,bool & ok); 
     // Getters ////////////////////////////////////////////////////////////////
         const Oid & oid() const;
-    // Downcast To The Descriptor /////////////////////////////////////////////
-        operator MarshallEventDescriptor() const;
     // type container, used directly by parser ////////////////////////////////
         EventTypeContainer types;
     private:
@@ -37,12 +35,9 @@ namespace event_model
         MarshallNamespaceDescriptorBuilder(); 
         MarshallNamespaceDescriptorBuilder( const std::string & name_in, 
                                             const ordinal_type ordinal_in);
-
         void AddEventDescriptor( const MarshallEventDescriptorBuilder & medb, 
                                  bool & ok);
-    
         operator MarshallNamespaceDescriptor() const;
-
         void set_name(std::string & _name);
         
     private:
@@ -97,6 +92,21 @@ namespace event_model
     MarshallNamespaceDescriptorBuilder()
         : MarshallNamespaceDescriptor() 
     { 
+    }
+
+    inline void MarshallNamespaceDescriptorBuilder::AddEventDescriptor
+    (const MarshallEventDescriptorBuilder & medb, bool & ok)
+    {
+        ok = true;
+        MarshallEventDescriptor med(    medb.oid(),
+                                        ordinal_,
+                                        medb.types);
+
+        EventDescriptorContainer::entry_type entry
+            (medb.oid(), med );
+        
+        if( events_.SetEntry(entry) != OP_NO_ERROR)
+            ok = false; 
     }
 
     inline MarshallNamespaceDescriptorBuilder::
