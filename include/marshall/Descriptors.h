@@ -4,6 +4,9 @@
 
 namespace event_model
 {
+//---------------------------------------------------------------------------//
+// Class Declarations                                                        //
+//---------------------------------------------------------------------------//
     // MarshallEventDescriptor ////////////////////////////////////////////////
     class MarshallEventDescriptor : public EventDescriptorBase
     {
@@ -24,12 +27,11 @@ namespace event_model
                                      const  ordinal_type ordinal_in);
     };
     //-----------------------------------------------------------------------// 
-    
 
 //---------------------------------------------------------------------------//
 // Inline Definitions                                                        //
 //---------------------------------------------------------------------------//
-    // MarshallEvenDescriptor ////////////////////////////////////////////////
+    // MarshallEvenDescriptor /////////////////////////////////////////////////
     inline MarshallEventDescriptor::MarshallEventDescriptor()
         :  EventDescriptorBase()
     {

@@ -5,6 +5,9 @@
 
 namespace event_model
 {
+//---------------------------------------------------------------------------//
+// Class Declarations                                                        //
+//---------------------------------------------------------------------------//
     // RelayEventDescriptor ///////////////////////////////////////////////////
     class RelayEventDescriptor : public EventDescriptorBase
     {
