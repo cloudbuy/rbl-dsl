@@ -25,6 +25,7 @@ namespace event_model
         MarshallNamespaceDescriptor();
         MarshallNamespaceDescriptor( const  std::string & name_in,
                                      const  ordinal_type ordinal_in);
+        operator GeneratorNamespaceDescriptor() const;
     };
     //-----------------------------------------------------------------------// 
 
@@ -53,7 +54,9 @@ namespace event_model
         : NamespaceDescriptorBase<MarshallEventDescriptor>(name_in, ordinal_in)
     {
     }
+    
     //-----------------------------------------------------------------------//
-
+    
+//---------------------------------------------------------------------------//
 }
 #endif
