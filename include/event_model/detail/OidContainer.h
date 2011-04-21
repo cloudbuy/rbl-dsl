@@ -32,77 +32,20 @@ template<unsigned length>
 class OidConstrainedString<char,length> 
 {
 public:
-    inline OidConstrainedString()
-    {
-        str_[0]='\0';
-    };
-   
-    inline OidConstrainedString(const char * char_)
-    {
-        std::string str(char_);
-        construct_(str); 
-    };
-
-    inline OidConstrainedString(const std::string & str)
-    {
-        construct_(str);
-    };
-
-    inline const char * c_str() const 
-    {
-        if( ! is_initialized() )
-            throw std::invalid_argument("the string is uninitialized");
-         
-        return str_;
-    };
-    inline bool is_initialized() const
-    {
-        return (str_[0]=='\0') ? false : true;
-    }
-
-    inline bool 
-    operator< (const OidConstrainedString<char,length> & rhs) const
-    {
-        return (strncmp(str_, rhs.c_str(),length) < 0) ? true : false;
-    }
-    inline bool 
-    operator== (const OidConstrainedString<char,length> & rhs) const
-    {
-        return (strncmp(str_,rhs.c_str(),length) == 0) ? true : false;
-    }
-    inline bool 
-    operator> (const OidConstrainedString<char,length> & rhs) const
-    {
-        return (strncmp(str_,rhs.c_str(),length) > 0) ? true : false;
-    }
+    OidConstrainedString();
+    OidConstrainedString(const char * char_);
+    OidConstrainedString(const std::string & str);
     
-    void serialize(SF::Archive & ar)
-    {
-        if(ar.isWrite())
-        {
-            std::string s(str_);
-            ar & s;        
-        }
-        else
-        {
-            std::string s;
-            ar & s;
-            construct_(s);
-        }
-    }
-    
+    inline const char * c_str() const;
+    inline bool is_initialized() const;
+  
+    inline bool operator<(const OidConstrainedString<char,length> & rhs) const;
+    inline bool operator==(const OidConstrainedString<char,length> & rhs) const;
+    inline bool operator>(const OidConstrainedString<char,length> & rhs) const;
+    void serialize(SF::Archive & ar);
 private:
-    void construct_(const std::string & str)
-    {
-        if(str.length()+1 > length)
-            throw std::length_error
-                ("identifier string larger than identifier limit");
-        std::string str2(str);
-        boost::to_lower(str2);
-
-        strncpy(str_, str2.c_str(), length);
-    }
-
+    void construct_(const std::string & str);
+    
     char str_[length];
 };
 
@@ -477,7 +420,83 @@ protected:
 //---------------------------------------------------------------------------//
 // Inline Definitions                                                        //
 //---------------------------------------------------------------------------//
+    // OidConstrainedString ///////////////////////////////////////////////////
+    template<unsigned length>
+    inline OidConstrainedString<char,length>::OidConstrainedString()
+    {
+        str_[0]='\0';
+    }
+    template<unsigned length>
+    inline OidConstrainedString<char,length>::OidConstrainedString
+    (const char * char_)
+    {
+        std::string str(char_);
+        construct_(str); 
+    };
+    template<unsigned length>
+    inline OidConstrainedString<char,length>::OidConstrainedString
+    (const std::string & str)
+    {
+        construct_(str);
+    };
+    template<unsigned length>
+    inline const char * OidConstrainedString<char,length>::c_str() const 
+    {
+        if( ! is_initialized() )
+            throw std::invalid_argument("the string is uninitialized");
+         
+        return str_;
+    };
+    template<unsigned length>
+    inline bool OidConstrainedString<char,length>::is_initialized() const
+    {
+        return (str_[0]=='\0') ? false : true;
+    }
+    template<unsigned length>
+    inline bool OidConstrainedString<char,length>::
+    operator< (const OidConstrainedString<char,length> & rhs) const
+    {
+        return (strncmp(str_, rhs.c_str(),length) < 0) ? true : false;
+    }
+    template<unsigned length>
+    inline bool OidConstrainedString<char,length>::operator== 
+    (const OidConstrainedString<char,length> & rhs) const
+    {
+        return (strncmp(str_,rhs.c_str(),length) == 0) ? true : false;
+    }
+    template<unsigned length>
+    inline bool OidConstrainedString<char,length>::operator> 
+    (const OidConstrainedString<char,length> & rhs) const
+    {
+        return (strncmp(str_,rhs.c_str(),length) > 0) ? true : false;
+    }
+    template<unsigned length>
+    void OidConstrainedString<char,length>::serialize(SF::Archive & ar)
+    {
+        if(ar.isWrite())
+        {
+            std::string s(str_);
+            ar & s;        
+        }
+        else
+        {
+            std::string s;
+            ar & s;
+            construct_(s);
+        }
+    }
+    template<unsigned length>
+    void OidConstrainedString<char,length>::construct_(const std::string & str)
+    {
+        if(str.length()+1 > length)
+            throw std::length_error
+                ("identifier string larger than identifier limit");
+        std::string str2(str);
+        boost::to_lower(str2);
 
+        strncpy(str_, str2.c_str(), length);
+    }
+    //-----------------------------------------------------------------------//
 }
 }
 
