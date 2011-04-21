@@ -471,60 +471,12 @@ protected:
     name_index_set name_index_;
 };
 
-#if 0
-template <typename Base, typename Derived>
-class SlicingContainer : public Base
-{
-public:
-    typedef Base    base_type;
-    typedef Derived derived_type;
-    SlicingContainer()
-        : Base() {}
-    explicit SlicingContainer(const derived_type & d)
-    {
-        Base::name_index_.clear();
-        Base::entries_.clear();
-        std::size_t size=d.size();
+    //-----------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
 
-        Base::entries_.resize(size);
-        for(int i = 0; i < size; ++i)
-        {
-            typename Base::entry_type & bi       = Base::entries_.at(i);
-            const typename Derived::entry_type * di  = d.EntryAtordinal(i);
-            
-            if(di != NULL) {
-                bi.set_identifier(di->Id());//bi.ordinal 
-                const typename Base::entry_type::basic_entry_type bet = di->entry();
-                bi.set_entry(bet);
-            }
-        }
-        Base::regen_name_index_();
-    }
-    void serialize(SF::Archive & ar)
-    {
-        Base::serialize(ar);
-    }
-};
-
-template<typename TContainer>
-class ContainerBuilder : public TContainer
-{
-public:
-    OP_RESPONSE SetEntry(const typename TContainer::entry_type & entry)
-    {
-        resize_if_needed_(entry.ordinal() );
-
-        OP_RESPONSE ret = ContainsEither(entry.Id());
-        if (ret != OP_NO_ERROR)
-            return ret;
-        
-        TContainer::entries_.at(entry.ordinal()) = entry;
-        TContainer::name_index_.insert( TContainer::entries_.at( entry.ordinal() )); 
-        
-        return OP_NO_ERROR;
-    } 
-};
-#endif 
+//---------------------------------------------------------------------------//
+// Inline Definitions                                                        //
+//---------------------------------------------------------------------------//
 
 }
 }
