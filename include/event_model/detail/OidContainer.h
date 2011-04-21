@@ -66,19 +66,11 @@ public:
     typedef str_type name_type;
     typedef size_type ordinal_type;    
 
-    inline OidType()
-        : name_(),ordinal_() {}
+    OidType();
+        
      
     explicit inline OidType( const std::string & str_in, 
-                             const boost::uint32_t ordinal_in)
-        : name_(str_in), ordinal_() 
-    { 
-        if( ordinal_in > MAX )
-            throw std::out_of_range("ordinal exceeds limit");
-
-        ordinal_ = ordinal_in;
-    }
- 
+                             const boost::uint32_t ordinal_in);
     void serialize(SF::Archive & ar)
     {
         ar & name_ & ordinal_;
@@ -497,6 +489,39 @@ protected:
         strncpy(str_, str2.c_str(), length);
     }
     //-----------------------------------------------------------------------//
+
+    // OidType ////////////////////////////////////////////////////////////////
+    template< typename str_type, typename size_type>
+    inline OidType<str_type,size_type>::OidType()
+        : name_(),ordinal_() 
+    {
+    }
+    template< typename str_type, typename size_type>
+    inline OidType<str_type,size_type>::OidType( 
+            const std::string & str_in, 
+            const boost::uint32_t ordinal_in)
+        : name_(str_in), ordinal_() 
+    { 
+        if( ordinal_in > MAX )
+            throw std::out_of_range("ordinal exceeds limit");
+
+        ordinal_ = ordinal_in;
+    }
+
+/*
+    template< typename str_type, typename size_type>
+    inline OidType<str_type,size_type>::
+    template< typename str_type, typename size_type>
+    inline OidType<str_type,size_type>::
+    template< typename str_type, typename size_type>
+    inline OidType<str_type,size_type>::
+    template< typename str_type, typename size_type>
+    inline OidType<str_type,size_type>::
+    template< typename str_type, typename size_type>
+    inline OidType<str_type,size_type>::
+    template< typename str_type, typename size_type>
+    inline OidType<str_type,size_type>::a*/
+
 }
 }
 
