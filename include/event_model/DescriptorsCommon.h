@@ -9,7 +9,6 @@ namespace event_model
     using namespace primitives;
     
     typedef boost::uint16_t ordinal_type; 
-    // Common 
     typedef OidConstrainedString<char, 32> OidName;
     typedef OidType<OidName, ordinal_type> Oid;
     

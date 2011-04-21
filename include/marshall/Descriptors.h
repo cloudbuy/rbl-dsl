@@ -14,6 +14,7 @@ namespace event_model
         MarshallEventDescriptor(); 
         MarshallEventDescriptor( const Oid & oid, const ordinal_type ordinal_, 
                                  const EventTypeContainer & etc);
+        operator RelayEventDescriptor() const;
     };
     //-----------------------------------------------------------------------//
     
@@ -25,7 +26,7 @@ namespace event_model
         MarshallNamespaceDescriptor();
         MarshallNamespaceDescriptor( const  std::string & name_in,
                                      const  ordinal_type ordinal_in);
-        operator GeneratorNamespaceDescriptor() const;
+        operator RelayNamespaceDescriptor() const;
     };
     //-----------------------------------------------------------------------// 
 
@@ -42,6 +43,13 @@ namespace event_model
         : EventDescriptorBase(oid,ordinal_,etc)
     {
     }
+    MarshallEventDescriptor::operator RelayEventDescriptor() const
+    {
+        RelayEventDescriptor red(   event_oid_type_pair_.Id(),
+                                    namespace_ordinal_,
+                                    event_oid_type_pair_.entry());
+        return red;
+    }
     //-----------------------------------------------------------------------//
 
     // MarshallNamespaceDescriptor ////////////////////////////////////////////
@@ -55,8 +63,14 @@ namespace event_model
     {
     }
     
+    MarshallNamespaceDescriptor::operator RelayNamespaceDescriptor() const
+    {        
+        RelayNamespaceDescriptor::EventDescriptorContainer redc;
+        events_.SlicingPopulate(redc); 
+        RelayNamespaceDescriptor casted(name_,ordinal_,redc);
+        return casted;
+    }
     //-----------------------------------------------------------------------//
-    
 //---------------------------------------------------------------------------//
 }
 #endif

@@ -197,6 +197,13 @@ public:
         (const OidContainerEntryType<identifier_type, _entry_type> & rhs) const
     { return id_.name() > rhs.id_.name() ; }
 
+    template<typename ENTRY>
+    operator OidContainerEntryType<identifier_type, ENTRY>() const
+    {
+        OidContainerEntryType<identifier_type, ENTRY> ret(id_,(ENTRY)entry_);
+        return ret;
+    }
+
     void serialize(SF::Archive & ar)
     {
         ar & id_ & entry_; 
@@ -267,7 +274,30 @@ public:
 
         return *this; 
     }
+
+    template<typename Id_T, typename Entry_T>
+    void SlicingPopulate(OidContainer<Id_T,Entry_T> & target) const
+    {
+        std::size_t sz = size();
+        target.clear();
+
+        for(int i=0; i < sz; ++i)
+        {
+            const entry_type * et = EntryAtordinal(i);
+            if(et != NULL)
+            {
+                typename OidContainer<Id_T,Entry_T>::entry_type tet = (*et);
+                target.SetEntry(tet);
+            }
+        }
+    }
     
+    inline void clear()
+    {
+        name_index_.clear();
+        entries_.clear();
+    } 
+
     inline const vector_type & get_entries() const
     {
         return entries_;
@@ -440,6 +470,7 @@ protected:
     std::vector<entry_type> entries_;
     name_index_set name_index_;
 };
+
 #if 0
 template <typename Base, typename Derived>
 class SlicingContainer : public Base

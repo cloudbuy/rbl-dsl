@@ -288,7 +288,7 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(mnd.EventWithName("MonKey")->ordinal() == 5);
     ASSERT_TRUE(mnd.EventWithName("eVeNt")->ordinal() == 0);
 
-    ASSERT_EQ( typeid(mnd.EventWithName("Monkey")) 
+    ASSERT_EQ( typeid((*mnd.EventWithName("Monkey"))) 
         ,typeid(*new MarshallEventDescriptor()) );
 
     ASSERT_EQ(mnd.EventAt(0)->type_container_size(),9);
@@ -357,7 +357,7 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(rnd.EventWithName("MonKey")->ordinal() == 5);
     ASSERT_TRUE(rnd.EventWithName("eVeNt")->ordinal() == 0);
 
-    ASSERT_EQ( typeid(rnd.EventWithName("Monkey")) 
+    ASSERT_EQ( (typeid(*rnd.EventWithName("Monkey"))) 
         ,typeid(*new RelayEventDescriptor()) );
 
     ASSERT_EQ(rnd.EventAt(0)->type_container_size(),9);
@@ -426,7 +426,7 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(gnd.EventWithName("MonKey")->ordinal() == 5);
     ASSERT_TRUE(gnd.EventWithName("eVeNt")->ordinal() == 0);
 
-    ASSERT_EQ( typeid(gnd.EventWithName("Monkey")) 
+    ASSERT_EQ( typeid((*gnd.EventWithName("Monkey"))) 
         ,typeid(*new GeneratorEventDescriptor()) );
 
     ASSERT_EQ(gnd.EventAt(0)->type_container_size(),9);

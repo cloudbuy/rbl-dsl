@@ -27,7 +27,7 @@ namespace event_model
     };
     //-----------------------------------------------------------------------//
     
-    // MarshallNamespaceDescriptor ////////////////////////////////////////////
+    // MarshallNamespaceDescriptorBuilder /////////////////////////////////////
     class MarshallNamespaceDescriptorBuilder : 
         public MarshallNamespaceDescriptor
     {
@@ -35,9 +35,10 @@ namespace event_model
         MarshallNamespaceDescriptorBuilder(); 
         MarshallNamespaceDescriptorBuilder( const std::string & name_in, 
                                             const ordinal_type ordinal_in);
+        operator MarshallNamespaceDescriptor() const;
         void AddEventDescriptor( const MarshallEventDescriptorBuilder & medb, 
                                  bool & ok);
-        operator MarshallNamespaceDescriptor() const;
+
         void set_name(std::string & _name);
         
     private:
