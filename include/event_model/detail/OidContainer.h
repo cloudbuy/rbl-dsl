@@ -11,6 +11,8 @@
 #include <boost/static_assert.hpp>
 #include <boost/noncopyable.hpp>
 
+//TODO  use free function form of serialization, and make the interface
+//      dependance and implementation dependance.
 #include <SF/vector.hpp>
 #include <SF/string.hpp>
 
@@ -67,34 +69,19 @@ public:
     typedef size_type ordinal_type;    
 
     OidType();
-        
-     
     explicit inline OidType( const std::string & str_in, 
                              const boost::uint32_t ordinal_in);
-    void serialize(SF::Archive & ar)
-    {
-        ar & name_ & ordinal_;
-    }
-    
-    inline bool operator==(const OidType<str_type,size_type> & rhs) const
-    {
-        if( rhs.name_ == this->name_
-            && rhs.ordinal_ == this->ordinal_)
-            return true;
-        else
-            return false; 
-    }
-    inline const str_type & name() const { return name_; }
-    inline const size_type ordinal() const { return ordinal_; }
 
-    inline void set_name(const name_type & name_in) 
-    {
-        name_ = name_in;    
-    }
-    inline void set_ordinal(const size_type & ordinal_in)
-    {
-        ordinal_  = ordinal_in;
-    }
+    void serialize(SF::Archive & ar);
+    
+    
+    inline bool operator==(const OidType<str_type,size_type> & rhs) const;
+    inline const str_type & name() const;     
+    inline const size_type ordinal() const; 
+
+    inline void set_name(const name_type & name_in);
+    
+    inline void set_ordinal(const size_type & ordinal_in);
 private:
     str_type name_;
     size_type ordinal_;
@@ -179,6 +166,8 @@ enum OP_RESPONSE {
         OP_ORDINAL_OVERFLOW
 };
 
+//TODO: SPLIT UP THE DECLARATION AND DEFINITION
+//TODO: NEST THE ENUMS INTO THE CLASSES THEY BELONG TO
 template<typename _identifier_type, typename _entry_type>
 class OidContainer
 {
@@ -496,6 +485,7 @@ protected:
         : name_(),ordinal_() 
     {
     }
+
     template< typename str_type, typename size_type>
     inline OidType<str_type,size_type>::OidType( 
             const std::string & str_in, 
@@ -508,19 +498,47 @@ protected:
         ordinal_ = ordinal_in;
     }
 
-/*
+
     template< typename str_type, typename size_type>
-    inline OidType<str_type,size_type>::
+    inline void OidType<str_type,size_type>::serialize(SF::Archive & ar)
+    {
+        ar & name_ & ordinal_;
+    }
+
     template< typename str_type, typename size_type>
-    inline OidType<str_type,size_type>::
+    inline bool OidType<str_type,size_type>::operator==
+        (const OidType<str_type,size_type> & rhs) const
+    {
+        if( rhs.name_ == this->name_
+            && rhs.ordinal_ == this->ordinal_)
+            return true;
+        else
+            return false; 
+    }
+
     template< typename str_type, typename size_type>
-    inline OidType<str_type,size_type>::
+    inline const str_type & OidType<str_type,size_type>::name() const
+    { 
+        return name_; 
+    }
+
     template< typename str_type, typename size_type>
-    inline OidType<str_type,size_type>::
+    inline const size_type OidType<str_type,size_type>::ordinal() const
+    { 
+        return ordinal_; 
+    }
+
     template< typename str_type, typename size_type>
-    inline OidType<str_type,size_type>::
+    inline void OidType<str_type,size_type>::set_name(const name_type & name_in)
+    {
+        name_ = name_in;    
+    }
     template< typename str_type, typename size_type>
-    inline OidType<str_type,size_type>::a*/
+    inline void OidType<str_type,size_type>::set_ordinal(const size_type & ordinal_in)
+    {
+        ordinal_  = ordinal_in;
+    }
+
 
 }
 }

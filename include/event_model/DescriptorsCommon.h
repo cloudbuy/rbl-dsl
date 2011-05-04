@@ -6,6 +6,9 @@
 
 namespace event_model
 {
+//---------------------------------------------------------------------------//
+// Class Declarations                                                        //
+//---------------------------------------------------------------------------//
     using namespace primitives;
     
     typedef boost::uint16_t ordinal_type; 
@@ -19,6 +22,7 @@ namespace event_model
         ENTRY_OPTIONAL,
     };
     
+    // EventTypeDescriptor ////////////////////////////////////////////////////
     class EventTypeDescriptor
     {
     public:
@@ -44,11 +48,15 @@ namespace event_model
         VALUE_TYPE  type_;
         bool primitive_;
     };
+    //-----------------------------------------------------------------------//
     
     typedef OidContainer<Oid, EventTypeDescriptor>  EventTypeContainer;
     
     typedef OidContainerEntryType<Oid,EventTypeContainer> 
                                                     EventDescriptorPair;
+    
+    // EventDescriptorBase ////////////////////////////////////////////////////
+    
     //TODO I have to get rid of size_t and replace it with 2^8-1 limit
     //respecting operations and types, this involves changing stuff
     //in OidContainer.h and the unit tests.
@@ -72,7 +80,9 @@ namespace event_model
         EventDescriptorPair event_oid_type_pair_;
         ordinal_type namespace_ordinal_;
     };
+    //-----------------------------------------------------------------------//
     
+    // NamespaceDescriptorBase ////////////////////////////////////////////////
     template<class EventDescriptor_>
     class NamespaceDescriptorBase 
     {
@@ -98,6 +108,9 @@ namespace event_model
         ordinal_type ordinal_;
         EventDescriptorContainer events_;
     };
+    //-----------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
+
 //---------------------------------------------------------------------------//
 // inline definitions                                                        //
 //---------------------------------------------------------------------------//
@@ -145,7 +158,7 @@ namespace event_model
     }
     //-----------------------------------------------------------------------//
 
-    ///////////////////////////////////////////////////////////////////////////
+    // EventDescriptorBase ////////////////////////////////////////////////////
     inline EventDescriptorBase::EventDescriptorBase() 
         : namespace_ordinal_(), event_oid_type_pair_()
     {
@@ -252,6 +265,7 @@ namespace event_model
         return events_[name_in];
     }
     //-----------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
 }
 #endif 
 

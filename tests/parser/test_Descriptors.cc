@@ -59,6 +59,7 @@ TEST(descriptor_building_and_serialization, identifier_collision_tests)
     ASSERT_FALSE(res);
 //    medb.
 }
+
 TEST(descriptor_building_and_serialization, event_descriptor_building_test)
 {
     MarshallNamespaceDescriptorBuilder mndb("testing",0);
@@ -480,14 +481,13 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(8)->is_primitive(), true);
 }
 
-#if 0
 // descriptor_building_and_serialization
 TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
 {
-    MarshallNamespaceDescriptorBuilder mndb("testing");
+    MarshallNamespaceDescriptorBuilder mndb("testing",0);
     ASSERT_TRUE(mndb.name() == "testing");
-    ASSERT_TRUE(mndb.events.size() == 0); 
-    ASSERT_TRUE(mndb.events.occupied_size() == 0);
+    ASSERT_TRUE(mndb.event_container_size() == 0); 
+    ASSERT_TRUE(mndb.event_container_occupied_size() == 0);
 
     MarshallEventDescriptorBuilder medb1;
     MarshallEventDescriptorBuilder medb2;
@@ -545,15 +545,15 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(rnd.EventAt(4) == NULL);
     ASSERT_TRUE(rnd.EventAt(5) != NULL);
  
-    ASSERT_TRUE( rnd.events.EntryWithName("MonKey") != NULL);
-    ASSERT_TRUE( rnd.events.EntryWithName("HasSan") ==NULL);
-    ASSERT_TRUE( rnd.events.EntryWithName("eVeNt") !=NULL);
+    ASSERT_TRUE( rnd.EventWithName("MonKey") != NULL);
+    ASSERT_TRUE( rnd.EventWithName("HasSan") ==NULL);
+    ASSERT_TRUE( rnd.EventWithName("eVeNt") !=NULL);
 
-    ASSERT_TRUE(rnd.events.EntryWithName("MonKey")->ordinal() == 5);
-    ASSERT_TRUE(rnd.events.EntryWithName("eVeNt")->ordinal() == 0);
+    ASSERT_TRUE(rnd.EventWithName("MonKey")->ordinal() == 5);
+    ASSERT_TRUE(rnd.EventWithName("eVeNt")->ordinal() == 0);
 
-    ASSERT_EQ(rnd.EventAt(0)->types.size(),9);
-    ASSERT_EQ(rnd.EventAt(0)->types.occupied_size(),3);
+    ASSERT_EQ(rnd.EventAt(0)->type_container_size(),9);
+    ASSERT_EQ(rnd.EventAt(0)->type_container_occupied_size(),3);
 
     ASSERT_TRUE(rnd.EventAt(0)->TypeAt(0)!=NULL);
     ASSERT_TRUE(rnd.EventAt(0)->TypeAt(1)==NULL);
@@ -577,8 +577,8 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
-    ASSERT_EQ(rnd.EventAt(5)->types.size(),9);
-    ASSERT_EQ(rnd.EventAt(5)->types.occupied_size(),3);
+    ASSERT_EQ(rnd.EventAt(5)->type_container_size(),9);
+    ASSERT_EQ(rnd.EventAt(5)->type_container_occupied_size(),3);
 
     ASSERT_TRUE(rnd.EventAt(5)->TypeAt(0)!=NULL);
     ASSERT_TRUE(rnd.EventAt(5)->TypeAt(1)==NULL);
@@ -618,18 +618,18 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(rnd_out.EventAt(4) == NULL);
     ASSERT_TRUE(rnd_out.EventAt(5) != NULL);
  
-    ASSERT_TRUE( rnd_out.events.EntryWithName("MonKey") != NULL);
-    ASSERT_TRUE( rnd_out.events.EntryWithName("HasSan") ==NULL);
-    ASSERT_TRUE( rnd_out.events.EntryWithName("eVeNt") !=NULL);
+    ASSERT_TRUE( rnd_out.EventWithName("MonKey") != NULL);
+    ASSERT_TRUE( rnd_out.EventWithName("HasSan") ==NULL);
+    ASSERT_TRUE( rnd_out.EventWithName("eVeNt") !=NULL);
 
-    ASSERT_TRUE(rnd_out.events.EntryWithName("MonKey")->ordinal() == 5);
-    ASSERT_TRUE(rnd_out.events.EntryWithName("eVeNt")->ordinal() == 0);
+    ASSERT_TRUE(rnd_out.EventWithName("MonKey")->ordinal() == 5);
+    ASSERT_TRUE(rnd_out.EventWithName("eVeNt")->ordinal() == 0);
 
-    ASSERT_EQ( typeid(rnd_out.events.EntryWithName("Monkey")->entry()) 
+    ASSERT_EQ( typeid(rnd_out.EventWithName("Monkey")) 
         ,typeid(*new RelayEventDescriptor()) );
 
-    ASSERT_EQ(rnd_out.EventAt(0)->types.size(),9);
-    ASSERT_EQ(rnd_out.EventAt(0)->types.occupied_size(),3);
+    ASSERT_EQ(rnd_out.EventAt(0)->type_container_size(),9);
+    ASSERT_EQ(rnd_out.EventAt(0)->type_container_occupied_size(),3);
 
     ASSERT_TRUE(rnd_out.EventAt(0)->TypeAt(0)!=NULL);
     ASSERT_TRUE(rnd_out.EventAt(0)->TypeAt(1)==NULL);
@@ -653,8 +653,8 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
-    ASSERT_EQ(rnd_out.EventAt(5)->types.size(),9);
-    ASSERT_EQ(rnd_out.EventAt(5)->types.occupied_size(),3);
+    ASSERT_EQ(rnd_out.EventAt(5)->type_container_size(),9);
+    ASSERT_EQ(rnd_out.EventAt(5)->type_container_occupied_size(),3);
 
     ASSERT_TRUE(rnd_out.EventAt(5)->TypeAt(0)!=NULL);
     ASSERT_TRUE(rnd_out.EventAt(5)->TypeAt(1)==NULL);
@@ -690,15 +690,15 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(gnd_out.EventAt(4) == NULL);
     ASSERT_TRUE(gnd_out.EventAt(5) != NULL);
  
-    ASSERT_TRUE( gnd_out.events.EntryWithName("MonKey") != NULL);
-    ASSERT_TRUE( gnd_out.events.EntryWithName("HasSan") ==NULL);
-    ASSERT_TRUE( gnd_out.events.EntryWithName("eVeNt") !=NULL);
+    ASSERT_TRUE( gnd_out.EventWithName("MonKey") != NULL);
+    ASSERT_TRUE( gnd_out.EventWithName("HasSan") ==NULL);
+    ASSERT_TRUE( gnd_out.EventWithName("eVeNt") !=NULL);
 
-    ASSERT_TRUE(gnd_out.events.EntryWithName("MonKey")->ordinal() == 5);
-    ASSERT_TRUE(gnd_out.events.EntryWithName("eVeNt")->ordinal() == 0);
+    ASSERT_TRUE(gnd_out.EventWithName("MonKey")->ordinal() == 5);
+    ASSERT_TRUE(gnd_out.EventWithName("eVeNt")->ordinal() == 0);
 
-    ASSERT_EQ(gnd_out.EventAt(0)->types.size(),9);
-    ASSERT_EQ(gnd_out.EventAt(0)->types.occupied_size(),3);
+    ASSERT_EQ(gnd_out.EventAt(0)->type_container_size(),9);
+    ASSERT_EQ(gnd_out.EventAt(0)->type_container_occupied_size(),3);
 
     ASSERT_TRUE(gnd_out.EventAt(0)->TypeAt(0)!=NULL);
     ASSERT_TRUE(gnd_out.EventAt(0)->TypeAt(1)==NULL);
@@ -722,8 +722,8 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
-    ASSERT_EQ(gnd_out.EventAt(5)->types.size(),9);
-    ASSERT_EQ(gnd_out.EventAt(5)->types.occupied_size(),3);
+    ASSERT_EQ(gnd_out.EventAt(5)->type_container_size(),9);
+    ASSERT_EQ(gnd_out.EventAt(5)->type_container_occupied_size(),3);
 
     ASSERT_TRUE(gnd_out.EventAt(5)->TypeAt(0)!=NULL);
     ASSERT_TRUE(gnd_out.EventAt(5)->TypeAt(1)==NULL);
@@ -748,7 +748,7 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(8)->is_primitive(), true);
 
 }
-#endif 
+
 #ifdef ISOLATED_GTEST_COMPILE
 int main(int argc,char ** argv)
 {

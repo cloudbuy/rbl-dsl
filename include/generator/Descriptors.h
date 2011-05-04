@@ -1,9 +1,18 @@
 #ifndef _GENERATOR_DESCRIPTORS_H
 #define _GENERATOR_DESCRIPTORS_H
-#include "event_model/DescriptorsCommon.h"
+#include <event_model/DescriptorsCommon.h>
+
+//TODO centralize the SF forward declarations
+namespace SF
+{
+    class Archive;
+}
 
 namespace event_model
 {
+    //---------------------------------------------------------------------------//
+// Class Declarations                                                        // 
+//---------------------------------------------------------------------------//
     // GeneratorEventDescriptor ///////////////////////////////////////////////
     class GeneratorEventDescriptor : public EventDescriptorBase
     {
@@ -12,6 +21,7 @@ namespace event_model
         GeneratorEventDescriptor(   const  Oid & oid,
                                     const  ordinal_type ordinal_in,
                                     const  EventTypeContainer & edc_in);
+        void serialize(SF::Archive & ar) {} 
     };
     //-----------------------------------------------------------------------//
  
@@ -24,6 +34,7 @@ namespace event_model
         GeneratorNamespaceDescriptor(   const   std::string & name_in,
                                         const   ordinal_type ordinal_in,
                                         const   EventDescriptorContainer &);
+        void serialize(SF::Archive & ar) {}
     };
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
@@ -43,6 +54,7 @@ namespace event_model
     {
     }
     //-----------------------------------------------------------------------//
+    
     // GeneratorNamespaceDescriptor ///////////////////////////////////////////
     GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor()
         : NamespaceDescriptorBase<GeneratorEventDescriptor>()

@@ -3,6 +3,12 @@
 #include "event_model/DescriptorsCommon.h"
 #include "generator/Descriptors.h"
 
+//TODO centralize the SF forward declarations
+namespace SF
+{
+    class Archive;
+}
+
 namespace event_model
 {
 //---------------------------------------------------------------------------//
@@ -16,6 +22,7 @@ namespace event_model
         RelayEventDescriptor (  const Oid & oid, const ordinal_type ordinal_, 
                                 const EventTypeContainer & etc);
         operator GeneratorEventDescriptor() const;
+        void serialize(SF::Archive & ar) {} 
     };
     //-----------------------------------------------------------------------//
     
@@ -29,7 +36,7 @@ namespace event_model
                                     const  ordinal_type ordinal_in,
                                     const  EventDescriptorContainer & edc_in);
         operator GeneratorNamespaceDescriptor() const;
-
+        void serialize(SF::Archive & ar) {}
     };
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
