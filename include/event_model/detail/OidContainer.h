@@ -20,7 +20,6 @@ namespace event_model
 {
 namespace primitives
 {
-
 // uninstantiatable generic template
 template<typename char_type, unsigned length>
 class OidConstrainedString
@@ -29,7 +28,7 @@ private:
     OidConstrainedString();
 };
 
-// instantiatable specialization
+// instantiatable specialization for UTF-8/ASCII
 template<unsigned length>
 class OidConstrainedString<char,length> 
 {
@@ -98,61 +97,33 @@ class OidContainerEntryType:
 {
 public:
     typedef _entry_type basic_entry_type;
-    inline OidContainerEntryType()
-        : id_(), entry_()
-    {}    
-    explicit inline 
-    OidContainerEntryType(const identifier_type & id, const _entry_type & et)
-        : id_(id), entry_(et) {}
 
-    inline bool is_initialized() const { return id_.name().is_initialized(); }
+    inline OidContainerEntryType();
+    explicit inline 
+    OidContainerEntryType(const identifier_type & id, const _entry_type & et);
+
+    inline bool is_initialized() const;
     
     inline bool operator< 
-        (const OidContainerEntryType<identifier_type,_entry_type> & rhs) const
-    { return id_.name() < rhs.id_.name() ; }
-   
+        (const OidContainerEntryType<identifier_type,_entry_type> & rhs) const;
     inline bool operator== 
-        (const OidContainerEntryType<identifier_type,_entry_type> & rhs) const
-    { return id_.name() == rhs.id_.name() ; }
-
+        (const OidContainerEntryType<identifier_type,_entry_type> & rhs) const;
     inline bool operator> 
-        (const OidContainerEntryType<identifier_type, _entry_type> & rhs) const
-    { return id_.name() > rhs.id_.name() ; }
-
+        (const OidContainerEntryType<identifier_type, _entry_type> & rhs) const;
+   
+    //TODO comment here, seems this one converts two entry_types which have a conversion
+    // operator specified. it's a complex monstrosity to look at. 
     template<typename ENTRY>
-    operator OidContainerEntryType<identifier_type, ENTRY>() const
-    {
-        OidContainerEntryType<identifier_type, ENTRY> ret(id_,(ENTRY)entry_);
-        return ret;
-    }
-
-    void serialize(SF::Archive & ar)
-    {
-        ar & id_ & entry_; 
-    }
-    inline const typename identifier_type::name_type & name() const 
-    {
-        return id_.name();
-    } 
-    inline const typename identifier_type::ordinal_type ordinal() const
-    {
-        return id_.ordinal();
-    }
-    inline const _entry_type & entry() const
-    {
-        return entry_;
-    }
-    inline const identifier_type & Id() const { return id_; }
+    operator OidContainerEntryType<identifier_type, ENTRY>() const;
     
-    inline void set_identifier(const identifier_type & id_in) 
-    { 
-        id_.set_name(id_in.name());
-        id_.set_ordinal(id_in.ordinal());
-    }
-    inline void set_entry(const basic_entry_type & entry_in)
-    {
-        entry_ = entry_in;
-    }
+    void serialize(SF::Archive & ar);
+    
+    inline const typename identifier_type::name_type & name() const;
+    inline const typename identifier_type::ordinal_type ordinal() const;
+    inline const _entry_type & entry() const;
+    inline const identifier_type & Id() const; 
+    inline void set_identifier(const identifier_type & id_in);
+    inline void set_entry(const basic_entry_type & entry_in);
 private:
     identifier_type id_;
     _entry_type     entry_;
@@ -166,7 +137,7 @@ enum OP_RESPONSE {
         OP_ORDINAL_OVERFLOW
 };
 
-//TODO: SPLIT UP THE DECLARATION AND DEFINITION
+//TODO: REMOVE SIZE_T
 //TODO: NEST THE ENUMS INTO THE CLASSES THEY BELONG TO
 template<typename _identifier_type, typename _entry_type>
 class OidContainer
@@ -180,367 +151,50 @@ public:
     typedef typename _identifier_type::ordinal_type     ordinal_type;
     typedef std::vector<entry_type>                     vector_type;
 
-    OidContainer() : entries_(),name_index_() { }
-    OidContainer(const OidContainer & rhs)
-    {
-        name_index_.clear();
-        entries_ = rhs.entries_;
-        regen_name_index_();
-    }
-    OidContainer& operator=(const OidContainer & oid)
-    {
-        if(this != &oid)
-        {
-            name_index_.clear();
-            entries_ = oid.entries_;
-            regen_name_index_();
-        }
-
-        return *this; 
-    }
+    OidContainer();    
+    OidContainer(const OidContainer & rhs);
+    
+    OidContainer& operator=(const OidContainer & oid);
+    
 
     template<typename Id_T, typename Entry_T>
-    void SlicingPopulate(OidContainer<Id_T,Entry_T> & target) const
-    {
-        std::size_t sz = size();
-        target.clear();
-
-        for(int i=0; i < sz; ++i)
-        {
-            const entry_type * et = EntryAtordinal(i);
-            if(et != NULL)
-            {
-                typename OidContainer<Id_T,Entry_T>::entry_type tet = (*et);
-                target.SetEntry(tet);
-            }
-        }
-    }
+    void SlicingPopulate(OidContainer<Id_T,Entry_T> & target) const;
     
-    inline void clear()
-    {
-        name_index_.clear();
-        entries_.clear();
-    } 
+    inline void clear();
+    
+    inline const vector_type & get_entries() const;
+    inline const std::size_t size() const;
+    inline const std::size_t occupied_size() const;
 
-    inline const vector_type & get_entries() const
-    {
-        return entries_;
-    }
- 
-    inline const std::size_t size() const
-    {
-        return entries_.size();
-    }
+    inline const entry_type * EntryAtordinal(boost::uint32_t ordinal) const;
 
-    inline const std::size_t occupied_size() const
-    {
-        return name_index_.size();
-    }
+    inline const entry_type * EntryWithName (
+        const typename identifier_type::name_type & name_in) const;
+    
+    inline OP_RESPONSE ContainsEither(const identifier_type & id) const;
 
-    inline const entry_type * EntryAtordinal(boost::uint32_t ordinal) const
-    {   
-        try
-        {
-            const entry_type * e = &(entries_.at(ordinal));
-            if(e->is_initialized())
-                return e;
-            else
-                return NULL; 
-        }
-        catch(std::out_of_range)
-        {
-            return NULL; 
-        }
-    }
+    void serialize(SF::Archive & ar);
 
-    const entry_type * EntryWithName (
-        const typename identifier_type::name_type & name_in) const 
-    {
-        typename name_index_set::const_iterator it =
-            name_index_.find(name_in, name_key_finder());
-        
-        if( it == name_index_.end() )
-            return NULL;
-        else
-        {
-            return &(*it);
-        }
-    }
+    const  basic_entry_type * operator[] (const name_type & name) const;
 
+    const basic_entry_type * operator[] (const ordinal_type & ordinal) const;
     
     
-    OP_RESPONSE ContainsEither(const identifier_type & id) const
-    {
-        bool ordinal_in_vector=false;
-       
-        if(occupied_size() == 0)
-            return OP_NO_ERROR;
-     
-        if(size() < (id.ordinal()+1))
-            ordinal_in_vector=false;
-        else if( entries_.at( id.ordinal() ).is_initialized())
-            ordinal_in_vector=true;
-        
-        typename name_index_set::const_iterator it =
-            name_index_.find(id.name(), name_key_finder());
-        
-        bool entry_name_used=true;
+    OP_RESPONSE SetEntry(const entry_type & entry);
     
-        if( it == name_index_.end())
-            entry_name_used=false;
-
-        if( ordinal_in_vector != entry_name_used ) {
-            if( ordinal_in_vector)
-                return OP_ORDINAL_USED;
-            else
-                return OP_NAME_USED;
-        }
-        
-        if(entry_name_used)
-            return OP_ALLREADY_CONTAINS_ENTRY;
-        
-        return OP_NO_ERROR;
-    }
-
-    void serialize(SF::Archive & ar)
-    {
-        ar & entries_;
-        
-        if(!ar.isWrite())
-        {
-            regen_name_index_();
-        }
-    }
-
-    const  basic_entry_type * operator[] (const name_type & name) const 
-    {
-        const entry_type * ent = EntryWithName(name);
-
-        if( ent != NULL )
-            return (& ( ent->entry() ) );
-        else return NULL;
-    }
-    const basic_entry_type * operator[] (const ordinal_type & ordinal) const
-    {
-        const entry_type * ent = EntryAtordinal(ordinal);
-        if( ent != NULL) {
-            return (& ( ent->entry() ) );
-        }
-        else return NULL;
-    }
-    
-    OP_RESPONSE SetEntry(const entry_type & entry)
-    {
-        resize_if_needed_(entry.ordinal() );
-
-        OP_RESPONSE ret = ContainsEither(entry.Id());
-        if (ret != OP_NO_ERROR)
-            return ret;
-        
-        entries_.at(entry.ordinal()) = entry;
-        name_index_.insert( entries_.at( entry.ordinal() )); 
-        
-        return OP_NO_ERROR;
-    } 
-
 protected:
     typedef intrusive::set< entry_type > name_index_set;    
     
-    struct name_key_finder // functor
-    {
-        bool operator()(    const typename identifier_type::name_type & name, 
-                            const entry_type & entry) const
-        {
-            return ( name < entry.name() );
-        }
-        bool operator()(    const entry_type & entry,
-                            const typename identifier_type::name_type & name) const
-        {
-           return ( entry.name() < name);
-        }
-    };
-
+    struct name_key_finder; // functor
     
+    void resize_if_needed_(boost::uint32_t ordinal);
+    void regen_name_index_();
     
-    void resize_if_needed_(boost::uint32_t ordinal)
-    {
-        std::size_t old_size = entries_.size();
-        if( old_size < ordinal + 1) {
-            name_index_.clear();
-            entries_.resize(ordinal+1 );
-            if(old_size != 0) 
-                regen_name_index_();
-        }
-    }
-    void regen_name_index_()
-    {
-        // the intrusive container needs to be clear()'d before or vector
-        // resizing will fail an assertion. therefore this isn't handled
-        // here.
-        typedef typename std::vector<entry_type>::iterator
-            it_type;
-
-        it_type beg = entries_.begin();
-        it_type end = entries_.end();
-
-                    
-        for(it_type it=beg;it != end; it++)
-        {
-            if(it->is_initialized())
-                name_index_.insert(*it);        
-        }        
-    }
-
     std::vector<entry_type> entries_;
     name_index_set name_index_;
 };
-
-    //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
-
-//---------------------------------------------------------------------------//
-// Inline Definitions                                                        //
-//---------------------------------------------------------------------------//
-    // OidConstrainedString ///////////////////////////////////////////////////
-    template<unsigned length>
-    inline OidConstrainedString<char,length>::OidConstrainedString()
-    {
-        str_[0]='\0';
-    }
-    template<unsigned length>
-    inline OidConstrainedString<char,length>::OidConstrainedString
-    (const char * char_)
-    {
-        std::string str(char_);
-        construct_(str); 
-    };
-    template<unsigned length>
-    inline OidConstrainedString<char,length>::OidConstrainedString
-    (const std::string & str)
-    {
-        construct_(str);
-    };
-    template<unsigned length>
-    inline const char * OidConstrainedString<char,length>::c_str() const 
-    {
-        if( ! is_initialized() )
-            throw std::invalid_argument("the string is uninitialized");
-         
-        return str_;
-    };
-    template<unsigned length>
-    inline bool OidConstrainedString<char,length>::is_initialized() const
-    {
-        return (str_[0]=='\0') ? false : true;
-    }
-    template<unsigned length>
-    inline bool OidConstrainedString<char,length>::
-    operator< (const OidConstrainedString<char,length> & rhs) const
-    {
-        return (strncmp(str_, rhs.c_str(),length) < 0) ? true : false;
-    }
-    template<unsigned length>
-    inline bool OidConstrainedString<char,length>::operator== 
-    (const OidConstrainedString<char,length> & rhs) const
-    {
-        return (strncmp(str_,rhs.c_str(),length) == 0) ? true : false;
-    }
-    template<unsigned length>
-    inline bool OidConstrainedString<char,length>::operator> 
-    (const OidConstrainedString<char,length> & rhs) const
-    {
-        return (strncmp(str_,rhs.c_str(),length) > 0) ? true : false;
-    }
-    template<unsigned length>
-    void OidConstrainedString<char,length>::serialize(SF::Archive & ar)
-    {
-        if(ar.isWrite())
-        {
-            std::string s(str_);
-            ar & s;        
-        }
-        else
-        {
-            std::string s;
-            ar & s;
-            construct_(s);
-        }
-    }
-    template<unsigned length>
-    void OidConstrainedString<char,length>::construct_(const std::string & str)
-    {
-        if(str.length()+1 > length)
-            throw std::length_error
-                ("identifier string larger than identifier limit");
-        std::string str2(str);
-        boost::to_lower(str2);
-
-        strncpy(str_, str2.c_str(), length);
-    }
-    //-----------------------------------------------------------------------//
-
-    // OidType ////////////////////////////////////////////////////////////////
-    template< typename str_type, typename size_type>
-    inline OidType<str_type,size_type>::OidType()
-        : name_(),ordinal_() 
-    {
-    }
-
-    template< typename str_type, typename size_type>
-    inline OidType<str_type,size_type>::OidType( 
-            const std::string & str_in, 
-            const boost::uint32_t ordinal_in)
-        : name_(str_in), ordinal_() 
-    { 
-        if( ordinal_in > MAX )
-            throw std::out_of_range("ordinal exceeds limit");
-
-        ordinal_ = ordinal_in;
-    }
-
-
-    template< typename str_type, typename size_type>
-    inline void OidType<str_type,size_type>::serialize(SF::Archive & ar)
-    {
-        ar & name_ & ordinal_;
-    }
-
-    template< typename str_type, typename size_type>
-    inline bool OidType<str_type,size_type>::operator==
-        (const OidType<str_type,size_type> & rhs) const
-    {
-        if( rhs.name_ == this->name_
-            && rhs.ordinal_ == this->ordinal_)
-            return true;
-        else
-            return false; 
-    }
-
-    template< typename str_type, typename size_type>
-    inline const str_type & OidType<str_type,size_type>::name() const
-    { 
-        return name_; 
-    }
-
-    template< typename str_type, typename size_type>
-    inline const size_type OidType<str_type,size_type>::ordinal() const
-    { 
-        return ordinal_; 
-    }
-
-    template< typename str_type, typename size_type>
-    inline void OidType<str_type,size_type>::set_name(const name_type & name_in)
-    {
-        name_ = name_in;    
-    }
-    template< typename str_type, typename size_type>
-    inline void OidType<str_type,size_type>::set_ordinal(const size_type & ordinal_in)
-    {
-        ordinal_  = ordinal_in;
-    }
-
-
 }
 }
-
+#include "OidContainer-inl.h"
 #endif
