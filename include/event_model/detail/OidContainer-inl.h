@@ -56,21 +56,7 @@ inline bool OidConstrainedString<char,length>::operator>
 {
   return (strncmp(str_,rhs.c_str(),length) > 0) ? true : false;
 }
-template<unsigned length>
-void OidConstrainedString<char,length>::serialize(SF::Archive & ar)
-{
-  if(ar.isWrite())
-  {
-    std::string s(str_);
-    ar & s;        
-  }
-  else
-  {
-    std::string s;
-    ar & s;
-    construct_(s);
-  }
-}
+
 template<unsigned length>
 void OidConstrainedString<char,length>::construct_(const std::string & str)
 {
@@ -101,12 +87,6 @@ inline OidType<str_type,size_type>::OidType(
     throw std::out_of_range("ordinal exceeds limit");
 
   ordinal_ = ordinal_in;
-}
-
-template< typename str_type, typename size_type>
-inline void OidType<str_type,size_type>::serialize(SF::Archive & ar)
-{
-  ar & name_ & ordinal_;
 }
 
 template< typename str_type, typename size_type>
@@ -201,13 +181,6 @@ operator OidContainerEntryType<identifier_type, ENTRY>() const
 {
   OidContainerEntryType<identifier_type, ENTRY> ret(id_,(ENTRY)entry_);
   return ret;
-}
-
-template<typename identifier_type, typename _entry_type>
-inline void OidContainerEntryType<identifier_type, _entry_type>::
-serialize(SF::Archive & ar)
-{
-  ar & id_ & entry_; 
 }
 
 template<typename identifier_type, typename _entry_type>
@@ -411,18 +384,6 @@ ContainsEither(const identifier_type & id) const
     return OP_ALLREADY_CONTAINS_ENTRY;
   
   return OP_NO_ERROR;
-}
-
-template<typename _identifier_type, typename _entry_type>
-inline void OidContainer<_identifier_type, _entry_type>::
-serialize(SF::Archive & ar)
-{
-  ar & entries_;
-  
-  if(!ar.isWrite())
-  {
-    regen_name_index_();
-  }
 }
 
 template<typename _identifier_type, typename _entry_type>

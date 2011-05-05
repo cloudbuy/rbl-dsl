@@ -10,11 +10,12 @@
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/integer_traits.hpp>
 
-//TODO  use free function form of serialization, and make the interface
-//      dependance and implementation dependance.
-#include <SF/vector.hpp>
-#include <SF/string.hpp>
+namespace SF
+{
+  class Archive;
+}
 
 namespace event_model
 {
@@ -42,11 +43,14 @@ public:
   inline bool operator== (const my_type & rhs)  const;
   inline bool operator>  (const my_type & rhs)  const;
 
-  void serialize(SF::Archive & ar);
-
-  inline const char * c_str()                                             const;
-  inline bool is_initialized()                                            const;
+  inline const char * c_str()                   const;
+  inline bool is_initialized()                  const;
 private:
+  template<typename CHAR_,unsigned LENGTH_>
+  friend void serialize(  SF::Archive & ar, 
+                          OidConstrainedString<CHAR_, LENGTH_> & oid_string);
+  
+
   void construct_(const std::string & str);
   char str_[length];
 };
@@ -75,14 +79,16 @@ public:
 
   inline bool operator==(const OidType<str_type,size_type> & rhs)         const;
 
-  void serialize(SF::Archive & ar);
-  
   inline const str_type & name()                                          const;     
   inline const size_type ordinal()                                        const; 
 
   inline void set_name(const name_type & name_in);
   inline void set_ordinal(const size_type & ordinal_in);
 private:
+  template< typename f_str_type, typename f_size_type>
+  friend void serialize
+  (SF::Archive & ar, OidType<f_str_type, f_size_type> & oid_type);
+
   str_type name_;
   size_type ordinal_;
 };
@@ -112,9 +118,7 @@ public:
   inline bool operator== (const my_type & rhs)                          const;
   inline bool operator>  (const my_type & rhs)                          const;
 
-  void serialize(SF::Archive & ar);
-
-  inline bool is_initialized() const;
+    inline bool is_initialized() const;
   inline const typename identifier_type::name_type & name()             const;
   inline const typename identifier_type::ordinal_type ordinal()         const;
   inline const _entry_type & entry()                                    const;
@@ -123,6 +127,11 @@ public:
   inline void set_identifier(const identifier_type & id_in);
   inline void set_entry(const basic_entry_type & entry_in);
 private:
+  template<typename f_id, typename f_ent> 
+  friend void serialize(  SF::Archive & ar,  
+                          OidContainerEntryType<f_id, f_ent> & entry);
+
+
   identifier_type id_;
   _entry_type     entry_;
 };
@@ -155,7 +164,8 @@ public:
   template<typename Id_T, typename Entry_T>
   void SlicingPopulate(OidContainer<Id_T,Entry_T> & target)             const;
   
-  void serialize(SF::Archive & ar);
+  template<typename f_id, typename f_ent>
+  friend void serialize(  SF::Archive & ar, OidContainer<f_id, f_ent> & entry);
   inline void clear();
   
   inline const vector_type & get_entries()                              const;
@@ -169,6 +179,9 @@ public:
   
   OP_RESPONSE SetEntry(const entry_type & entry);
 protected:
+  template<typename f_id, typename f_ent>
+  friend void serialize(  SF::Archive & ar, OidContainer<f_id, f_ent> & entry);
+
   typedef intrusive::set< entry_type > name_index_set;    
   
   struct name_key_finder; // functor

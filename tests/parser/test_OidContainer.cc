@@ -1,4 +1,5 @@
 #include "event_model/detail/OidContainer.h"
+#include "event_model/detail/OidContainer-Serialization.h"
 #include "gtest/gtest.h"
 
 #include <SF/OBinaryStream.hpp>
