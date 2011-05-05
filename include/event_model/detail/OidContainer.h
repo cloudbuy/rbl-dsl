@@ -32,21 +32,22 @@ private:
 template<unsigned length>
 class OidConstrainedString<char,length> 
 {
+  typedef OidConstrainedString<char,length> my_type;
 public:
   OidConstrainedString();
   OidConstrainedString(const char * char_);
   OidConstrainedString(const std::string & str);
   
-  inline const char * c_str() const;
-  inline bool is_initialized() const;
+  inline bool operator<  (const my_type & rhs)  const;
+  inline bool operator== (const my_type & rhs)  const;
+  inline bool operator>  (const my_type & rhs)  const;
 
-  inline bool operator<(const OidConstrainedString<char,length> & rhs) const;
-  inline bool operator==(const OidConstrainedString<char,length> & rhs) const;
-  inline bool operator>(const OidConstrainedString<char,length> & rhs) const;
   void serialize(SF::Archive & ar);
+
+  inline const char * c_str()                                             const;
+  inline bool is_initialized()                                            const;
 private:
   void construct_(const std::string & str);
-  
   char str_[length];
 };
 
@@ -61,8 +62,8 @@ std::ostream & operator<<
 template< typename str_type, typename size_type>
 class OidType
 {
-  const static size_type MAX = boost::integer_traits<size_type>::const_max;
   BOOST_STATIC_ASSERT(boost::integer_traits<size_type>::is_integer == true);
+  const static size_type MAX = boost::integer_traits<size_type>::const_max;
 
 public:
   typedef str_type name_type;
@@ -72,15 +73,14 @@ public:
   explicit inline OidType( const std::string & str_in, 
                            const boost::uint32_t ordinal_in);
 
+  inline bool operator==(const OidType<str_type,size_type> & rhs)         const;
+
   void serialize(SF::Archive & ar);
   
-  
-  inline bool operator==(const OidType<str_type,size_type> & rhs) const;
-  inline const str_type & name() const;     
-  inline const size_type ordinal() const; 
+  inline const str_type & name()                                          const;     
+  inline const size_type ordinal()                                        const; 
 
   inline void set_name(const name_type & name_in);
-  
   inline void set_ordinal(const size_type & ordinal_in);
 private:
   str_type name_;
@@ -96,33 +96,30 @@ template<typename identifier_type, typename _entry_type>
 class OidContainerEntryType: 
   public intrusive::set_base_hook<>
 {
+  typedef OidContainerEntryType<identifier_type,_entry_type> my_type;
 public:
   typedef _entry_type basic_entry_type;
 
   inline OidContainerEntryType();
   explicit inline 
   OidContainerEntryType(const identifier_type & id, const _entry_type & et);
-
-  inline bool is_initialized() const;
-  
-  inline bool operator< 
-      (const OidContainerEntryType<identifier_type,_entry_type> & rhs) const;
-  inline bool operator== 
-      (const OidContainerEntryType<identifier_type,_entry_type> & rhs) const;
-  inline bool operator> 
-      (const OidContainerEntryType<identifier_type, _entry_type> & rhs) const;
- 
   //TODO comment here, seems this one converts two entry_types which have a 
   // conversion operator specified. it's a complex monstrosity to look at. 
   template<typename ENTRY>
-  operator OidContainerEntryType<identifier_type, ENTRY>() const;
-  
+  operator OidContainerEntryType<identifier_type, ENTRY>()              const;
+
+  inline bool operator<  (const my_type & rhs)                          const;
+  inline bool operator== (const my_type & rhs)                          const;
+  inline bool operator>  (const my_type & rhs)                          const;
+
   void serialize(SF::Archive & ar);
+
+  inline bool is_initialized() const;
+  inline const typename identifier_type::name_type & name()             const;
+  inline const typename identifier_type::ordinal_type ordinal()         const;
+  inline const _entry_type & entry()                                    const;
+  inline const identifier_type & Id()                                   const; 
   
-  inline const typename identifier_type::name_type & name() const;
-  inline const typename identifier_type::ordinal_type ordinal() const;
-  inline const _entry_type & entry() const;
-  inline const identifier_type & Id() const; 
   inline void set_identifier(const identifier_type & id_in);
   inline void set_entry(const basic_entry_type & entry_in);
 private:
@@ -154,35 +151,23 @@ public:
 
   OidContainer();    
   OidContainer(const OidContainer & rhs);
-  
   OidContainer& operator=(const OidContainer & oid);
-  
-
   template<typename Id_T, typename Entry_T>
-  void SlicingPopulate(OidContainer<Id_T,Entry_T> & target) const;
+  void SlicingPopulate(OidContainer<Id_T,Entry_T> & target)             const;
   
+  void serialize(SF::Archive & ar);
   inline void clear();
   
-  inline const vector_type & get_entries() const;
-  inline const std::size_t size() const;
-  inline const std::size_t occupied_size() const;
-
-  inline const entry_type * EntryAtordinal(boost::uint32_t ordinal) const;
-
-  inline const entry_type * EntryWithName (
-      const typename identifier_type::name_type & name_in) const;
-  
-  inline OP_RESPONSE ContainsEither(const identifier_type & id) const;
-
-  void serialize(SF::Archive & ar);
-
-  const  basic_entry_type * operator[] (const name_type & name) const;
-
-  const basic_entry_type * operator[] (const ordinal_type & ordinal) const;
-  
+  inline const vector_type & get_entries()                              const;
+  inline const std::size_t size()                                       const;
+  inline const std::size_t occupied_size()                              const;
+  inline const entry_type * EntryAtordinal (boost::uint32_t ordinal)    const;
+  inline const entry_type * EntryWithName( const name_type & name_in)   const;
+  inline OP_RESPONSE ContainsEither(const identifier_type & id)         const;
+  const  basic_entry_type * operator[] (const name_type & name)         const;
+  const basic_entry_type * operator[] (const ordinal_type & ordinal)    const;
   
   OP_RESPONSE SetEntry(const entry_type & entry);
-  
 protected:
   typedef intrusive::set< entry_type > name_index_set;    
   
