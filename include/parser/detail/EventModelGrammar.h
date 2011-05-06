@@ -2,8 +2,7 @@
 #define _SWAT_PARSER_DATA_ENTRY_H
 #include <boost/spirit/include/qi.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
-#include <event_model/Descriptors.h>
-
+#include <marshall/DescriptorBuilders.h>
 
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_fusion.hpp>

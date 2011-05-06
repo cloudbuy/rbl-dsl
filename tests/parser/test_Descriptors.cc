@@ -578,6 +578,74 @@ TEST( descriptor_building_and_serialization, base_descriptor_serialization_test)
   EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(2)->is_primitive(),true);
 }
 
+// ok the base classes work fine, why can't I static_cast during
+// serialization ? 
+TEST(descriptor_building_and_serializationm, static_cast_test)
+{
+  MarshallNamespaceDescriptorBuilder mndb("testing",0);
+  ASSERT_TRUE(mndb.name() == "testing");
+  ASSERT_TRUE(mndb.event_container_size() == 0); 
+  ASSERT_TRUE(mndb.event_container_occupied_size() == 0);
+
+  MarshallEventDescriptorBuilder medb1;
+  MarshallEventDescriptorBuilder medb2;
+  bool res;
+  Oid one("monkey",0);
+  Oid two("zebra",3);
+  Oid three("giraffe",8);
+  
+  medb1.Init(Oid("evenT",0),mndb,res);
+  ASSERT_TRUE(res);
+
+  medb1.AddEventType(  one,
+                      EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                      res);
+  ASSERT_TRUE(res);
+  medb1.AddEventType(  two,
+                      EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                      res);
+  ASSERT_TRUE(res);
+  
+  medb1.AddEventType(  three,
+                      EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                      res);
+  ASSERT_TRUE(res);
+  
+  medb2.Init(Oid("monkey",5),mndb,res);
+  ASSERT_TRUE(res);
+
+  medb2.AddEventType(  one,
+                      EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                      res);
+  ASSERT_TRUE(res);
+  medb2.AddEventType(  two,
+                      EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                      res);
+  ASSERT_TRUE(res);
+  
+  medb2.AddEventType(  three,
+                      EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                      res);
+  ASSERT_TRUE(res);
+
+  mndb.AddEventDescriptor(medb1,res);
+  ASSERT_TRUE(res);
+  
+  mndb.AddEventDescriptor(medb2,res);
+  ASSERT_TRUE(res);
+
+  RelayNamespaceDescriptor rnd = (MarshallNamespaceDescriptor) mndb;
+  
+  ASSERT_TRUE( static_cast<NamespaceDescriptorBase<RelayEventDescriptor> >(rnd).EventAt(0) != NULL);
+  ASSERT_TRUE( static_cast<NamespaceDescriptorBase<RelayEventDescriptor> >(rnd).EventAt(1) == NULL);
+  ASSERT_TRUE( static_cast<NamespaceDescriptorBase<RelayEventDescriptor> >(rnd).EventAt(2) == NULL);
+  ASSERT_TRUE( static_cast<NamespaceDescriptorBase<RelayEventDescriptor> >(rnd).EventAt(3) == NULL);
+  ASSERT_TRUE( static_cast<NamespaceDescriptorBase<RelayEventDescriptor> >(rnd).EventAt(4) == NULL);
+  ASSERT_TRUE( static_cast<NamespaceDescriptorBase<RelayEventDescriptor> >(rnd).EventAt(5) != NULL);
+  
+  
+}
+
 // descriptor_building_and_serialization
 TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
 {

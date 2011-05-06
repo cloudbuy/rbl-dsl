@@ -39,7 +39,7 @@ namespace event_model
         void AddEventDescriptor( const MarshallEventDescriptorBuilder & medb, 
                                  bool & ok);
 
-        void set_name(std::string & _name);
+        void set_name(const std::string & _name);
         
     private:
     };
@@ -115,6 +115,11 @@ namespace event_model
                                           const ordinal_type ordinal_in) 
         : MarshallNamespaceDescriptor( name_in , ordinal_in ) 
     { 
+    }
+    inline void MarshallNamespaceDescriptorBuilder::set_name
+      (const std::string & s_in)
+    {
+      this->name_ = s_in;
     }
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
