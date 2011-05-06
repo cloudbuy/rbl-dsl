@@ -1,4 +1,7 @@
 #include "marshall/DescriptorBuilders.h"
+#include "event_model/detail/DescriptorsCommon-Serialization.h"
+#include "relay/Descriptors-Serialization.h"
+#include "generator/Descriptors-Serialization.h"
 #include <gtest/gtest.h>
 
 #include <SF/OBinaryStream.hpp>
@@ -22,6 +25,7 @@ TEST(descriptor_building_and_serialization, event_entry_serialization_test)
     ASSERT_TRUE(etd_default_constructed.type() == VALUE_INT4);
     ASSERT_TRUE(etd_default_constructed.is_primitive() == false);
 }
+
 
 TEST(descriptor_building_and_serialization, identifier_collision_tests)
 {
@@ -57,8 +61,8 @@ TEST(descriptor_building_and_serialization, identifier_collision_tests)
                         EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
                         res);
     ASSERT_FALSE(res);
-//    medb.
 }
+
 
 TEST(descriptor_building_and_serialization, event_descriptor_building_test)
 {
@@ -95,6 +99,7 @@ TEST(descriptor_building_and_serialization, event_descriptor_building_test)
                         res);
     ASSERT_FALSE(res);
 }
+
 
 TEST(descriptor_building_and_serialization, exhaustive_mndb_building_test)
 {
@@ -481,6 +486,98 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(8)->is_primitive(), true);
 }
 
+// there is a serialization issue for the new class heirarchy, rather than 
+// understand the code above I decided to write a new test from scratch.
+TEST( descriptor_building_and_serialization, base_descriptor_serialization_test)
+{
+  Oid event_oid("hassan",0);
+  ordinal_type ns_o(0);
+
+  EventTypeContainer etc;  
+
+  Oid one("monkey",0);
+  Oid two("zebra",1);
+  Oid three("giraffe",2);
+  
+  EventTypeDescriptor etd1(ENTRY_REQUIRED,VALUE_INT4,true);
+  EventTypeDescriptor etd2(ENTRY_OPTIONAL,VALUE_INT8,false);
+  EventTypeDescriptor etd3(ENTRY_REQUIRED,VALUE_INT4,true);
+  
+  EventTypeContainer::entry_type oet1(one, etd1);
+  EventTypeContainer::entry_type oet2(two, etd2);
+  EventTypeContainer::entry_type oet3(three,etd3);
+ 
+  etc.SetEntry(oet1);
+  etc.SetEntry(oet2);
+  etc.SetEntry(oet3);
+
+  EventDescriptorBase etb(event_oid, ns_o, etc);
+  
+  ASSERT_EQ(etb.type_container_size(),3);
+  ASSERT_EQ(etb.type_container_occupied_size(),3);
+
+  std::stringstream ss;
+  SF::OBinaryStream os(ss);   
+  os << etb;
+
+  EventDescriptorBase etb_out;
+  
+  SF::IBinaryStream is(ss);
+  is >> etb_out;
+ 
+  ASSERT_EQ(etb_out.type_container_size(),3);
+  ASSERT_EQ(etb_out.type_container_occupied_size(),3);
+  
+  EXPECT_EQ(etb_out.TypeAt(0)->qualifier(),ENTRY_REQUIRED); 
+  EXPECT_EQ(etb_out.TypeAt(1)->qualifier(),ENTRY_OPTIONAL);
+  EXPECT_EQ(etb_out.TypeAt(2)->qualifier(),ENTRY_REQUIRED);
+
+  EXPECT_EQ(etb_out.TypeAt(0)->type(),VALUE_INT4);
+  EXPECT_EQ(etb_out.TypeAt(1)->type(),VALUE_INT8);
+  EXPECT_EQ(etb_out.TypeAt(2)->type(),VALUE_INT4);
+
+  EXPECT_EQ(etb_out.TypeAt(0)->is_primitive(),true);
+  EXPECT_EQ(etb_out.TypeAt(1)->is_primitive(),false);
+  EXPECT_EQ(etb_out.TypeAt(2)->is_primitive(),true);
+  
+  typedef NamespaceDescriptorBase<EventDescriptorBase> ndb_type;
+
+  
+  ndb_type::EventDescriptorContainer::entry_type ndbet1(one,etb);
+  ndb_type::EventDescriptorContainer::entry_type ndbet2(two,etb);
+  ndb_type::EventDescriptorContainer::entry_type ndbet3(three,etb);
+
+  ndb_type::EventDescriptorContainer edc;
+  edc.SetEntry(ndbet1);
+  edc.SetEntry(ndbet2);
+  edc.SetEntry(ndbet3);
+  ndb_type ndb("hassan",0,edc);
+
+  ASSERT_EQ(ndb.event_container_size(),3);
+  ASSERT_EQ(ndb.event_container_occupied_size(),3);
+  
+  os << ndb;
+
+  ndb_type ndb_out;  
+
+  is >> ndb_out;
+
+  ASSERT_EQ(ndb_out.event_container_size(),3);
+  ASSERT_EQ(ndb_out.event_container_occupied_size(),3);
+
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(0)->qualifier(),ENTRY_REQUIRED); 
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(1)->qualifier(),ENTRY_OPTIONAL);
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(2)->qualifier(),ENTRY_REQUIRED);
+
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(0)->type(),VALUE_INT4);
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(1)->type(),VALUE_INT8);
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(2)->type(),VALUE_INT4);
+
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(0)->is_primitive(),true);
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(1)->is_primitive(),false);
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(2)->is_primitive(),true);
+}
+
 // descriptor_building_and_serialization
 TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
 {
@@ -610,7 +707,7 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
 
     SF::IBinaryStream is(ss);
     is >> rnd_out;
-
+    
     ASSERT_TRUE(rnd_out.EventAt(0) != NULL);
     ASSERT_TRUE(rnd_out.EventAt(1) == NULL);
     ASSERT_TRUE(rnd_out.EventAt(2) == NULL);
@@ -625,7 +722,7 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(rnd_out.EventWithName("MonKey")->ordinal() == 5);
     ASSERT_TRUE(rnd_out.EventWithName("eVeNt")->ordinal() == 0);
 
-    ASSERT_EQ( typeid(rnd_out.EventWithName("Monkey")) 
+    ASSERT_EQ( typeid(*rnd_out.EventWithName("Monkey")) 
         ,typeid(*new RelayEventDescriptor()) );
 
     ASSERT_EQ(rnd_out.EventAt(0)->type_container_size(),9);

@@ -21,7 +21,8 @@ namespace event_model
         GeneratorEventDescriptor(   const  Oid & oid,
                                     const  ordinal_type ordinal_in,
                                     const  EventTypeContainer & edc_in);
-        void serialize(SF::Archive & ar) {} 
+        friend void serialize(  SF::Archive & ar, 
+                                GeneratorEventDescriptor & ged);
     };
     //-----------------------------------------------------------------------//
  
@@ -34,7 +35,8 @@ namespace event_model
         GeneratorNamespaceDescriptor(   const   std::string & name_in,
                                         const   ordinal_type ordinal_in,
                                         const   EventDescriptorContainer &);
-        void serialize(SF::Archive & ar) {}
+        friend void serialize(  SF::Archive & ar,
+                                GeneratorNamespaceDescriptor & gnd );
     };
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
@@ -66,9 +68,8 @@ namespace event_model
             const  ordinal_type ordinal_in, 
             const EventDescriptorContainer & edc_in)
         : NamespaceDescriptorBase<GeneratorEventDescriptor>
-            (name_in,ordinal_in)
+            (name_in,ordinal_in,edc_in)
     {
-        events_ = edc_in;
     }
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//

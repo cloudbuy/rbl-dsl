@@ -11,34 +11,32 @@ namespace SF
 
 namespace event_model
 {
-//---------------------------------------------------------------------------//
-// Class Declarations                                                        //
-//---------------------------------------------------------------------------//
-    // RelayEventDescriptor ///////////////////////////////////////////////////
-    class RelayEventDescriptor : public EventDescriptorBase
-    {
-    public:
-        RelayEventDescriptor();
-        RelayEventDescriptor (  const Oid & oid, const ordinal_type ordinal_, 
-                                const EventTypeContainer & etc);
-        operator GeneratorEventDescriptor() const;
-        void serialize(SF::Archive & ar) {} 
-    };
-    //-----------------------------------------------------------------------//
+// RelayEventDescriptor ///////////////////////////////////////////////////
+class RelayEventDescriptor : public EventDescriptorBase
+{
+public:
+  RelayEventDescriptor();
+  RelayEventDescriptor (  const Oid & oid, const ordinal_type ordinal_, 
+                          const EventTypeContainer & etc);
+  operator GeneratorEventDescriptor() const;
+  friend void serialize(SF::Archive & ar,RelayEventDescriptor & red);
+};
+//-----------------------------------------------------------------------//
     
-    // RelayNamespaceDescriptor ///////////////////////////////////////////////
-    class RelayNamespaceDescriptor : 
-        public  NamespaceDescriptorBase<RelayEventDescriptor>
-    {
-    public:
-        RelayNamespaceDescriptor();
-        RelayNamespaceDescriptor(   const  std::string & name_in,
-                                    const  ordinal_type ordinal_in,
-                                    const  EventDescriptorContainer & edc_in);
-        operator GeneratorNamespaceDescriptor() const;
-        void serialize(SF::Archive & ar) {}
-    };
-    //-----------------------------------------------------------------------//
+// RelayNamespaceDescriptor ///////////////////////////////////////////////
+class RelayNamespaceDescriptor : 
+  public  NamespaceDescriptorBase<RelayEventDescriptor>
+{
+public:
+  RelayNamespaceDescriptor();
+  RelayNamespaceDescriptor(   const  std::string & name_in,
+                              const  ordinal_type ordinal_in,
+                              const  EventDescriptorContainer & edc_in);
+  operator GeneratorNamespaceDescriptor() const;
+
+  friend void serialize(SF::Archive & ar, RelayNamespaceDescriptor & rnd);
+};
+//-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
 
 //---------------------------------------------------------------------------//
@@ -73,9 +71,8 @@ namespace event_model
         ( const  std::string & name_in, 
           const  ordinal_type ordinal_in, 
           const EventDescriptorContainer & edc_in)
-            : NamespaceDescriptorBase<RelayEventDescriptor>(name_in, ordinal_in)
+            : NamespaceDescriptorBase<RelayEventDescriptor>(name_in, ordinal_in,edc_in)
     {
-        events_ = edc_in;
     }
     RelayNamespaceDescriptor::operator GeneratorNamespaceDescriptor() const
     {

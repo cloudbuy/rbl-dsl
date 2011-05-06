@@ -1,5 +1,6 @@
 #ifndef _MARSHALL_DESCRIPTORS_H
 #define _MARSHALL_DESCRIPTORS_H
+#include "event_model/DescriptorsCommon.h"
 #include "relay/Descriptors.h"
 
 namespace event_model
@@ -26,6 +27,9 @@ namespace event_model
         MarshallNamespaceDescriptor();
         MarshallNamespaceDescriptor( const  std::string & name_in,
                                      const  ordinal_type ordinal_in);
+        MarshallNamespaceDescriptor( const  std::string & name_in,
+                                     const  ordinal_type ordinal_in,
+                                     const EventDescriptorContainer & edc);
         operator RelayNamespaceDescriptor() const;
     };
     //-----------------------------------------------------------------------// 
@@ -39,8 +43,8 @@ namespace event_model
     {
     }
     inline MarshallEventDescriptor::MarshallEventDescriptor
-    (const Oid & oid, const ordinal_type ordinal_, const EventTypeContainer & etc)
-        : EventDescriptorBase(oid,ordinal_,etc)
+    (const Oid & oid, const ordinal_type ordinal_, const EventTypeContainer & edc)
+        : EventDescriptorBase(oid,ordinal_,edc)
     {
     }
     MarshallEventDescriptor::operator RelayEventDescriptor() const
@@ -60,6 +64,11 @@ namespace event_model
     MarshallNamespaceDescriptor::MarshallNamespaceDescriptor
         ( const std::string & name_in,const ordinal_type ordinal_in)
         : NamespaceDescriptorBase<MarshallEventDescriptor>(name_in, ordinal_in)
+    {
+    }
+    MarshallNamespaceDescriptor::MarshallNamespaceDescriptor
+        ( const std::string & name_in,const ordinal_type ordinal_in, const EventDescriptorContainer & edc)
+        : NamespaceDescriptorBase<MarshallEventDescriptor>(name_in, ordinal_in, edc)
     {
     }
     
