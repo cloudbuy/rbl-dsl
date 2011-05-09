@@ -145,7 +145,7 @@ enum OP_RESPONSE {
 };
 
 //TODO  fix capatilization in EventAtordinal (captiral oh!)
-//TODO  REMOVE OPERATOR[] and replay with EntryWith...
+//TODO  REMOVE OPERATOR[] and replace with EntryWith...
 //TODO: REMOVE SIZE_T
 //TODO: NEST THE ENUMS INTO THE CLASSES THEY BELONG TO
 template<typename _identifier_type, typename _entry_type>
