@@ -130,7 +130,7 @@ TEST(grammar_test, event_descriptor)
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), VALUE_INT8);
 }
 
-#if 0
+
 TEST(grammar_test, namespace_descriptor)
 {
     parser::skipper<c_s_it> skipper;
@@ -162,44 +162,43 @@ TEST(grammar_test, namespace_descriptor)
                     skipper 
                 );
     ASSERT_TRUE(res);
-    ASSERT_TRUE(mndb.events[1] != NULL);
-    ASSERT_TRUE(mndb.events[6] != NULL);
-    EXPECT_EQ(mndb.events.occupied_size(),2);
-    EXPECT_EQ(mndb.events.size(), 7);
+    ASSERT_TRUE(mndb.EventAt(1) != NULL);
+    ASSERT_TRUE(mndb.EventAt(6) != NULL);
+    EXPECT_EQ(mndb.event_container_occupied_size(),2);
+    EXPECT_EQ(mndb.event_container_size(), 7);
     
-    ASSERT_TRUE(mndb.events[1]->types[0] == NULL);
-    ASSERT_TRUE(mndb.events[1]->types[1] != NULL); 
-    ASSERT_TRUE(mndb.events[1]->types[2] != NULL);
+    ASSERT_TRUE(mndb.EventAt(1)->TypeAt(0) == NULL);
+    ASSERT_TRUE(mndb.EventAt(1)->TypeAt(1) != NULL); 
+    ASSERT_TRUE(mndb.EventAt(1)->TypeAt(2) != NULL);
     
-    EXPECT_EQ( mndb.events[1]->types.occupied_size(), 2);
-    EXPECT_EQ( mndb.events[1]->types.size(),3);
+    EXPECT_EQ( mndb.EventAt(1)->type_container_occupied_size(), 2);
+    EXPECT_EQ( mndb.EventAt(1)->type_container_size(),3);
     
-    EXPECT_EQ( mndb.events[1]->types.EntryAtordinal(1)->name(), "hassan");
-    EXPECT_EQ( mndb.events[1]->types[1]->is_primitive(), true);
-    EXPECT_EQ( mndb.events[1]->types[1]->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( mndb.events[1]->types[1]->type(), VALUE_INT4);
+    EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(1)->name(), "hassan");
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->is_primitive(), true);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), VALUE_INT4);
     
-    EXPECT_EQ( mndb.events[1]->types.EntryAtordinal(2)->name(), "monkeys");
-    EXPECT_EQ( mndb.events[1]->types[2]->is_primitive(), true);
-    EXPECT_EQ( mndb.events[1]->types[2]->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( mndb.events[1]->types[2]->type(), VALUE_INT8);
+    EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(2)->name(), "monkeys");
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->is_primitive(), true);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), VALUE_INT8);
     
-    EXPECT_EQ( mndb.events[6]->types.occupied_size(), 2);
-    EXPECT_EQ( mndb.events[6]->types.size(),3);
+    EXPECT_EQ( mndb.EventAt(6)->type_container_occupied_size(), 2);
+    EXPECT_EQ( mndb.EventAt(6)->type_container_size(),3);
     
-    EXPECT_EQ( mndb.events[6]->types.EntryAtordinal(1)->name(), "hassan");
-    EXPECT_EQ( mndb.events[6]->types[1]->is_primitive(), true);
-    EXPECT_EQ( mndb.events[6]->types[1]->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( mndb.events[6]->types[1]->type(), VALUE_INT4);
+    EXPECT_EQ( mndb.EventAt(6)->TypeOidAt(1)->name(), "hassan");
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->is_primitive(), true);
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->type(), VALUE_INT4);
     
-    EXPECT_EQ( mndb.events[6]->types.EntryAtordinal(2)->name(), "monkeys");
-    EXPECT_EQ( mndb.events[6]->types[2]->is_primitive(), true);
-    EXPECT_EQ( mndb.events[6]->types[2]->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( mndb.events[6]->types[2]->type(), VALUE_INT8);
+    EXPECT_EQ( mndb.EventAt(6)->TypeOidAt(2)->name(), "monkeys");
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->is_primitive(), true);
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->type(), VALUE_INT8);
 
 }
 
-#endif
 #ifdef ISOLATED_GTEST_COMPILE
 int main(int argc,char ** argv)
 {
