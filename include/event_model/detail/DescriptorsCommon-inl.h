@@ -73,6 +73,29 @@ inline const Oid & EventDescriptorBase::oid() const
   return event_oid_type_pair_.Id();
 }
 
+inline const Oid * EventDescriptorBase::TypeOidAt(const ordinal_type ordinal) const
+{
+  const EventTypeContainer::entry_type * et = 
+    event_oid_type_pair_.entry().EntryAtordinal(ordinal);
+  
+  if(et != NULL)
+    return & et->Id();
+  else
+    return NULL;
+}
+
+inline const Oid * EventDescriptorBase::TypeOidWithName(const OidName & name) const
+{
+  const EventTypeContainer::entry_type * et = 
+    event_oid_type_pair_.entry().EntryWithName(name);
+  
+  if(et != NULL)
+    return & et->Id();
+  else
+    return NULL;
+
+}
+
 const EventTypeDescriptor * EventDescriptorBase::
 TypeAt(const ordinal_type ordinal) const
 {

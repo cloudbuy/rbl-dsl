@@ -100,7 +100,7 @@ TEST(grammar_test, event_descriptor)
     c_s_it beg = data_line_string.begin();
     c_s_it end = data_line_string.end();
         
-    MarshallNamespaceDescriptorBuilder mndb("hassan");
+    MarshallNamespaceDescriptorBuilder mndb("hassan",0);
     
     bool res =  qi::phrase_parse(
                     beg,end,
@@ -119,12 +119,12 @@ TEST(grammar_test, event_descriptor)
     EXPECT_EQ( mndb.EventAt(1)->type_container_occupied_size(), 2);
     EXPECT_EQ( mndb.EventAt(1)->type_container_size(),3);
     
-    EXPECT_EQ( mndb.EventAt(1)->types.EntryAtordinal(1)->name(), "hassan");
+    EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(1)->name(), "hassan");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), VALUE_INT4);
     
-    EXPECT_EQ( mndb.EventAt(1)->types.EntryAtordinal(2)->name(), "monkeys");
+    EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(2)->name(), "monkeys");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), VALUE_INT8);

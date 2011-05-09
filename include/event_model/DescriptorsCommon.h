@@ -73,14 +73,17 @@ public:
                           const ordinal_type ordinal_,  
                           const EventTypeContainer & etc);
    
-  const ordinal_type          namespace_ordinal()                 const;
-  const ordinal_type          ordinal()                           const;
-  const OidName               name()                              const;
-  const Oid &                 oid()                               const;
+  const ordinal_type          namespace_ordinal()                   const;
+  const ordinal_type          ordinal()                             const;
+  const OidName               name()                                const;
+  const Oid &                 oid()                                 const;
+  
+  const Oid *                 TypeOidAt(const ordinal_type ordinal) const;
+  const Oid *                 TypeOidWithName(const OidName & name) const;
 
-  const EventTypeDescriptor * TypeAt(const ordinal_type ordinal)  const;
-  const std::size_t           type_container_size()               const;
-  const std::size_t           type_container_occupied_size()      const;
+  const EventTypeDescriptor * TypeAt(const ordinal_type ordinal)    const;
+  const std::size_t           type_container_size()                 const;
+  const std::size_t           type_container_occupied_size()        const;
 protected:
   friend void serialize(SF::Archive & ar, EventDescriptorBase & edb);
   

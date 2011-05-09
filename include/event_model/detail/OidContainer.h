@@ -118,7 +118,7 @@ public:
   inline bool operator== (const my_type & rhs)                          const;
   inline bool operator>  (const my_type & rhs)                          const;
 
-    inline bool is_initialized() const;
+  inline bool is_initialized() const;
   inline const typename identifier_type::name_type & name()             const;
   inline const typename identifier_type::ordinal_type ordinal()         const;
   inline const _entry_type & entry()                                    const;
@@ -144,6 +144,8 @@ enum OP_RESPONSE {
   OP_ORDINAL_OVERFLOW
 };
 
+//TODO  fix capatilization in EventAtordinal (captiral oh!)
+//TODO  REMOVE OPERATOR[] and replay with EntryWith...
 //TODO: REMOVE SIZE_T
 //TODO: NEST THE ENUMS INTO THE CLASSES THEY BELONG TO
 template<typename _identifier_type, typename _entry_type>
