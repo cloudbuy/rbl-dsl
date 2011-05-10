@@ -1,7 +1,7 @@
 #ifndef _EM_NAMESPACE_PARSERS
 #define _EM_NAMESPACE_PARSERS
-#include <event_model/Descriptors.h>
-
+#include "marshall/Descriptors.h"
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace event_model
@@ -13,6 +13,8 @@ namespace parser
 class NamespaceFileParser
 {
 public:
+    typedef boost::shared_ptr<MarshallNamespaceDescriptor> t_mnd_shp;
+
     NamespaceFileParser() : 
         filepath_(), canParse_(false), error_message_("none") {}
     NamespaceFileParser(const std::string & filename);
@@ -20,13 +22,13 @@ public:
     bool CanParse() const;
     bool Parse();
     const char * error() const;
-    const  MarshallNamespaceDescriptor_shptr get_descriptor() const ;
+    const  t_mnd_shp get_descriptor() const ;
 private:
     void test_file_();
     std::string filepath_;
     bool canParse_;
     const char * error_message_;
-    MarshallNamespaceDescriptor_shptr mnd_;
+    t_mnd_shp m_mnd_shp;
 };
 
 }

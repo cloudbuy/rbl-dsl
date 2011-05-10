@@ -34,7 +34,7 @@ namespace event_model
         GeneratorNamespaceDescriptor();
         GeneratorNamespaceDescriptor(   const   std::string & name_in,
                                         const   ordinal_type ordinal_in,
-                                        const   EventDescriptorContainer &);
+                                        const   t_edc &);
         friend void serialize(  SF::Archive & ar,
                                 GeneratorNamespaceDescriptor & gnd );
     };
@@ -66,7 +66,7 @@ namespace event_model
     GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor
         (   const  std::string & name_in, 
             const  ordinal_type ordinal_in, 
-            const EventDescriptorContainer & edc_in)
+            const t_edc & edc_in)
         : NamespaceDescriptorBase<GeneratorEventDescriptor>
             (name_in,ordinal_in,edc_in)
     {

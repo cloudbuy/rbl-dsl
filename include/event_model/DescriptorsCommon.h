@@ -50,9 +50,9 @@ public:
 private:
   friend void serialize(SF::Archive & ar, EventTypeDescriptor & etd);
   
-  EVENT_DESCRIPTOR_QUALIFIER qualifier_;
-  VALUE_TYPE  type_;
-  bool primitive_;
+  EVENT_DESCRIPTOR_QUALIFIER m_qualifier;
+  VALUE_TYPE m_type;
+  bool m_primitive;
 };
 
 //---------------------------------------------------------------------------//
@@ -87,8 +87,8 @@ public:
 protected:
   friend void serialize(SF::Archive & ar, EventDescriptorBase & edb);
   
-  EventDescriptorPair event_oid_type_pair_;
-  ordinal_type namespace_ordinal_;
+  EventDescriptorPair m_event_oid_type_pair;
+  ordinal_type m_namespace_ordinal;
 };
 //---------------------------------------------------------------------------//
     
@@ -98,30 +98,32 @@ class NamespaceDescriptorBase
 {
 public:
   typedef EventDescriptor_ EventDescriptor;
-  typedef OidContainer<Oid,EventDescriptor> EventDescriptorContainer;
+  typedef OidContainer<Oid,EventDescriptor> t_edc;
 
   NamespaceDescriptorBase();
   NamespaceDescriptorBase(  const std::string & name_in,
                             const ordinal_type ordinal);
   NamespaceDescriptorBase(  const std::string & name_in,
                             const ordinal_type ordinal,
-                            const EventDescriptorContainer & con);
+                            const t_edc & con);
 
   const std::size_t       event_container_size()                        const;
   const std::size_t       event_container_occupied_size()               const;
   const OP_RESPONSE       ContainsEventIdentifier(const Oid & oid)      const;
   const EventDescriptor * EventAt(const ordinal_type ordinal)           const;
   const EventDescriptor * EventWithName(const OidName & name_in)        const;
+  const t_edc &           events()                                      const;
 
   const std::string & name();
   const ordinal_type ordinal();
+  
 protected:
   template<typename NDBType>
   friend void serialize(SF::Archive & ar, NamespaceDescriptorBase<NDBType> & ndb);
 
-  std::string name_;
-  ordinal_type ordinal_;
-  EventDescriptorContainer events_;
+  std::string m_name;
+  ordinal_type m_ordinal;
+  t_edc m_events;
 };
 //---------------------------------------------------------------------------//
 }

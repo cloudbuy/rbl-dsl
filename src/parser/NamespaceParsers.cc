@@ -81,8 +81,8 @@ namespace parser
                 skipper
             );
         
-            mnd_.reset(new MarshallNamespaceDescriptor(
-                mndb.name(), mndb.events));   
+            m_mnd_shp.reset(new MarshallNamespaceDescriptor(
+                mndb.name(), mndb.ordinal(), mndb.events() ) );   
         }
         catch (const expectation_failure<pos_iterator_type>& e)
         {
@@ -115,11 +115,12 @@ namespace parser
     const char * NamespaceFileParser::error() const 
     {
         return error_message_;
-    } 
-    const  MarshallNamespaceDescriptor_shptr 
+    }
+
+    const  NamespaceFileParser::t_mnd_shp 
     NamespaceFileParser::get_descriptor() const
     {
-        return mnd_;
+        return m_mnd_shp;
     }
 }
 }

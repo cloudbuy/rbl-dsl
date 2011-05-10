@@ -9,18 +9,18 @@ namespace event_model
 
 inline void serialize(SF::Archive & ar, EventTypeDescriptor & etd)
 {
-  ar & etd.qualifier_ & etd.type_ & etd.primitive_;
+  ar & etd.m_qualifier & etd.m_type & etd.m_primitive;
 }
 
 inline void serialize(SF::Archive & ar, EventDescriptorBase & edb)
 { 
-  ar & edb.event_oid_type_pair_ & edb.namespace_ordinal_;
+  ar & edb.m_event_oid_type_pair & edb.m_namespace_ordinal;
 }
 
 template<typename NDBType>
 inline void serialize(SF::Archive & ar, NamespaceDescriptorBase<NDBType> & ndb)
 {
-  ar & ndb.name_ & ndb.ordinal_ & ndb.events_;
+  ar & ndb.m_name & ndb.m_ordinal & ndb.m_events;
 }
 
 }// namespace event_model

@@ -100,13 +100,13 @@ namespace event_model
     {
         ok = true;
         MarshallEventDescriptor med(    medb.oid(),
-                                        ordinal_,
+                                        m_ordinal,
                                         medb.types);
 
-        EventDescriptorContainer::entry_type entry
+        t_edc::entry_type entry
             (medb.oid(), med );
         
-        if( events_.SetEntry(entry) != OP_NO_ERROR)
+        if( m_events.SetEntry(entry) != OP_NO_ERROR)
             ok = false; 
     }
 
@@ -119,7 +119,7 @@ namespace event_model
     inline void MarshallNamespaceDescriptorBuilder::set_name
       (const std::string & s_in)
     {
-      this->name_ = s_in;
+      this->m_name = s_in;
     }
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//

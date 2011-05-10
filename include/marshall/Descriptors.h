@@ -24,12 +24,15 @@ namespace event_model
         public NamespaceDescriptorBase<MarshallEventDescriptor>
     {
     public:
+        // when a mnd is created, all of its state needs to be present.
+        // therefore the following constructor should be removed.`
+        // TODO remove following two contructors
         MarshallNamespaceDescriptor();
         MarshallNamespaceDescriptor( const  std::string & name_in,
                                      const  ordinal_type ordinal_in);
         MarshallNamespaceDescriptor( const  std::string & name_in,
                                      const  ordinal_type ordinal_in,
-                                     const EventDescriptorContainer & edc);
+                                     const t_edc & edc);
         operator RelayNamespaceDescriptor() const;
     };
     //-----------------------------------------------------------------------// 
@@ -49,9 +52,9 @@ namespace event_model
     }
     MarshallEventDescriptor::operator RelayEventDescriptor() const
     {
-        RelayEventDescriptor red(   event_oid_type_pair_.Id(),
-                                    namespace_ordinal_,
-                                    event_oid_type_pair_.entry());
+        RelayEventDescriptor red(   m_event_oid_type_pair.Id(),
+                                    m_namespace_ordinal,
+                                    m_event_oid_type_pair.entry());
         return red;
     }
     //-----------------------------------------------------------------------//
@@ -67,16 +70,16 @@ namespace event_model
     {
     }
     MarshallNamespaceDescriptor::MarshallNamespaceDescriptor
-        ( const std::string & name_in,const ordinal_type ordinal_in, const EventDescriptorContainer & edc)
+        ( const std::string & name_in,const ordinal_type ordinal_in, const t_edc & edc)
         : NamespaceDescriptorBase<MarshallEventDescriptor>(name_in, ordinal_in, edc)
     {
     }
     
     MarshallNamespaceDescriptor::operator RelayNamespaceDescriptor() const
     {        
-        RelayNamespaceDescriptor::EventDescriptorContainer redc;
-        events_.SlicingPopulate(redc); 
-        RelayNamespaceDescriptor casted(name_,ordinal_,redc);
+        RelayNamespaceDescriptor::t_edc redc;
+        m_events.SlicingPopulate(redc); 
+        RelayNamespaceDescriptor casted(m_name,m_ordinal,redc);
         return casted;
     }
     //-----------------------------------------------------------------------//

@@ -1,4 +1,11 @@
-#include "test_includes.h"
+#include "marshall/DescriptorBuilders.h"
+#include "event_model/detail/DescriptorsCommon-Serialization.h"
+#include "relay/Descriptors-Serialization.h"
+#include "generator/Descriptors-Serialization.h"
+#include "parser/NamespaceParsers.h"
+#include <gtest/gtest.h>
+
+
 
 std::string test_data_dir;
 
@@ -22,6 +29,7 @@ TEST(FileParserTesting, test_file_existance)
      
 }
 
+#if 0
 TEST(FileParserTesting, parse_correct_file)
 {
     std::string correct_namespace_file = test_data_dir;
@@ -100,4 +108,12 @@ TEST(FileParserTesting, parse_spacein_id)
     {
     }
 }
+#endif
 
+#ifdef ISOLATED_GTEST_COMPILE
+int main(int argc,char ** argv)
+{
+    ::testing::InitGoogleTest(&argc,argv);
+    return RUN_ALL_TESTS();
+}
+#endif

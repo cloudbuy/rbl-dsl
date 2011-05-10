@@ -6,77 +6,77 @@ namespace event_model
 using namespace primitives;
 // EventTypeDescriptor ////////////////////////////////////////////////////////
 inline EventTypeDescriptor::EventTypeDescriptor()
-: qualifier_(ENTRY_UNINITIALIZED), 
-  type_(VALUE_UNINITIALIZED), 
-  primitive_(false) {} 
+: m_qualifier(ENTRY_UNINITIALIZED), 
+  m_type(VALUE_UNINITIALIZED), 
+  m_primitive(false) {} 
 
 inline EventTypeDescriptor::EventTypeDescriptor( 
   EVENT_DESCRIPTOR_QUALIFIER _qualifier, 
   VALUE_TYPE _type,
   bool primitive_in)
-  : qualifier_(_qualifier),
-    type_(_type),
-    primitive_(primitive_in) {}
+  : m_qualifier(_qualifier),
+    m_type(_type),
+    m_primitive(primitive_in) {}
 
 inline const bool 
-EventTypeDescriptor::is_primitive() const {return primitive_; } 
+EventTypeDescriptor::is_primitive() const {return m_primitive; } 
 
 inline const EVENT_DESCRIPTOR_QUALIFIER 
 EventTypeDescriptor::qualifier() const
-  { return qualifier_; }
+  { return m_qualifier; }
 
 inline const VALUE_TYPE 
-EventTypeDescriptor::type() const { return type_; }     
+EventTypeDescriptor::type() const { return m_type; }     
 
 inline void EventTypeDescriptor::set_is_primitive(bool _is_primitive)
 {
-  primitive_ = _is_primitive;
+  m_primitive = _is_primitive;
 }
 inline void EventTypeDescriptor::set_qualifier
   (EVENT_DESCRIPTOR_QUALIFIER _qualifier)
 {
-  qualifier_ = _qualifier;
+  m_qualifier = _qualifier;
 }
 inline void EventTypeDescriptor::set_type(VALUE_TYPE _type)
 {
-  type_ = _type;
+  m_type = _type;
 }
 //---------------------------------------------------------------------------//
 
 // EventDescriptorBase ////////////////////////////////////////////////////////
 inline EventDescriptorBase::EventDescriptorBase() 
-  : namespace_ordinal_(), event_oid_type_pair_()
+  : m_namespace_ordinal(), m_event_oid_type_pair()
 {
 }
 inline EventDescriptorBase::EventDescriptorBase
   ( const Oid & oid,
     const ordinal_type ordinal_,
     const EventTypeContainer & etc)
-      : event_oid_type_pair_(oid,etc), 
-        namespace_ordinal_(ordinal_) {}
+      : m_event_oid_type_pair(oid,etc), 
+        m_namespace_ordinal (ordinal_) {}
 
 inline const std::size_t EventDescriptorBase::type_container_size() const
 {
-  return event_oid_type_pair_.entry().size();        
+  return m_event_oid_type_pair.entry().size();        
 }
 inline const ordinal_type EventDescriptorBase::ordinal() const
 {
-  return event_oid_type_pair_.Id().ordinal();
+  return m_event_oid_type_pair.Id().ordinal();
 }
 inline const OidName EventDescriptorBase::name() const
 {
-  return event_oid_type_pair_.Id().name();
+  return m_event_oid_type_pair.Id().name();
 }
 
 inline const Oid & EventDescriptorBase::oid() const
 {
-  return event_oid_type_pair_.Id();
+  return m_event_oid_type_pair.Id();
 }
 
 inline const Oid * EventDescriptorBase::TypeOidAt(const ordinal_type ordinal) const
 {
   const EventTypeContainer::entry_type * et = 
-    event_oid_type_pair_.entry().EntryAtordinal(ordinal);
+    m_event_oid_type_pair.entry().EntryAtordinal(ordinal);
   
   if(et != NULL)
     return & et->Id();
@@ -87,7 +87,7 @@ inline const Oid * EventDescriptorBase::TypeOidAt(const ordinal_type ordinal) co
 inline const Oid * EventDescriptorBase::TypeOidWithName(const OidName & name) const
 {
   const EventTypeContainer::entry_type * et = 
-    event_oid_type_pair_.entry().EntryWithName(name);
+    m_event_oid_type_pair.entry().EntryWithName(name);
   
   if(et != NULL)
     return & et->Id();
@@ -99,13 +99,13 @@ inline const Oid * EventDescriptorBase::TypeOidWithName(const OidName & name) co
 const EventTypeDescriptor * EventDescriptorBase::
 TypeAt(const ordinal_type ordinal) const
 {
-  return event_oid_type_pair_.entry()[ordinal];
+  return m_event_oid_type_pair.entry()[ordinal];
 }
 
 inline const std::size_t EventDescriptorBase::
 type_container_occupied_size() const
 {
-  return event_oid_type_pair_.entry().occupied_size();
+  return m_event_oid_type_pair.entry().occupied_size();
 } 
 //-----------------------------------------------------------------------//
   
@@ -121,7 +121,7 @@ template<class EventDescriptor>
 inline NamespaceDescriptorBase<EventDescriptor>::
 NamespaceDescriptorBase(  const std::string & name_in,
                           const ordinal_type ordinal)
-  : name_(name_in), ordinal_(ordinal), events_()
+  : m_name(name_in), m_ordinal(ordinal), m_events()
 {
 }
 
@@ -129,8 +129,8 @@ template<class EventDescriptor>
 inline NamespaceDescriptorBase<EventDescriptor>::
 NamespaceDescriptorBase(  const std::string & name_in,
                           const ordinal_type ordinal,
-                          const EventDescriptorContainer & con)
-  : name_(name_in), ordinal_(ordinal), events_(con)
+                          const t_edc & con)
+  : m_name(name_in), m_ordinal(ordinal), m_events(con)
 {
 }
 
@@ -138,32 +138,32 @@ template<class EventDescriptor>
 inline const std::string & NamespaceDescriptorBase<EventDescriptor>
 ::name()
 {
-  return name_;
+  return m_name;
 }
 template<class EventDescriptor>
 inline const ordinal_type NamespaceDescriptorBase<EventDescriptor>
 ::ordinal()
 {
-  return ordinal_;
+  return m_ordinal;
 }
 
 template<class EventDescriptor>
 inline const std::size_t NamespaceDescriptorBase<EventDescriptor>::
 event_container_size() const
 {
-  return events_.size();
+  return m_events.size();
 }
 template<class EventDescriptor>
 inline const std::size_t NamespaceDescriptorBase<EventDescriptor>::
 event_container_occupied_size() const
 {
-  return  events_.occupied_size();    
+  return  m_events.occupied_size();    
 }
 template<class EventDescriptor>
 inline const OP_RESPONSE NamespaceDescriptorBase<EventDescriptor>::
 ContainsEventIdentifier(const Oid & oid) const
 {
-  return events_.ContainsEither(oid); 
+  return m_events.ContainsEither(oid); 
 }
 
 template<class EventDescriptor>
@@ -171,15 +171,18 @@ inline const EventDescriptor *
 NamespaceDescriptorBase<EventDescriptor>::
 EventAt(const ordinal_type ordinal) const
 {
-  return events_[ordinal];        
+  return m_events[ordinal];        
 }
 template<class EventDescriptor>
 inline const EventDescriptor *
 NamespaceDescriptorBase<EventDescriptor>::
 EventWithName(const OidName & name_in) const
 {
-  return events_[name_in];
+  return m_events[name_in];
 }
+
+// template<class EventDescriptor>
+// inline const  
 //---------------------------------------------------------------------------//
 }
 #endif

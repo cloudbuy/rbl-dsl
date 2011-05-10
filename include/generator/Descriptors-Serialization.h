@@ -17,7 +17,7 @@ namespace event_model
     else 
       ar & static_cast<EventDescriptorBase>(red); 
     #endif
-    ar & ged.event_oid_type_pair_ & ged.namespace_ordinal_;
+    ar & ged.m_event_oid_type_pair & ged.m_namespace_ordinal;
   }
   void serialize(SF::Archive & ar, GeneratorNamespaceDescriptor & gnd)
   {
@@ -32,7 +32,7 @@ namespace event_model
       ar & static_cast<NamespaceDescriptorBase<RelayEventDescriptor> >(rnd);
     #endif
     
-    ar & gnd.name_ & gnd.ordinal_ & gnd.events_;
+    ar & gnd.m_name & gnd.m_ordinal & gnd.m_events;
   }
  
 }

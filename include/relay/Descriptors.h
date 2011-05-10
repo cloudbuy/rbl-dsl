@@ -31,7 +31,7 @@ public:
   RelayNamespaceDescriptor();
   RelayNamespaceDescriptor(   const  std::string & name_in,
                               const  ordinal_type ordinal_in,
-                              const  EventDescriptorContainer & edc_in);
+                              const  t_edc & edc_in);
   operator GeneratorNamespaceDescriptor() const;
 
   friend void serialize(SF::Archive & ar, RelayNamespaceDescriptor & rnd);
@@ -55,9 +55,9 @@ public:
     }
     inline RelayEventDescriptor::operator GeneratorEventDescriptor() const
     {
-        GeneratorEventDescriptor ged(   event_oid_type_pair_.Id(),
-                                        namespace_ordinal_,
-                                        event_oid_type_pair_.entry());
+        GeneratorEventDescriptor ged(   m_event_oid_type_pair.Id(),
+                                        m_namespace_ordinal,
+                                        m_event_oid_type_pair.entry());
         return ged;
     }
 
@@ -70,15 +70,15 @@ public:
     RelayNamespaceDescriptor::RelayNamespaceDescriptor
         ( const  std::string & name_in, 
           const  ordinal_type ordinal_in, 
-          const EventDescriptorContainer & edc_in)
+          const t_edc & edc_in)
             : NamespaceDescriptorBase<RelayEventDescriptor>(name_in, ordinal_in,edc_in)
     {
     }
     RelayNamespaceDescriptor::operator GeneratorNamespaceDescriptor() const
     {
-        GeneratorNamespaceDescriptor::EventDescriptorContainer gedc;
-        events_.SlicingPopulate(gedc);
-        GeneratorNamespaceDescriptor casted(name_,ordinal_,gedc);
+        GeneratorNamespaceDescriptor::t_edc gedc;
+        m_events.SlicingPopulate(gedc);
+        GeneratorNamespaceDescriptor casted(m_name,m_ordinal,gedc);
         return casted;    
     }
     //-----------------------------------------------------------------------//
