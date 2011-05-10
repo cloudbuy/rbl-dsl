@@ -45,10 +45,10 @@ namespace event_model
 // Inline Definitions                                                        //
 //---------------------------------------------------------------------------//
     // GenereatorEventDescriptor //////////////////////////////////////////////
-    GeneratorEventDescriptor::GeneratorEventDescriptor()
+    inline GeneratorEventDescriptor::GeneratorEventDescriptor()
     {
     }
-    GeneratorEventDescriptor::GeneratorEventDescriptor(   
+    inline GeneratorEventDescriptor::GeneratorEventDescriptor(   
                                     const  Oid & oid,
                                     const  ordinal_type ordinal_in,
                                     const  EventTypeContainer & edc_in)
@@ -58,12 +58,12 @@ namespace event_model
     //-----------------------------------------------------------------------//
     
     // GeneratorNamespaceDescriptor ///////////////////////////////////////////
-    GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor()
+    inline GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor()
         : NamespaceDescriptorBase<GeneratorEventDescriptor>()
     {
         
     }
-    GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor
+    inline GeneratorNamespaceDescriptor::GeneratorNamespaceDescriptor
         (   const  std::string & name_in, 
             const  ordinal_type ordinal_in, 
             const t_edc & edc_in)

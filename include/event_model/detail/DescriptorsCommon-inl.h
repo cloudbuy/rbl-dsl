@@ -96,7 +96,7 @@ inline const Oid * EventDescriptorBase::TypeOidWithName(const OidName & name) co
 
 }
 
-const EventTypeDescriptor * EventDescriptorBase::
+inline const EventTypeDescriptor * EventDescriptorBase::
 TypeAt(const ordinal_type ordinal) const
 {
   return m_event_oid_type_pair.entry()[ordinal];
@@ -181,8 +181,12 @@ EventWithName(const OidName & name_in) const
   return m_events[name_in];
 }
 
-// template<class EventDescriptor>
-// inline const  
+template<class EventDescriptor>
+inline const typename NamespaceDescriptorBase<EventDescriptor>::t_edc &
+NamespaceDescriptorBase<EventDescriptor>::events() const
+{
+  return m_events;
+}
 //---------------------------------------------------------------------------//
 }
 #endif

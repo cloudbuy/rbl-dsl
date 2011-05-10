@@ -12,6 +12,8 @@ namespace event_model
 {
 namespace parser
 {
+    NamespaceFileParser::NamespaceFileParser()
+      : filepath_(), canParse_(false), error_message_("none") {}
 
     NamespaceFileParser::NamespaceFileParser(const std::string & filename)
             : canParse_(true), error_message_("none"), filepath_(filename)

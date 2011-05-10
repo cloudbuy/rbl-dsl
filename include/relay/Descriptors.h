@@ -63,18 +63,18 @@ public:
 
     //-----------------------------------------------------------------------//
     // RelayNamespaceDescriptor ///////////////////////////////////////////////
-    RelayNamespaceDescriptor::RelayNamespaceDescriptor()
+    inline RelayNamespaceDescriptor::RelayNamespaceDescriptor()
         : NamespaceDescriptorBase<RelayEventDescriptor>() 
     {
     }
-    RelayNamespaceDescriptor::RelayNamespaceDescriptor
+    inline RelayNamespaceDescriptor::RelayNamespaceDescriptor
         ( const  std::string & name_in, 
           const  ordinal_type ordinal_in, 
           const t_edc & edc_in)
             : NamespaceDescriptorBase<RelayEventDescriptor>(name_in, ordinal_in,edc_in)
     {
     }
-    RelayNamespaceDescriptor::operator GeneratorNamespaceDescriptor() const
+    inline RelayNamespaceDescriptor::operator GeneratorNamespaceDescriptor() const
     {
         GeneratorNamespaceDescriptor::t_edc gedc;
         m_events.SlicingPopulate(gedc);

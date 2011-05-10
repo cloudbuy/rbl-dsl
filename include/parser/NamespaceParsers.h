@@ -15,19 +15,22 @@ class NamespaceFileParser
 public:
     typedef boost::shared_ptr<MarshallNamespaceDescriptor> t_mnd_shp;
 
-    NamespaceFileParser() : 
-        filepath_(), canParse_(false), error_message_("none") {}
+    NamespaceFileParser();
+        
     NamespaceFileParser(const std::string & filename);
-    void SetFile(const std::string & s_in);
-    bool CanParse() const;
+
+    bool              CanParse()       const;
+    const char *      error()          const;
+    const t_mnd_shp   get_descriptor() const;
+
     bool Parse();
-    const char * error() const;
-    const  t_mnd_shp get_descriptor() const ;
+    void SetFile(const std::string & s_in);
 private:
     void test_file_();
     std::string filepath_;
     bool canParse_;
     const char * error_message_;
+    
     t_mnd_shp m_mnd_shp;
 };
 

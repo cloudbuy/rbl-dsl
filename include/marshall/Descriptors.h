@@ -50,7 +50,7 @@ namespace event_model
         : EventDescriptorBase(oid,ordinal_,edc)
     {
     }
-    MarshallEventDescriptor::operator RelayEventDescriptor() const
+    inline MarshallEventDescriptor::operator RelayEventDescriptor() const
     {
         RelayEventDescriptor red(   m_event_oid_type_pair.Id(),
                                     m_namespace_ordinal,
@@ -60,22 +60,22 @@ namespace event_model
     //-----------------------------------------------------------------------//
 
     // MarshallNamespaceDescriptor ////////////////////////////////////////////
-    MarshallNamespaceDescriptor::MarshallNamespaceDescriptor()
+    inline MarshallNamespaceDescriptor::MarshallNamespaceDescriptor()
         : NamespaceDescriptorBase<MarshallEventDescriptor>()
     {
     }
-    MarshallNamespaceDescriptor::MarshallNamespaceDescriptor
+    inline MarshallNamespaceDescriptor::MarshallNamespaceDescriptor
         ( const std::string & name_in,const ordinal_type ordinal_in)
         : NamespaceDescriptorBase<MarshallEventDescriptor>(name_in, ordinal_in)
     {
     }
-    MarshallNamespaceDescriptor::MarshallNamespaceDescriptor
+    inline MarshallNamespaceDescriptor::MarshallNamespaceDescriptor
         ( const std::string & name_in,const ordinal_type ordinal_in, const t_edc & edc)
         : NamespaceDescriptorBase<MarshallEventDescriptor>(name_in, ordinal_in, edc)
     {
     }
     
-    MarshallNamespaceDescriptor::operator RelayNamespaceDescriptor() const
+    inline MarshallNamespaceDescriptor::operator RelayNamespaceDescriptor() const
     {        
         RelayNamespaceDescriptor::t_edc redc;
         m_events.SlicingPopulate(redc); 
