@@ -9,7 +9,7 @@
 #include <gtest/gtest.h>
 #include <string>
 #include <parser/NamespaceParsers.h>
-#include <event_model/Descriptors.h>
+#include <event_model/DescriptorsCommon.h>
 #include <gtest/gtest.h>
 #include <boost/cstdint.hpp>
 #include <event_model/detail/OidContainer.h>
@@ -28,8 +28,7 @@ using namespace event_model;
 
 TEST(event_table_test, test_one)
 {
-    ContainerBuilder<EventTypeContainer> container_builder;
-    typedef ContainerBuilder<EventTypeContainer>::entry_type et;
+    EventTypeContainer container_builder;
 
     Oid oid0("monkey",0);
     Oid oid2("zebra",2);
@@ -57,10 +56,10 @@ TEST(event_table_test, test_one)
     type_d5.set_qualifier(ENTRY_REQUIRED);
     type_d5.set_type(VALUE_STRING);
 
-    container_builder.SetEntry(et(oid0,type_d0));
-    container_builder.SetEntry(et(oid2,type_d2));
-    container_builder.SetEntry(et(oid3,type_d3));
-    container_builder.SetEntry(et(oid5,type_d5)); 
+    container_builder.SetEntry(oid0,type_d0);
+    container_builder.SetEntry(oid2,type_d2);
+    container_builder.SetEntry(oid3,type_d3);
+    container_builder.SetEntry(oid5,type_d5); 
     
     ASSERT_EQ(container_builder.size(), 6);
     ASSERT_EQ(container_builder.occupied_size(),4);

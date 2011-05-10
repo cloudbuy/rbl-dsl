@@ -31,7 +31,6 @@ enum EVENT_DESCRIPTOR_QUALIFIER
 class EventTypeDescriptor
 {
 public:
-  
   EventTypeDescriptor();
   explicit EventTypeDescriptor(   EVENT_DESCRIPTOR_QUALIFIER _qualifier,
                                   VALUE_TYPE _type,

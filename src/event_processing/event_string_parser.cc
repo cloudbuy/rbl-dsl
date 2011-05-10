@@ -60,6 +60,8 @@ namespace event_model
         phoenix::bind(  &event_parse_grammar::set_value, \
                         *this,_r1,_CO,_a,_pass)
        
+        #define _TYPE(type_entry) \
+        phoenix::bind( & EventTypeDescriptor::type, type_entry)
 
         quoted_string =  
             char_('"') > 
@@ -68,7 +70,7 @@ namespace event_model
 
         event_entry = 
             qi::ushort_[ _CO=_1] > '=' > 
-            eps [_CVT = phoenix::bind(&EventDescriptor::RowTypeAt, _r2, _CO)] >>
+            eps [_CVT = _TYPE(phoenix::bind(&EventDescriptorBase::TypeAt, _r2, _CO))] >>
             (       ( eps( _CVT == VALUE_INT4) >> p_int32_t 
                         [ _a = _1, _SET_VALUE ])
                 |   ( eps( _CVT == VALUE_INT8) >> p_int64_t 

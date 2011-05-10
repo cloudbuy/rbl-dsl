@@ -2,6 +2,7 @@
 #define _MARSHALL_DESCRIPTORS_H
 #include "event_model/DescriptorsCommon.h"
 #include "relay/Descriptors.h"
+#include <boost/shared_ptr.hpp>
 
 namespace event_model
 {
@@ -24,6 +25,7 @@ namespace event_model
         public NamespaceDescriptorBase<MarshallEventDescriptor>
     {
     public:
+        typedef  boost::shared_ptr<MarshallNamespaceDescriptor> t_shp;
         // when a mnd is created, all of its state needs to be present.
         // therefore the following constructor should be removed.`
         // TODO remove following two contructors

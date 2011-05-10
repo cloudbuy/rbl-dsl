@@ -1,4 +1,4 @@
-#include <event_model/Descriptors.h>
+#include <event_model/DescriptorsCommon.h>
 #include <event_model/DescriptorKarmaGenerators.h>
 #include <RCF/Idl.hpp>
 #include <RCF/TcpEndpoint.hpp>

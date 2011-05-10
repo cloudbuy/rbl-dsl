@@ -4,12 +4,12 @@
 
 namespace event_model
 {
-    Event::Event(const EventDescriptor & event_descriptor)
-        : ed_(event_descriptor), event_data_(event_descriptor.entry().size()) {}
+    Event::Event(const EventDescriptorBase & event_descriptor)
+        : ed_(event_descriptor), event_data_(event_descriptor.type_container_size()) {}
   
     void Event::reset_event()
     {
-        event_data_.assign(ed_.entry().size(), undefined());
+        event_data_.assign(ed_.type_container_size(), undefined());
     }
  
     void Event::reset_parser()
@@ -64,6 +64,6 @@ namespace event_model
     }
 
  
-    EventSet::EventSet(const EventDescriptor & event_descriptor)
+    EventSet::EventSet(const EventDescriptorBase & event_descriptor)
         : ed_(event_descriptor), events_() {}
 };

@@ -1,5 +1,5 @@
 SET(    PARSER_COMPILE_FILES
-            Descriptors.cc
+            DescriptorBuilders.cc
             NamespaceParsers.cc
             ../../include/event_model/Descriptors.h
             ../../include/parser/NamespaceParsers.h

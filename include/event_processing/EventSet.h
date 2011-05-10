@@ -1,7 +1,6 @@
 #ifndef _EM_ROW_AND_TABLE_H
 #define _EM_ROW_AND_TABLE_H
-#include <event_model/Types.h>
-#include <event_model/Descriptors.h>
+#include "event_model/DescriptorsCommon.h"
 #include "detail/event_string_parser.h"
 #include "detail/event_string_generator.h"
 #include <boost/scoped_ptr.hpp>
@@ -22,7 +21,7 @@ namespace event_model {
     class Event : boost::noncopyable
     {
     public:
-        Event(const EventDescriptor & event_descriptor);
+        Event(const EventDescriptorBase & event_descriptor);
         bool operator >>(std::string & str) const; 
         bool operator <<(const std::string & str);
         const value_variant_vector & get_event_vector() const;
@@ -39,7 +38,7 @@ namespace event_model {
         }
     private:
         value_variant_vector event_data_;
-        const EventDescriptor & ed_;
+        const EventDescriptorBase & ed_;
 
         boost::scoped_ptr<event_parse_grammar> epg_scptr_;
         mutable boost::scoped_ptr<event_string_generator_grammar> epgg_scptr_;
@@ -50,14 +49,14 @@ namespace event_model {
     class EventSet : boost::noncopyable
     {
     public:
-        EventSet(const EventDescriptor & event_descriptor);
+        EventSet(const EventDescriptorBase & event_descriptor);
 
         bool push(const Event & event);
         bool pop(Event & event) const;
         typedef std::vector<value_variant_vector> event_vector;
     private:
         event_vector events_;
-        const EventDescriptor & ed_;
+        const EventDescriptorBase & ed_;
         
     };
 };

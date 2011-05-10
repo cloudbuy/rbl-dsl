@@ -1,5 +1,5 @@
-#include <interface/RelayToServerInterface.h>
-#include <event_model/Descriptors.h>
+#include "interface/RelayToServerInterface.h"
+#include "marshall/Descriptors.h"
 #include <map>
 
 class NamespaceRepository
@@ -15,7 +15,7 @@ private:
     
     typedef std::map<
         std::string, 
-        event_model::MarshallNamespaceDescriptor_shptr> map_type_;
+        event_model::MarshallNamespaceDescriptor::t_shp> map_type_;
 
     map_type_ map_;
 };

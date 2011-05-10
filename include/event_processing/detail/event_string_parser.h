@@ -3,7 +3,7 @@
 
 #include <boost/spirit/include/qi.hpp>
 #include <event_model/Types.h>
-#include <event_model/Descriptors.h>
+#include <event_model/DescriptorsCommon.h>
 #include <string>
 
 namespace event_model
@@ -35,7 +35,7 @@ namespace event_model
 
     struct event_parse_grammar : 
         boost::spirit::qi::grammar< std::string::const_iterator, 
-            void(value_variant_vector & , const EventDescriptor &),
+            void(value_variant_vector & , const EventDescriptorBase &),
             boost::spirit::qi::ascii::space_type> 
     {
         void set_value (
@@ -76,12 +76,12 @@ namespace event_model
             boost::spirit::ascii::space_type > quoted_string;
  
         boost::spirit::qi::rule<   std::string::const_iterator,
-                    void(value_variant_vector &, const EventDescriptor &),
+                    void(value_variant_vector &, const EventDescriptorBase &),
                     boost::spirit::qi::locals<value_variant>,
                     boost::spirit::ascii::space_type>  event_entry;
 
         boost::spirit::qi::rule<   std::string::const_iterator, 
-                    void(value_variant_vector &, const EventDescriptor &),
+                    void(value_variant_vector &, const EventDescriptorBase &),
                     boost::spirit::ascii::space_type> event_rule;
     
         event_parser_error_descriptor rped_;

@@ -1,6 +1,6 @@
 #ifndef _EM_DESCRIPTOR_KARMA_GENERATORS
 #define _EM_DESCRIPTOR_KARMA_GENERATORS
-#include "Descriptors.h"
+#include "event_model/DescriptorsCommon.h"
 #include <boost/spirit/include/karma.hpp>
 #include <boost/spirit/include/phoenix_bind.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
@@ -36,7 +36,7 @@ struct EventTypeContainerGenerator:
 
 #define EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE            \
     iterator,                                           \
-    void (const event_model::EventDescriptor &),        \
+    void (const event_model::EventDescriptorBase &),        \
     boost::spirit::karma::locals<uint32_t>
 
 
@@ -47,10 +47,10 @@ struct  EventDescriptorGenerator
     karma::rule<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE> base_rule;
 
     #define _EVENT_ORDINAL                                          \
-    phoenix::bind(&event_model::EventDescriptor::ordinal,_r1)
+    phoenix::bind(&event_model::EventDescriptorBase::ordinal,_r1)
     
     #define _EVENT_NAME                                             \
-    phoenix::bind(&event_model::EventDescriptor::name,_r1)
+    phoenix::bind(&event_model::EventDescriptorBase::name,_r1)
 
     EventDescriptorGenerator() 
         : EventDescriptorGenerator::base_type(base_rule)
@@ -60,6 +60,7 @@ struct  EventDescriptorGenerator
         using karma::char_;
         using karma::stream;
         using karma::eol;
+        using karma::int_;
 
         base_rule = 
             int_ (_EVENT_ORDINAL) << char_(':') << stream(_EVENT_NAME) << eol 

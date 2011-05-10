@@ -1,4 +1,4 @@
-#include <server/ServerToRelay.h>
+#include <marshall/ServerToRelay.h>
 #include <parser/NamespaceParsers.h>
 
 using namespace event_model;
@@ -29,7 +29,7 @@ void NamespaceRepository::AddNamespaceFromFile(const std::string & namespace_fil
         error_ = nfp.error();
         exit(1);
     }
-    MarshallNamespaceDescriptor_shptr mnd_s = nfp.get_descriptor();
+    MarshallNamespaceDescriptor::t_shp mnd_s = nfp.get_descriptor();
     map_[mnd_s->name()] = mnd_s;
 }
 

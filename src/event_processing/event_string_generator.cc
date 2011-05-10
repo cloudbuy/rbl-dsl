@@ -27,15 +27,18 @@ event_string_generator_grammar()
     using karma::ascii::space;
     using karma::repeat;
     using event_model::value_variant_vector;
-    using event_model::EventDescriptor;
+    using event_model::EventDescriptorBase;
     using namespace event_model; 
    
     #define _CO                                                             \
     phoenix::bind(&event_string_generator_grammar::current_ordinal,*this)
 
+    #define __CVT_CURRENT(ordinal)                                          \
+    phoenix::bind(&EventDescriptorBase::TypeAt, _r1, ordinal)
+
     #define _CVT_CURRENT(ordinal)                                           \
-    phoenix::bind(&EventDescriptor::RowTypeAt, _r1, ordinal)
-    
+    phoenix::bind(&EventTypeDescriptor::type, __CVT_CURRENT(ordinal))
+
     #define _CVT_LOCAL                                                      \
     phoenix::bind(&event_string_generator_grammar::current_value_type,*this)
    
@@ -52,7 +55,7 @@ event_string_generator_grammar()
                    _r2 )
 
     base_rule = 
-        int_ [ _1 = phoenix::bind(&EventDescriptor::ordinal, _r1) ]         <<
+        int_ [ _1 = phoenix::bind(&EventDescriptorBase::ordinal, _r1) ]     <<
         space << char_('(') << space                                        <<
         repeat(_VVV_SIZE) [
             eps[_CVT_LOCAL = _CVT_CURRENT(_CO)]                             << 

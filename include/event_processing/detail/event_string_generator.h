@@ -1,13 +1,13 @@
 #ifndef _EP_EVENT_STRING_GENERATOR_H
 #define _EP_EVENT_STRING_GENERATOR_H
 #include <event_model/Types.h>
-#include <event_model/Descriptors.h>
+#include <event_model/DescriptorsCommon.h>
 #include <boost/spirit/include/karma.hpp>
 #include <string>
 #include <ostream>
 
 #define BASE_RULE_SIGNATURE std::back_insert_iterator<std::string>,     \
-        void(   const event_model::EventDescriptor &,                   \
+        void(   const event_model::EventDescriptorBase &,               \
                 const event_model::value_variant_vector &),             \
         boost::spirit::karma::locals<uint32_t>
                 
