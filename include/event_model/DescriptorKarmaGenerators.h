@@ -36,7 +36,7 @@ struct EventTypeContainerGenerator:
 
 #define EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE            \
     iterator,                                           \
-    void (const event_model::EventDescriptorBase &),        \
+    void (const event_model::EventDescriptorBase &),    \
     boost::spirit::karma::locals<uint32_t>
 
 

@@ -1,5 +1,5 @@
-#include "parser/NamespaceParsers.h"
-#include "parser/detail/EventModelGrammar.h"
+#include "marshall/parser/NamespaceParsers.h"
+#include "marshall/parser/detail/EventModelGrammar.h"
 #define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem.hpp>
 #include <fstream>

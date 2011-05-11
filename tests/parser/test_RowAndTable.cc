@@ -8,7 +8,7 @@
 //#include <event_model/detail/EventModelGrammar.h>
 #include <gtest/gtest.h>
 #include <string>
-#include <parser/NamespaceParsers.h>
+#include <marshall/parser/NamespaceParsers.h>
 #include <event_model/DescriptorsCommon.h>
 #include <gtest/gtest.h>
 #include <boost/cstdint.hpp>

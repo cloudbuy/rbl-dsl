@@ -1,5 +1,5 @@
 #include <marshall/ServerToRelay.h>
-#include <parser/NamespaceParsers.h>
+#include <marshall/parser/NamespaceParsers.h>
 
 using namespace event_model;
 

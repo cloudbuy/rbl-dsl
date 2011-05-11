@@ -1,4 +1,4 @@
-#include "parser/NamespaceParsers.h"
+#include "marshall/parser/NamespaceParsers.h"
 
 #include "marshall/DescriptorBuilders.h"
 #include "event_model/detail/DescriptorsCommon-Serialization.h"

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <string>
-#include <parser/detail/EventModelGrammar.h>
+#include <marshall/parser/detail/EventModelGrammar.h>
 
 typedef std::string::iterator c_s_it;
 
