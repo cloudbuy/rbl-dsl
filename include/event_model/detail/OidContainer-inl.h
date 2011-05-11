@@ -429,6 +429,13 @@ SetEntry(const entry_type & entry)
 } 
 
 template<typename _identifier_type, typename _entry_type>
+inline OP_RESPONSE OidContainer<_identifier_type, _entry_type>::
+SetEntry( const identifier_type & id, const basic_entry_type & entry)
+{
+  SetEntry( entry_type(id,entry) );
+}
+
+template<typename _identifier_type, typename _entry_type>
 inline void OidContainer<_identifier_type, _entry_type>::
 resize_if_needed_(boost::uint32_t ordinal)
 {

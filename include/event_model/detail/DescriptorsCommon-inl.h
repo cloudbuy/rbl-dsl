@@ -102,6 +102,16 @@ TypeAt(const ordinal_type ordinal) const
   return m_event_oid_type_pair.entry()[ordinal];
 }
 
+inline const VALUE_TYPE 
+EventDescriptorBase::TypeValueTypeAt(const ordinal_type ordinal) const
+{
+  const EventTypeDescriptor * etd = m_event_oid_type_pair.entry()[ordinal];
+  if( etd == NULL)
+    return VALUE_UNINITIALIZED;
+  else
+    return etd->type();
+}
+
 inline const std::size_t EventDescriptorBase::
 type_container_occupied_size() const
 {

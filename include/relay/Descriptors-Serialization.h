@@ -6,7 +6,7 @@
 
 namespace event_model
 {
-  void serialize(SF::Archive & ar,RelayEventDescriptor & red) 
+  inline void serialize(SF::Archive & ar,RelayEventDescriptor & red) 
   {
     #if 0
     if(!ar.isWrite())
@@ -19,7 +19,7 @@ namespace event_model
     #endif
     ar & red.m_event_oid_type_pair & red.m_namespace_ordinal;
   }
-  void serialize(SF::Archive & ar, RelayNamespaceDescriptor & rnd)
+  inline void serialize(SF::Archive & ar, RelayNamespaceDescriptor & rnd)
   {
     #if 0
     if(!ar.isWrite())

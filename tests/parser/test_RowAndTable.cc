@@ -12,7 +12,6 @@
 #include <event_model/DescriptorsCommon.h>
 #include <gtest/gtest.h>
 #include <boost/cstdint.hpp>
-#include <event_model/detail/OidContainer.h>
 
 #include <typeinfo>
 #define BOOST_FILESYSTEM_VERSION 3
@@ -28,7 +27,7 @@ using namespace event_model;
 
 TEST(event_table_test, test_one)
 {
-    EventTypeContainer container_builder;
+    EventTypeContainer etc;
 
     Oid oid0("monkey",0);
     Oid oid2("zebra",2);
@@ -56,29 +55,29 @@ TEST(event_table_test, test_one)
     type_d5.set_qualifier(ENTRY_REQUIRED);
     type_d5.set_type(VALUE_STRING);
 
-    container_builder.SetEntry(oid0,type_d0);
-    container_builder.SetEntry(oid2,type_d2);
-    container_builder.SetEntry(oid3,type_d3);
-    container_builder.SetEntry(oid5,type_d5); 
+    etc.SetEntry(oid0,type_d0);
+    etc.SetEntry(oid2,type_d2);
+    etc.SetEntry(oid3,type_d3);
+    etc.SetEntry(oid5,type_d5); 
     
-    ASSERT_EQ(container_builder.size(), 6);
-    ASSERT_EQ(container_builder.occupied_size(),4);
+    ASSERT_EQ(etc.size(), 6);
+    ASSERT_EQ(etc.occupied_size(),4);
 
-    EventTypeContainer cont = container_builder;
+    EventTypeContainer cont = etc;
     ASSERT_EQ(cont.size(), 6);
     ASSERT_EQ(cont.occupied_size(),4);
 
-    EventDescriptor td( Oid("test",0), cont);
-    ASSERT_EQ(td.entry().size(), 6);
-    ASSERT_EQ(td.entry().occupied_size(),4);
+    EventDescriptorBase td( Oid("test",0),0,cont);
+    ASSERT_EQ(td.type_container_size(), 6);
+    ASSERT_EQ(td.type_container_occupied_size(),4);
 
     Event event(td);
-    ASSERT_EQ(td.RowTypeAt(0), VALUE_INT4);
-    ASSERT_EQ(td.RowTypeAt(1), VALUE_UNINITIALIZED);
-    ASSERT_EQ(td.RowTypeAt(2), VALUE_STRING);
-    ASSERT_EQ(td.RowTypeAt(3), VALUE_INT8);
-    ASSERT_EQ(td.RowTypeAt(4), VALUE_UNINITIALIZED);
-    ASSERT_EQ(td.RowTypeAt(5), VALUE_STRING);
+    ASSERT_EQ(td.TypeValueTypeAt(0), VALUE_INT4);
+    ASSERT_EQ(td.TypeValueTypeAt(1), VALUE_UNINITIALIZED);  
+    ASSERT_EQ(td.TypeValueTypeAt(2), VALUE_STRING);
+    ASSERT_EQ(td.TypeValueTypeAt(3), VALUE_INT8);
+    ASSERT_EQ(td.TypeValueTypeAt(4), VALUE_UNINITIALIZED);
+    ASSERT_EQ(td.TypeValueTypeAt(5), VALUE_STRING);
  
     std::string test_string("0(0=5, 2=\"jungle fever\", 3=12423, 5=\"boring\")");
     EXPECT_TRUE(event << test_string);
@@ -140,8 +139,7 @@ TEST(event_table_test, test_one)
 
 TEST(event_table_test, test_two)
 {
-    ContainerBuilder<EventTypeContainer> container_builder;
-    typedef ContainerBuilder<EventTypeContainer>::entry_type et;
+    EventTypeContainer etc;
 
     Oid oid0("monkey",0);
     Oid oid2("zebra",2);
@@ -169,17 +167,17 @@ TEST(event_table_test, test_two)
     type_d5.set_qualifier(ENTRY_REQUIRED);
     type_d5.set_type(VALUE_STRING);
 
-    container_builder.SetEntry(et(oid0,type_d0));
-    container_builder.SetEntry(et(oid2,type_d2));
-    container_builder.SetEntry(et(oid3,type_d3));
-    container_builder.SetEntry(et(oid5,type_d5)); 
+    etc.SetEntry(oid0,type_d0);
+    etc.SetEntry(oid2,type_d2);
+    etc.SetEntry(oid3,type_d3);
+    etc.SetEntry(oid5,type_d5); 
     
    
-    ASSERT_EQ(container_builder.size(), 6);
-    ASSERT_EQ(container_builder.occupied_size(),4);
+    ASSERT_EQ(etc.size(), 6);
+    ASSERT_EQ(etc.occupied_size(),4);
 
-    EventTypeContainer cont = container_builder;
-    EventDescriptor td( Oid("test",0), cont);
+    EventTypeContainer cont = etc;
+    EventDescriptorBase td( Oid("test",0),0, cont);
 
     Event event(td);
 
@@ -199,3 +197,11 @@ TEST(event_table_test, test_two)
     EXPECT_TRUE(event >> string2);
     std::cout << string2 << std::endl;
 }
+
+#ifdef ISOLATED_GTEST_COMPILE
+int main(int argc,char ** argv)
+{
+    ::testing::InitGoogleTest(&argc,argv);
+    return RUN_ALL_TESTS();
+}
+#endif

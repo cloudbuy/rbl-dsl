@@ -6,7 +6,7 @@
 
 namespace event_model
 {
-  void serialize(SF::Archive & ar,GeneratorEventDescriptor & ged) 
+  inline void serialize(SF::Archive & ar,GeneratorEventDescriptor & ged) 
   {
     #if 0
     if(!ar.isWrite())
@@ -19,7 +19,7 @@ namespace event_model
     #endif
     ar & ged.m_event_oid_type_pair & ged.m_namespace_ordinal;
   }
-  void serialize(SF::Archive & ar, GeneratorNamespaceDescriptor & gnd)
+  inline void serialize(SF::Archive & ar, GeneratorNamespaceDescriptor & gnd)
   {
     #if 0
     if(!ar.isWrite())

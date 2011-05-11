@@ -33,11 +33,8 @@ event_string_generator_grammar()
     #define _CO                                                             \
     phoenix::bind(&event_string_generator_grammar::current_ordinal,*this)
 
-    #define __CVT_CURRENT(ordinal)                                          \
-    phoenix::bind(&EventDescriptorBase::TypeAt, _r1, ordinal)
-
     #define _CVT_CURRENT(ordinal)                                           \
-    phoenix::bind(&EventTypeDescriptor::type, __CVT_CURRENT(ordinal))
+    phoenix::bind(&EventDescriptorBase::TypeValueTypeAt, _r1, ordinal)
 
     #define _CVT_LOCAL                                                      \
     phoenix::bind(&event_string_generator_grammar::current_value_type,*this)

@@ -179,7 +179,8 @@ public:
   const  basic_entry_type * operator[] (const name_type & name)         const;
   const basic_entry_type * operator[] (const ordinal_type & ordinal)    const;
   
-  OP_RESPONSE SetEntry(const entry_type & entry);
+  OP_RESPONSE SetEntry( const entry_type & entry);
+  OP_RESPONSE SetEntry( const identifier_type & ,const basic_entry_type & );
 protected:
   template<typename f_id, typename f_ent>
   friend void serialize(  SF::Archive & ar, OidContainer<f_id, f_ent> & entry);

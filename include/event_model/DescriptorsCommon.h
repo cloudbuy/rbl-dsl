@@ -81,6 +81,7 @@ public:
   const Oid *                 TypeOidWithName(const OidName & name) const;
 
   const EventTypeDescriptor * TypeAt(const ordinal_type ordinal)    const;
+  const VALUE_TYPE            TypeValueTypeAt(const ordinal_type )  const;
   const std::size_t           type_container_size()                 const;
   const std::size_t           type_container_occupied_size()        const;
 protected:

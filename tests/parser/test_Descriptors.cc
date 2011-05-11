@@ -542,15 +542,11 @@ TEST( descriptor_building_and_serialization, base_descriptor_serialization_test)
   
   typedef NamespaceDescriptorBase<EventDescriptorBase> ndb_type;
 
+  ndb_type::t_edc edc;
+  edc.SetEntry(one,   etb);
+  edc.SetEntry(two,   etb);
+  edc.SetEntry(three, etb);
   
-  ndb_type::EventDescriptorContainer::entry_type ndbet1(one,etb);
-  ndb_type::EventDescriptorContainer::entry_type ndbet2(two,etb);
-  ndb_type::EventDescriptorContainer::entry_type ndbet3(three,etb);
-
-  ndb_type::EventDescriptorContainer edc;
-  edc.SetEntry(ndbet1);
-  edc.SetEntry(ndbet2);
-  edc.SetEntry(ndbet3);
   ndb_type ndb("hassan",0,edc);
 
   ASSERT_EQ(ndb.event_container_size(),3);

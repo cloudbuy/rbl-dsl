@@ -1,4 +1,7 @@
-#include "test_includes.h"
+#include <gtest/gtest.h>
+
+#define BOOST_FILESYSTEM_VERSION 3
+#include <boost/filesystem.hpp>
 
 extern std::string test_data_dir;
 
