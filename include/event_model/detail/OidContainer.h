@@ -93,6 +93,14 @@ private:
   size_type ordinal_;
 };
 
+template<typename str_type, typename size_type>
+std::ostream & operator<<
+(std::ostream & os, const OidType<str_type, size_type> & oid)
+{
+  os << oid.ordinal() << ':' << oid.name().c_str();
+}
+
+
 namespace
 {
     namespace intrusive = boost::intrusive;

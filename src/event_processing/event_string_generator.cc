@@ -82,4 +82,10 @@ event_string_generator_grammar()
     terminal_type_rule  = 
         karma::stream(_r1)
     ;
+  #undef _CO
+  #undef _CVT_CURRENT
+  #undef _CVT_LOCAL
+  #undef _SET_CV_LOCAL
+  #undef _CV_LOCAL
+  #undef _VVV_SIZE
 }
