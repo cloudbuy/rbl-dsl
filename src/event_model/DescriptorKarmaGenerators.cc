@@ -47,10 +47,13 @@ BaseEventDescriptorGenerator::BaseEventDescriptorGenerator()
     << eps[_a = 0] <<
     repeat(_TYPE_CONTAINER_SIZE) [
       eps[ _b = _CURRENT_VALUE_TYPE] <<
-      (   ( eps( _b == VALUE_UNINITIALIZED)            )
-        | ( eps(_b == VALUE_INT4)   <<  int_(_a)  << lit("int4")   << eol ) 
-        | ( eps(_b == VALUE_INT8)   <<  int_(_a)  << lit("int8")   << eol )
-        | ( eps(_b == VALUE_STRING) <<  int_(_a)  << lit("string") << eol ) 
+      (   ( eps( _b == VALUE_UNINITIALIZED)             )
+        | ( eps(_b == VALUE_INT4)   <<  int_(_a)  
+              << lit("int4")   << eol                   ) 
+        | ( eps(_b == VALUE_INT8)   <<  int_(_a)  
+              << lit("int8")   << eol                   )
+        | ( eps(_b == VALUE_STRING) <<  int_(_a)  
+              << lit("string") << eol ) 
         |   eps ) << 
     eps[ _a = _a+1 ]   
     ] <<

@@ -48,13 +48,11 @@ namespace event_model
     inline std::ostream & operator<< 
     (std::ostream & out, event_model::undefined & undef)
     {
-        std::cout <<" hjaha" << std::endl;
         return out;
     }
     inline std::ostream & operator<< 
     (std::ostream & out, const event_model::undefined & undef)
     {
-        std::cout << " const haha"<< std::endl;
         return out;
     }
     typedef boost::variant< 
