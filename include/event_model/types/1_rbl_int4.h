@@ -61,10 +61,19 @@ struct rbl_int4_parser_rule_definition
   
   boost::spirit::qi::int_parser<rbl_int4> parser_int32_t;
   
+  rbl_int4_parser_rule_definition & operator=
+    (const rbl_int4_parser_rule_definition & rhs)
+  {
+
+  }
+  
   rule_type rule;
   
   rbl_int4_parser_rule_definition()
   {
+    static boost::spirit::qi::int_parser<rbl_int4> parser_int32_t;
+
+    rule.name("rbl int4 rule");
     rule = parser_int32_t;  
   }
 };

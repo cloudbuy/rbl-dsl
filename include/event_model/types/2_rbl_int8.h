@@ -60,10 +60,15 @@ struct rbl_int8_parser_rule_definition
   
   boost::spirit::qi::int_parser<rbl_int8> parser_int64_t;
   
+  rbl_int8_parser_rule_definition & operator=
+    (const rbl_int8_parser_rule_definition & rhs) 
+  {
+  }
   rule_type rule;
   
   rbl_int8_parser_rule_definition()
   {
+    rule.name("rbl in8 rule");
     rule = parser_int64_t;  
   }
 };

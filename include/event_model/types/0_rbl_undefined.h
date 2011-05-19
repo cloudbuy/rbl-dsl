@@ -59,6 +59,7 @@ struct rbl_undefined_parser_rule_definition
   
   rbl_undefined_parser_rule_definition()
   {
+    rule.name("undefined parse rule");
     rule = boost::spirit::qi::eps; 
   }
 };
