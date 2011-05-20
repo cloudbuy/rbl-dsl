@@ -10,13 +10,15 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/for_each.hpp>
+#include <boost/mpl/apply_wrap.hpp>
+#include <boost/mpl/size.hpp>
 #include <boost/bind.hpp>
+#include <boost/array.hpp>
 
 namespace rubble { namespace event_model { namespace types {
 
-typedef uint8_t rbl_type_ordinal_type;
+typedef uint8_t ordinal_type;
 
-template<rbl_type_ordinal_type ordinal> struct rbl_ordinal_type_traits;
 template<typename tag> struct rbl_type_type_traits;
 template<typename tag> struct rbl_type_parser_rule;
 
@@ -39,6 +41,17 @@ typedef boost::mpl::vector3<
 
 typedef boost::make_variant_over<rbl_type_mpl_vector>::type rbl_type_value_variant;
 
+template<typename SEQ, typename T>
+struct get_type_ordinal_in_sequence_f
+{
+  typedef typename boost::mpl::find<SEQ,T>::type it;
+  typedef typename boost::mpl::end<SEQ>::type end;
+
+  BOOST_MPL_ASSERT_NOT (( boost::is_same< it, end >));
+  
+  typedef typename it::pos pos; 
+};
+
 template<typename T> 
 struct get_type_ordinal_f
 {
@@ -51,24 +64,77 @@ struct get_type_ordinal_f
   
   typedef typename it::pos pos; 
 
-  rbl_type_ordinal_type operator()()
+  ordinal_type operator()()
   {
-    return it::pos::value;
+    return (ordinal_type) it::pos::value;
    }
 };
+
+#define RBL_TYPE_ORDINAL(type_name) \
+  (rubble::event_model::types::ordinal_type)                        \
+    rubble::event_model::types::get_type_ordinal_f<type_name>()()
+
+struct get_type_f
+{
+  template<class T1>
+  struct apply
+  {
+    typedef typename rbl_type_type_traits<T1>::tag type;
+  };
+};
+
+typedef boost::mpl::transform<rbl_type_mpl_vector, get_type_f>::type
+  type_variant_mpl_vector;
+
+typedef boost::make_variant_over<type_variant_mpl_vector>::type
+  type_variant;
+
+template<typename SEQ ,typename VARIANT, typename TRAIT_EXTRACTOR>
+struct variant_ordinal_map : 
+  boost::array< VARIANT, boost::mpl::size<rbl_type_mpl_vector>::type::value> 
+{
+  typedef boost::array< VARIANT,boost::mpl::size<rbl_type_mpl_vector>::type::value> array_t;
+  struct set_rule_f
+  {
+    template<typename T>
+    void operator()(T, array_t & a)
+    {
+      typedef typename get_type_ordinal_in_sequence_f<SEQ,T>::pos pos;
+      typedef typename  boost::mpl::apply_wrap1<TRAIT_EXTRACTOR,T >::type current_variant_type;      
+ 
+      a.at(pos::value) = current_variant_type();
+    }
+  };
+ /* 
+  type_variant operator[](int ordinal)
+  {
+    return (*this)[ordinal];
+  }
+  */
+  variant_ordinal_map()
+  {
+    boost::mpl::for_each<SEQ> ( boost::bind<void>(set_rule_f(),_1, boost::ref(*this))); 
+  }      
+};
+
+typedef variant_ordinal_map<  rbl_type_mpl_vector, 
+                              type_variant, 
+                              get_type_f> type_ordinal_map_t;
+
+extern type_ordinal_map_t type_ordinal_map;
 } } } 
 
 
 #ifdef RBL_TYPE_HEADER_SPIRIT_PARSING
 #include <boost/spirit/include/qi_symbols.hpp>
-#include <boost/array.hpp>
 #include <algorithm>
 #include <iostream>
 
 
 namespace rubble { namespace event_model { namespace types {
 
-typedef boost::spirit::qi::symbols<char,rbl_type_ordinal_type> rbl_type_symbols_t;
+typedef boost::spirit::qi::symbols<char,ordinal_type> rbl_type_symbols_t;
+
 struct RblTypes : rbl_type_symbols_t
 {
   struct populate_symbols_f 
@@ -76,7 +142,7 @@ struct RblTypes : rbl_type_symbols_t
     template<typename T>
     void operator()(T, rbl_type_symbols_t & s)
     {
-      rbl_type_ordinal_type ord = get_type_ordinal_f<T>()();
+      ordinal_type ord = get_type_ordinal_f<T>()();
       typename rbl_type_type_traits<T>::dsl_strings dsl_strings;
       int dsl_string_count = dsl_strings.count();
 
@@ -122,6 +188,7 @@ struct get_rule_f
 typedef boost::mpl::transform<rbl_type_mpl_vector,get_rule_f>::type 
   parser_rules_mpl_vector;
 
+
 typedef boost::make_variant_over<parser_rules_mpl_vector>::type 
   rbl_type_string_parser_variant;
 
@@ -129,20 +196,21 @@ typedef boost::array< rbl_type_string_parser_variant,
                       boost::mpl::size<parser_rules_mpl_vector>::type::value >
   rbl_rule_array_t;
 
-/// \TODO replace with insert into vector<string>
-struct get_rule_at_f
-  : public boost::static_visitor<>
-{
-  template<typename T>
-  void operator()(const T & t) const
-  {
-    std::cout << t.rule.name() << std::endl;
-  } 
-};
-
+/// \TODO remove the following struct with the general ordinal_type_map defined above
 struct rbl_type_string_parser_rules
   : rbl_rule_array_t
 {
+  /// \TODO replace with insert into vector<string>
+  struct get_rule_at_f
+    : public boost::static_visitor<>
+  {
+    template<typename T>
+    void operator()(const T & t) const
+    {
+      std::cout << t.rule.name() << std::endl;
+    } 
+  };
+
   struct set_rule_f
   {
     template<typename T> 

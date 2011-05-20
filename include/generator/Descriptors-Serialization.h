@@ -4,8 +4,7 @@
 #include <event_model/detail/DescriptorsCommon-Serialization.h>
 #include <SF/Serializer.hpp>
 
-namespace event_model
-{
+namespace rubble { namespace event_model { namespace descriptors {
   inline void serialize(SF::Archive & ar,GeneratorEventDescriptor & ged) 
   {
     #if 0
@@ -35,5 +34,5 @@ namespace event_model
     ar & gnd.m_name & gnd.m_ordinal & gnd.m_events;
   }
  
-}
+} } }
 #endif

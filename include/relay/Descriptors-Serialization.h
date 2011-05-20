@@ -4,8 +4,7 @@
 #include <event_model/detail/DescriptorsCommon-Serialization.h>
 #include <SF/Serializer.hpp>
 
-namespace event_model
-{
+namespace rubble { namespace event_model { namespace descriptors {
   inline void serialize(SF::Archive & ar,RelayEventDescriptor & red) 
   {
     #if 0
@@ -19,6 +18,7 @@ namespace event_model
     #endif
     ar & red.m_event_oid_type_pair & red.m_namespace_ordinal;
   }
+
   inline void serialize(SF::Archive & ar, RelayNamespaceDescriptor & rnd)
   {
     #if 0
@@ -34,5 +34,5 @@ namespace event_model
     
     ar & rnd.m_name & rnd.m_ordinal & rnd.m_events;
   }
-}
+} } }
 #endif 

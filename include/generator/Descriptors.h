@@ -8,7 +8,7 @@ namespace SF
     class Archive;
 }
 
-namespace event_model
+namespace rubble { namespace event_model { namespace descriptors
 {
     //---------------------------------------------------------------------------//
 // Class Declarations                                                        // 
@@ -73,5 +73,5 @@ namespace event_model
     }
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
-}
+} } }
 #endif

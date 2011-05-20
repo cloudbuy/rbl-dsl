@@ -7,43 +7,35 @@ namespace rubble { namespace event_model { namespace types {
 
 typedef boost::int32_t  rbl_int4;
 
-
-struct rbl_int4_runtime_string
-{
-  const char * operator()()
-  {
-    return "int";
-  }
-};
-
-struct rbl_int4_dsl_strings
-{
-  int count()
-  {
-    return 2;
-  }
-  const char ** operator()()
-  {
-    static const char * r[] = {"int","int4"};
-    return  r;
-  }  
-};
-
-template<> 
-struct rbl_ordinal_type_traits<1>
-{
-  typedef rbl_int4 type;
-};
-
 template<>
 struct rbl_type_type_traits<rbl_int4>
 {
-  static const rbl_type_ordinal_type ordinal = 1;
-  typedef      rbl_int4_runtime_string runtime_string;
-  typedef      rbl_int4_dsl_strings dsl_strings;
+  struct rbl_int4_runtime_string
+  {
+    const char * operator()()
+    {
+      return "int";
+    }
+  };
+
+  struct rbl_int4_dsl_strings
+  {
+    int count()
+    {
+      return 2;
+    }
+    const char ** operator()()
+    {
+      static const char * r[] = {"int","int4"};
+      return  r;
+    }  
+  };
+  struct rbl_int4_type_tag{};
+  typedef rbl_int4_type_tag tag;
+  typedef rbl_int4_runtime_string runtime_string;
+  typedef rbl_int4_dsl_strings    dsl_strings;
 
 };
-
 } } }
 #endif
 

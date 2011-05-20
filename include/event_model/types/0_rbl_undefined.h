@@ -7,36 +7,31 @@ namespace rubble { namespace event_model { namespace types {
 
 typedef boost::spirit::unused_type rbl_undefined;
 
-struct rbl_undefined_runtime_string
-{
-  const char * operator()()
-  {
-    return "undefined";
-  }
-};
-
-struct rbl_undefined_dsl_strings
-{
-  const unsigned char count()
-  {
-    return 0;
-  }
-  const char ** operator()()
-  {
-    return 0;
-  }
-};
-
-template<> 
-struct rbl_ordinal_type_traits<0>
-{ 
-  typedef rbl_undefined type;
-};
 
 template<>
 struct rbl_type_type_traits<rbl_undefined>
 {
-  static const rbl_type_ordinal_type ordinal = 0;
+  struct rbl_undefined_runtime_string
+  {
+    const char * operator()()
+    {
+      return "undefined";
+    }
+  };
+
+  struct rbl_undefined_dsl_strings
+  {
+    const unsigned char count()
+    {
+      return 0;
+    }
+    const char ** operator()()
+    {
+      return 0;
+    }
+  };
+  struct rbl_undefined_type_tag{};
+  typedef rbl_undefined_type_tag tag;
   typedef rbl_undefined_runtime_string runtime_string;
   typedef rbl_undefined_dsl_strings dsl_strings;
 };

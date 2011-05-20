@@ -17,10 +17,9 @@ namespace SF
   class Archive;
 }
 
-namespace event_model
-{
-namespace primitives
-{
+namespace rubble { namespace event_model { 
+namespace descriptors { namespace primitives {
+
 // uninstantiatable generic template
 template<typename char_type, unsigned length>
 class OidConstrainedString
@@ -204,7 +203,6 @@ protected:
   name_index_set name_index_;
 };
 //---------------------------------------------------------------------------//
-}
-}
+} } } }
 #include "OidContainer-inl.h"
 #endif

@@ -1,10 +1,8 @@
 #ifndef     _EM_OID_CONTAINER_INL_H
 #define     _EM_OID_CONTAINER_INL_H
 
-namespace event_model
-{
-namespace primitives
-{
+namespace rubble  { namespace event_model { 
+namespace descriptors { namespace primitives {
 
 // OidConstrainedString ///////////////////////////////////////////////////
 template<unsigned length>
@@ -486,7 +484,6 @@ struct OidContainer<_identifier_type, _entry_type>::name_key_finder
 };
 //-----------------------------------------------------------------------//
 
-}
-}
+} } } }
 
 #endif

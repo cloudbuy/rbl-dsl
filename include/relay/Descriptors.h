@@ -9,8 +9,7 @@ namespace SF
     class Archive;
 }
 
-namespace event_model
-{
+namespace rubble { namespace event_model { namespace descriptors {
 // RelayEventDescriptor ///////////////////////////////////////////////////
 class RelayEventDescriptor : public EventDescriptorBase
 {
@@ -83,5 +82,5 @@ public:
     }
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
-}
+} } } 
 #endif

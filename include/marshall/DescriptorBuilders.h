@@ -1,8 +1,7 @@
 #ifndef _MARSHALL_DESCRIPTOR_BUILDER
 #define _MARSHALL_DESCRIPTOR_BUILDER
 #include "marshall/Descriptors.h"
-namespace event_model
-{
+namespace rubble { namespace event_model { namespace descriptors {
 // Class Declarations /////////////////////////////////////////////////////////
     class MarshallNamespaceDescriptorBuilder;
     ///////////////////////////////////////////////////////////////////////////
@@ -123,5 +122,5 @@ namespace event_model
     }
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
-}
+} } }
 #endif

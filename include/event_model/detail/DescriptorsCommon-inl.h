@@ -1,21 +1,22 @@
 #ifndef _EM_DESCRIPTORS_INL_COMMON_H
 #define _EM_DESCRIPTORS_INL_COMMON_H
 #include <event_model/DescriptorsCommon.h>
-namespace event_model
-{
+namespace rubble { namespace event_model { namespace descriptors {
+
 using namespace primitives;
 // EventTypeDescriptor ////////////////////////////////////////////////////////
 inline EventTypeDescriptor::EventTypeDescriptor()
 : m_qualifier(ENTRY_UNINITIALIZED), 
-  m_type(VALUE_UNINITIALIZED), 
+  m_type(), 
   m_primitive(false) {} 
 
+template<typename T>
 inline EventTypeDescriptor::EventTypeDescriptor( 
   EVENT_DESCRIPTOR_QUALIFIER _qualifier, 
-  VALUE_TYPE _type,
+  T,
   bool primitive_in)
   : m_qualifier(_qualifier),
-    m_type(_type),
+    m_type( typename rbl_types::rbl_type_type_traits<T>::tag() ),
     m_primitive(primitive_in) {}
 
 inline const bool 
@@ -25,8 +26,10 @@ inline const EVENT_DESCRIPTOR_QUALIFIER
 EventTypeDescriptor::qualifier() const
   { return m_qualifier; }
 
-inline const VALUE_TYPE 
-EventTypeDescriptor::type() const { return m_type; }     
+inline const rbl_types::ordinal_type  EventTypeDescriptor::type() const 
+{ 
+  return (rbl_types::ordinal_type) m_type.which(); 
+}
 
 inline void EventTypeDescriptor::set_is_primitive(bool _is_primitive)
 {
@@ -37,9 +40,10 @@ inline void EventTypeDescriptor::set_qualifier
 {
   m_qualifier = _qualifier;
 }
-inline void EventTypeDescriptor::set_type(VALUE_TYPE _type)
+template<typename T> 
+inline void EventTypeDescriptor::set_type(T)
 {
-  m_type = _type;
+  m_type = T();
 }
 //---------------------------------------------------------------------------//
 
@@ -102,12 +106,12 @@ TypeAt(const ordinal_type ordinal) const
   return m_event_oid_type_pair.entry()[ordinal];
 }
 
-inline const VALUE_TYPE 
+inline const rbl_types::ordinal_type 
 EventDescriptorBase::TypeValueTypeAt(const ordinal_type ordinal) const
 {
   const EventTypeDescriptor * etd = m_event_oid_type_pair.entry()[ordinal];
   if( etd == NULL)
-    return VALUE_UNINITIALIZED;
+    return rbl_types::get_type_ordinal_f<rbl_types::rbl_undefined>()();
   else
     return etd->type();
 }
@@ -198,5 +202,5 @@ NamespaceDescriptorBase<EventDescriptor>::events() const
   return m_events;
 }
 //---------------------------------------------------------------------------//
-}
+} } }
 #endif

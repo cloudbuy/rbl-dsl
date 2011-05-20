@@ -1,6 +1,6 @@
 #ifndef _EM_DESCRIPTORS_COMMON_H
 #define _EM_DESCRIPTORS_COMMON_H
-#include <event_model/Types.h>
+#include <event_model/types/rbl_types.h>
 #include <boost/cstdint.hpp>
 #include "detail/OidContainer.h"
 
@@ -9,12 +9,12 @@ namespace SF
   class Archive;
 }
 
-namespace event_model
-{
-//---------------------------------------------------------------------------//
+namespace rubble { namespace event_model { namespace descriptors {
+//---------------------------------------------------------------------------// 
 // Class Declarations                                                        //
 //---------------------------------------------------------------------------//
 using namespace primitives;
+namespace rbl_types=rubble::event_model::types;
 
 typedef boost::uint16_t ordinal_type; 
 typedef OidConstrainedString<char, 32> OidName;
@@ -32,25 +32,26 @@ class EventTypeDescriptor
 {
 public:
   EventTypeDescriptor();
+  template<typename T>
   explicit EventTypeDescriptor(   EVENT_DESCRIPTOR_QUALIFIER _qualifier,
-                                  VALUE_TYPE _type,
+                                  T,
                                   bool primitive_in);
   
   // no operator= or copy constructor as bitwise copy is fine
 
-  const bool                        is_primitive()              const;
-  const EVENT_DESCRIPTOR_QUALIFIER  qualifier()                 const;    
-  const VALUE_TYPE                  type()                      const;
+  const bool                              is_primitive()        const;
+  const EVENT_DESCRIPTOR_QUALIFIER        qualifier()           const;    
+  const rbl_types::ordinal_type           type()                const;
   
-  void                              set_is_primitive(bool _is_primitive);
+  void set_is_primitive(bool _is_primitive);
   void set_qualifier(EVENT_DESCRIPTOR_QUALIFIER _qualifier);
-  void set_type(VALUE_TYPE _type);
+  template<typename T> void set_type(T);
 
 private:
   friend void serialize(SF::Archive & ar, EventTypeDescriptor & etd);
   
-  EVENT_DESCRIPTOR_QUALIFIER m_qualifier;
-  VALUE_TYPE m_type;
+  EVENT_DESCRIPTOR_QUALIFIER        m_qualifier;
+  rbl_types::type_variant  m_type;
   bool m_primitive;
 };
 
@@ -72,18 +73,18 @@ public:
                           const ordinal_type ordinal_,  
                           const EventTypeContainer & etc);
    
-  const ordinal_type          namespace_ordinal()                   const;
-  const ordinal_type          ordinal()                             const;
-  const OidName               name()                                const;
-  const Oid &                 oid()                                 const;
+  const ordinal_type            namespace_ordinal()                   const;
+  const ordinal_type            ordinal()                             const;
+  const OidName                 name()                                const;
+  const Oid &                   oid()                                 const;
   
-  const Oid *                 TypeOidAt(const ordinal_type ordinal) const;
-  const Oid *                 TypeOidWithName(const OidName & name) const;
+  const Oid *                   TypeOidAt(const ordinal_type ordinal) const;
+  const Oid *                   TypeOidWithName(const OidName & name) const;
 
-  const EventTypeDescriptor * TypeAt(const ordinal_type ordinal)    const;
-  const VALUE_TYPE            TypeValueTypeAt(const ordinal_type )  const;
-  const std::size_t           type_container_size()                 const;
-  const std::size_t           type_container_occupied_size()        const;
+  const EventTypeDescriptor *   TypeAt(const ordinal_type ordinal)    const;
+  const rbl_types::ordinal_type TypeValueTypeAt(const ordinal_type )  const;
+  const std::size_t             type_container_size()                 const;
+  const std::size_t             type_container_occupied_size()        const;
 protected:
   friend void serialize(SF::Archive & ar, EventDescriptorBase & edb);
   
@@ -126,7 +127,7 @@ protected:
   t_edc m_events;
 };
 //---------------------------------------------------------------------------//
-}
+} } }
 #include "detail/DescriptorsCommon-inl.h"
 #endif 
 

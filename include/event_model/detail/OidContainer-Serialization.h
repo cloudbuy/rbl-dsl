@@ -4,10 +4,7 @@
 
 #include <SF/vector.hpp>
 #include <SF/string.hpp>
-namespace event_model
-{
-namespace primitives
-{
+namespace rubble { namespace event_model { namespace descriptors { namespace primitives {
  
 template<typename CHAR_,unsigned LENGTH_> 
 void serialize( SF::Archive & ar, 
@@ -50,7 +47,5 @@ void serialize( SF::Archive & ar,
     entry.regen_name_index_();
   }
 }
-
-}
-}
+} } } }
 #endif 

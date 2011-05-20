@@ -4,8 +4,7 @@
 #include "relay/Descriptors.h"
 #include <boost/shared_ptr.hpp>
 
-namespace event_model
-{
+namespace rubble { namespace event_model { namespace descriptors {
 //---------------------------------------------------------------------------//
 // Class Declarations                                                        //
 //---------------------------------------------------------------------------//
@@ -86,5 +85,5 @@ namespace event_model
     }
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//
-}
+} } }
 #endif

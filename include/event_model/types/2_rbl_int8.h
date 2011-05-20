@@ -3,47 +3,39 @@
 
 #include <boost/cstdint.hpp>
 
-
 namespace rubble { namespace event_model { namespace types {
 
 typedef boost::int64_t rbl_int8;
 
-template<> 
-struct rbl_ordinal_type_traits<2>
-{
-  typedef rbl_int8 type;
-};
-
-struct rbl_int8_runtime_string
-{
-  const char * operator()()
-  {
-    return "int";
-  }
-};
-
-struct rbl_int8_dsl_strings
-{
-  int count()
-  {
-    return 2;
-  }
-  const char ** operator()()
-  {
-    static const char * r[] = {"bigint","int8"};
-    return  r;
-  }  
-};
-
 template<>
 struct rbl_type_type_traits<rbl_int8>
 {
-  static const rbl_type_ordinal_type ordinal = 2;
-  typedef      rbl_int8_runtime_string runtime_string;
-  typedef      rbl_int8_dsl_strings dsl_strings;
+  struct rbl_int8_runtime_string
+  {
+    const char * operator()()
+    {
+      return "int";
+    }
+  };
+
+  struct rbl_int8_dsl_strings
+  {
+    int count()
+    {
+      return 2;
+    }
+    const char ** operator()()
+    {
+      static const char * r[] = {"bigint","int8"};
+      return  r;
+    }  
+  };
+  struct rbl_int8_type_tag{};
+  typedef rbl_int8_type_tag tag;
+  typedef rbl_int8_runtime_string  runtime_string;
+  typedef rbl_int8_dsl_strings     dsl_strings;
 };
 } } }
-
 #endif
 
 #ifdef RBL_TYPE_HEADER_SPIRIT_PARSING
