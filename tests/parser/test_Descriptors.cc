@@ -37,7 +37,7 @@ TEST(descriptor_building_and_serialization, event_entry_serialization_test)
     ASSERT_TRUE(etd_default_constructed.is_primitive() == false);
 }
 
-#if 0
+
 TEST(descriptor_building_and_serialization, identifier_collision_tests)
 {
     MarshallNamespaceDescriptorBuilder mndb("testing",0);
@@ -56,25 +56,25 @@ TEST(descriptor_building_and_serialization, identifier_collision_tests)
     ASSERT_TRUE(res);
 
     medb.AddEventType(  hassan_zero,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_TRUE(res);
     medb.AddEventType(  hassan_zero,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_FALSE(res);
     
     medb.AddEventType(  hassan_zero_ord_collision,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_FALSE(res);
     medb.AddEventType(  hassan_zero_name_collision,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_FALSE(res);
 }
 
-
+#if 0
 TEST(descriptor_building_and_serialization, event_descriptor_building_test)
 {
     MarshallNamespaceDescriptorBuilder mndb("testing",0);

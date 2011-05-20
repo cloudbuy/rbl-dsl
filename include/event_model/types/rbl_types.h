@@ -91,9 +91,9 @@ typedef boost::make_variant_over<type_variant_mpl_vector>::type
 
 template<typename SEQ ,typename VARIANT, typename TRAIT_EXTRACTOR>
 struct variant_ordinal_map : 
-  boost::array< VARIANT, boost::mpl::size<rbl_type_mpl_vector>::type::value> 
+  boost::array< VARIANT, boost::mpl::size<SEQ>::type::value> 
 {
-  typedef boost::array< VARIANT,boost::mpl::size<rbl_type_mpl_vector>::type::value> array_t;
+  typedef boost::array< VARIANT,boost::mpl::size<SEQ>::type::value> array_t;
   struct set_rule_f
   {
     template<typename T>
@@ -105,12 +105,7 @@ struct variant_ordinal_map :
       a.at(pos::value) = current_variant_type();
     }
   };
- /* 
-  type_variant operator[](int ordinal)
-  {
-    return (*this)[ordinal];
-  }
-  */
+ 
   variant_ordinal_map()
   {
     boost::mpl::for_each<SEQ> ( boost::bind<void>(set_rule_f(),_1, boost::ref(*this))); 
