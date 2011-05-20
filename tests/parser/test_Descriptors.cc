@@ -74,7 +74,7 @@ TEST(descriptor_building_and_serialization, identifier_collision_tests)
     ASSERT_FALSE(res);
 }
 
-#if 0
+
 TEST(descriptor_building_and_serialization, event_descriptor_building_test)
 {
     MarshallNamespaceDescriptorBuilder mndb("testing",0);
@@ -93,20 +93,20 @@ TEST(descriptor_building_and_serialization, event_descriptor_building_test)
     ASSERT_TRUE(res);
 
     medb.AddEventType(  hassan_zero,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_TRUE(res);
     medb.AddEventType(  hassan_zero,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_FALSE(res);
     
     medb.AddEventType(  hassan_zero_ord_collision,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_FALSE(res);
     medb.AddEventType(  hassan_zero_name_collision,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_FALSE(res);
 }
@@ -130,16 +130,16 @@ TEST(descriptor_building_and_serialization, exhaustive_mndb_building_test)
     ASSERT_TRUE(res);
 
     medb1.AddEventType(  one,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_TRUE(res);
     medb1.AddEventType(  two,
-                        EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                        EventTypeDescriptor(ENTRY_OPTIONAL, rbl_types::rbl_int4(), false),
                         res);
     ASSERT_TRUE(res);
     
     medb1.AddEventType(  three,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int8(), true),
                         res);
     ASSERT_TRUE(res);
     
@@ -147,16 +147,16 @@ TEST(descriptor_building_and_serialization, exhaustive_mndb_building_test)
     ASSERT_TRUE(res);
 
     medb2.AddEventType(  one,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_TRUE(res);
     medb2.AddEventType(  two,
-                        EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                        EventTypeDescriptor(ENTRY_OPTIONAL, rbl_types::rbl_int4(), false),
                         res);
     ASSERT_TRUE(res);
     
     medb2.AddEventType(  three,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int8(), true),
                         res);
     ASSERT_TRUE(res);
 
@@ -197,15 +197,15 @@ TEST(descriptor_building_and_serialization, exhaustive_mndb_building_test)
     ASSERT_TRUE(mndb.EventAt(0)->TypeAt(7)==NULL);
     ASSERT_TRUE(mndb.EventAt(0)->TypeAt(8)!=NULL);
    
-    ASSERT_EQ(mndb.EventAt(0)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(mndb.EventAt(0)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(mndb.EventAt(0)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(mndb.EventAt(0)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(mndb.EventAt(0)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(mndb.EventAt(0)->TypeAt(3)->type(),RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(mndb.EventAt(0)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(mndb.EventAt(0)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(mndb.EventAt(0)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(mndb.EventAt(0)->TypeAt(8)->type(),RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(mndb.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(mndb.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
@@ -222,15 +222,15 @@ TEST(descriptor_building_and_serialization, exhaustive_mndb_building_test)
     ASSERT_TRUE(mndb.EventAt(5)->TypeAt(7)==NULL);
     ASSERT_TRUE(mndb.EventAt(5)->TypeAt(8)!=NULL);
     
-    ASSERT_EQ(mndb.EventAt(5)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(mndb.EventAt(5)->TypeAt(0)->type(),  RBL_TYPE_ORDINAL( rbl_types::rbl_int4));
     ASSERT_EQ(mndb.EventAt(5)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(mndb.EventAt(5)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(mndb.EventAt(5)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(mndb.EventAt(5)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(mndb.EventAt(5)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(mndb.EventAt(5)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(mndb.EventAt(5)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(mndb.EventAt(5)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(mndb.EventAt(5)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(mndb.EventAt(5)->TypeAt(8)->is_primitive(), true);
 }
@@ -253,16 +253,16 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(res);
 
     medb1.AddEventType(  one,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_TRUE(res);
     medb1.AddEventType(  two,
-                        EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                        EventTypeDescriptor(ENTRY_OPTIONAL, rbl_types::rbl_int4(), false),
                         res);
     ASSERT_TRUE(res);
     
     medb1.AddEventType(  three,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int8(), true),
                         res);
     ASSERT_TRUE(res);
     
@@ -270,16 +270,16 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(res);
 
     medb2.AddEventType(  one,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_TRUE(res);
     medb2.AddEventType(  two,
-                        EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                        EventTypeDescriptor(ENTRY_OPTIONAL, rbl_types::rbl_int4(), false),
                         res);
     ASSERT_TRUE(res);
     
     medb2.AddEventType(  three,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int8(), true),
                         res);
     ASSERT_TRUE(res);
 
@@ -321,15 +321,15 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(mnd.EventAt(0)->TypeAt(7)==NULL);
     ASSERT_TRUE(mnd.EventAt(0)->TypeAt(8)!=NULL);
    
-    ASSERT_EQ(mnd.EventAt(0)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(mnd.EventAt(0)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(mnd.EventAt(0)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(mnd.EventAt(0)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(mnd.EventAt(0)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(mnd.EventAt(0)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(mnd.EventAt(0)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(mnd.EventAt(0)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(mnd.EventAt(0)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(mnd.EventAt(0)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(mnd.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(mnd.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
@@ -346,15 +346,15 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(mnd.EventAt(5)->TypeAt(7)==NULL);
     ASSERT_TRUE(mnd.EventAt(5)->TypeAt(8)!=NULL);
     
-    ASSERT_EQ(mnd.EventAt(5)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(mnd.EventAt(5)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(mnd.EventAt(5)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(mnd.EventAt(5)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(mnd.EventAt(5)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(mnd.EventAt(5)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(mnd.EventAt(5)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(mnd.EventAt(5)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(mnd.EventAt(5)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(mnd.EventAt(5)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(mnd.EventAt(5)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(mnd.EventAt(5)->TypeAt(8)->is_primitive(), true);
 
@@ -390,15 +390,15 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(rnd.EventAt(0)->TypeAt(7)==NULL);
     ASSERT_TRUE(rnd.EventAt(0)->TypeAt(8)!=NULL);
    
-    ASSERT_EQ(rnd.EventAt(0)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.EventAt(0)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(rnd.EventAt(0)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.EventAt(0)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
@@ -415,15 +415,15 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(rnd.EventAt(5)->TypeAt(7)==NULL);
     ASSERT_TRUE(rnd.EventAt(5)->TypeAt(8)!=NULL);
     
-    ASSERT_EQ(rnd.EventAt(5)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.EventAt(5)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(rnd.EventAt(5)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.EventAt(5)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(rnd.EventAt(5)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(rnd.EventAt(5)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(8)->is_primitive(), true);
 
@@ -459,15 +459,15 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(gnd.EventAt(0)->TypeAt(7)==NULL);
     ASSERT_TRUE(gnd.EventAt(0)->TypeAt(8)!=NULL);
    
-    ASSERT_EQ(gnd.EventAt(0)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(gnd.EventAt(0)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(gnd.EventAt(0)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(gnd.EventAt(0)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(gnd.EventAt(0)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(gnd.EventAt(0)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(gnd.EventAt(0)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(gnd.EventAt(0)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(gnd.EventAt(0)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(gnd.EventAt(0)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(gnd.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(gnd.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
@@ -484,15 +484,15 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_TRUE(gnd.EventAt(5)->TypeAt(7)==NULL);
     ASSERT_TRUE(gnd.EventAt(5)->TypeAt(8)!=NULL);
     
-    ASSERT_EQ(gnd.EventAt(5)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(gnd.EventAt(5)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(gnd.EventAt(5)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(gnd.EventAt(5)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(gnd.EventAt(5)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(gnd.EventAt(5)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(8)->is_primitive(), true);
 }
@@ -510,9 +510,9 @@ TEST( descriptor_building_and_serialization, base_descriptor_serialization_test)
   Oid two("zebra",1);
   Oid three("giraffe",2);
   
-  EventTypeDescriptor etd1(ENTRY_REQUIRED,VALUE_INT4,true);
-  EventTypeDescriptor etd2(ENTRY_OPTIONAL,VALUE_INT8,false);
-  EventTypeDescriptor etd3(ENTRY_REQUIRED,VALUE_INT4,true);
+  EventTypeDescriptor etd1(ENTRY_REQUIRED,rbl_types::rbl_int4(),true);
+  EventTypeDescriptor etd2(ENTRY_OPTIONAL,rbl_types::rbl_int8(),false);
+  EventTypeDescriptor etd3(ENTRY_REQUIRED,rbl_types::rbl_int4(),true);
   
   EventTypeContainer::entry_type oet1(one, etd1);
   EventTypeContainer::entry_type oet2(two, etd2);
@@ -543,9 +543,9 @@ TEST( descriptor_building_and_serialization, base_descriptor_serialization_test)
   EXPECT_EQ(etb_out.TypeAt(1)->qualifier(),ENTRY_OPTIONAL);
   EXPECT_EQ(etb_out.TypeAt(2)->qualifier(),ENTRY_REQUIRED);
 
-  EXPECT_EQ(etb_out.TypeAt(0)->type(),VALUE_INT4);
-  EXPECT_EQ(etb_out.TypeAt(1)->type(),VALUE_INT8);
-  EXPECT_EQ(etb_out.TypeAt(2)->type(),VALUE_INT4);
+  EXPECT_EQ(etb_out.TypeAt(0)->type(),RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
+  EXPECT_EQ(etb_out.TypeAt(1)->type(),RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
+  EXPECT_EQ(etb_out.TypeAt(2)->type(),RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
 
   EXPECT_EQ(etb_out.TypeAt(0)->is_primitive(),true);
   EXPECT_EQ(etb_out.TypeAt(1)->is_primitive(),false);
@@ -576,9 +576,9 @@ TEST( descriptor_building_and_serialization, base_descriptor_serialization_test)
   EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(1)->qualifier(),ENTRY_OPTIONAL);
   EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(2)->qualifier(),ENTRY_REQUIRED);
 
-  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(0)->type(),VALUE_INT4);
-  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(1)->type(),VALUE_INT8);
-  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(2)->type(),VALUE_INT4);
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(0)->type(),RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(1)->type(),RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
+  EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(2)->type(),RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
 
   EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(0)->is_primitive(),true);
   EXPECT_EQ(ndb_out.EventAt(0)->TypeAt(1)->is_primitive(),false);
@@ -605,16 +605,16 @@ TEST(descriptor_building_and_serializationm, static_cast_test)
   ASSERT_TRUE(res);
 
   medb1.AddEventType(  one,
-                      EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                      EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                       res);
   ASSERT_TRUE(res);
   medb1.AddEventType(  two,
-                      EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                      EventTypeDescriptor(ENTRY_OPTIONAL, rbl_types::rbl_int4(), false),
                       res);
   ASSERT_TRUE(res);
   
   medb1.AddEventType(  three,
-                      EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                      EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int8(), true),
                       res);
   ASSERT_TRUE(res);
   
@@ -622,16 +622,16 @@ TEST(descriptor_building_and_serializationm, static_cast_test)
   ASSERT_TRUE(res);
 
   medb2.AddEventType(  one,
-                      EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                      EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                       res);
   ASSERT_TRUE(res);
   medb2.AddEventType(  two,
-                      EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                      EventTypeDescriptor(ENTRY_OPTIONAL, rbl_types::rbl_int4(), false),
                       res);
   ASSERT_TRUE(res);
   
   medb2.AddEventType(  three,
-                      EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                      EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int8(), true),
                       res);
   ASSERT_TRUE(res);
 
@@ -672,16 +672,16 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(res);
 
     medb1.AddEventType(  one,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_TRUE(res);
     medb1.AddEventType(  two,
-                        EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                        EventTypeDescriptor(ENTRY_OPTIONAL, rbl_types::rbl_int4(), false),
                         res);
     ASSERT_TRUE(res);
     
     medb1.AddEventType(  three,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int8(), true),
                         res);
     ASSERT_TRUE(res);
     
@@ -689,16 +689,16 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(res);
 
     medb2.AddEventType(  one,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT4, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int4(), true),
                         res);
     ASSERT_TRUE(res);
     medb2.AddEventType(  two,
-                        EventTypeDescriptor(ENTRY_OPTIONAL, VALUE_INT4, false),
+                        EventTypeDescriptor(ENTRY_OPTIONAL, rbl_types::rbl_int4(), false),
                         res);
     ASSERT_TRUE(res);
     
     medb2.AddEventType(  three,
-                        EventTypeDescriptor(ENTRY_REQUIRED, VALUE_INT8, true),
+                        EventTypeDescriptor(ENTRY_REQUIRED, rbl_types::rbl_int8(), true),
                         res);
     ASSERT_TRUE(res);
 
@@ -737,15 +737,15 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(rnd.EventAt(0)->TypeAt(7)==NULL);
     ASSERT_TRUE(rnd.EventAt(0)->TypeAt(8)!=NULL);
    
-    ASSERT_EQ(rnd.EventAt(0)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.EventAt(0)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(rnd.EventAt(0)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.EventAt(0)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(rnd.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
@@ -762,15 +762,15 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(rnd.EventAt(5)->TypeAt(7)==NULL);
     ASSERT_TRUE(rnd.EventAt(5)->TypeAt(8)!=NULL);
     
-    ASSERT_EQ(rnd.EventAt(5)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.EventAt(5)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(rnd.EventAt(5)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd.EventAt(5)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(rnd.EventAt(5)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(rnd.EventAt(5)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(rnd.EventAt(5)->TypeAt(8)->is_primitive(), true);
 
@@ -813,15 +813,15 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(rnd_out.EventAt(0)->TypeAt(7)==NULL);
     ASSERT_TRUE(rnd_out.EventAt(0)->TypeAt(8)!=NULL);
    
-    ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(rnd_out.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
@@ -838,15 +838,15 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(rnd_out.EventAt(5)->TypeAt(7)==NULL);
     ASSERT_TRUE(rnd_out.EventAt(5)->TypeAt(8)!=NULL);
     
-    ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(rnd_out.EventAt(5)->TypeAt(8)->is_primitive(), true);
 
@@ -882,15 +882,15 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(gnd_out.EventAt(0)->TypeAt(7)==NULL);
     ASSERT_TRUE(gnd_out.EventAt(0)->TypeAt(8)!=NULL);
    
-    ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(gnd_out.EventAt(0)->TypeAt(8)->is_primitive(), true);
 
@@ -907,20 +907,20 @@ TEST(descriptor_building_and_serialization , exhaustive_serialization_tests)
     ASSERT_TRUE(gnd_out.EventAt(5)->TypeAt(7)==NULL);
     ASSERT_TRUE(gnd_out.EventAt(5)->TypeAt(8)!=NULL);
     
-    ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(0)->type(), VALUE_INT4);
+    ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(0)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
     ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(0)->is_primitive(), true);
     
-    ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(3)->type(), VALUE_INT4);
+    ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(3)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(3)->is_primitive(), false);
     
-    ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(8)->type(), VALUE_INT8);
+    ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(8)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(gnd_out.EventAt(5)->TypeAt(8)->is_primitive(), true);
 
 }
-#endif
+
 #ifdef ISOLATED_GTEST_COMPILE
 int main(int argc,char ** argv)
 {
