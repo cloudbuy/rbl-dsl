@@ -5,7 +5,7 @@
 #include <SF/OBinaryStream.hpp>
 #include <SF/IBinaryStream.hpp>
 
-using namespace event_model::primitives;
+using namespace rubble::event_model::descriptors::primitives;
 
 typedef OidConstrainedString<char,8> oid_str_type;
 
