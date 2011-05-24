@@ -53,6 +53,11 @@ struct variant_ordinal_map :
   }      
 };
 
+template<typename SEQ>
+struct tag_enum
+{
+};
+
 } } }
 
 #endif

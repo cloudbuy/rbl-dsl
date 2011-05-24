@@ -8,10 +8,8 @@
 #include <boost/spirit/include/support_multi_pass.hpp>
 #include <boost/spirit/include/classic_position_iterator.hpp>
 
-namespace event_model
-{
-namespace parser
-{
+namespace rubble { namespace event_model { namespace descriptors { namespace parser {
+
     NamespaceFileParser::NamespaceFileParser()
       : filepath_(), canParse_(false), error_message_("none") {}
 
@@ -124,5 +122,4 @@ namespace parser
     {
         return m_mnd_shp;
     }
-}
-}
+} } } }

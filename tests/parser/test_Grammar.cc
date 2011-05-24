@@ -5,7 +5,7 @@
 typedef std::string::iterator c_s_it;
 using rubble::event_model::descriptors::Oid;
 
-using namespace rubble::event_model::descriptors;
+using namespace rubble::event_model::descriptors::parser;
 namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
 namespace phoenix = boost::phoenix;

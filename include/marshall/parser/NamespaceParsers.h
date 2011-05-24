@@ -4,10 +4,7 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-namespace event_model
-{
-namespace parser
-{
+namespace rubble { namespace  event_model { namespace descriptors { namespace parser {
 
 
 class NamespaceFileParser
@@ -34,6 +31,5 @@ private:
     t_mnd_shp m_mnd_shp;
 };
 
-}
-}
+} } } } 
 #endif 
