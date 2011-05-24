@@ -46,7 +46,7 @@ public:
   void set_is_primitive(bool _is_primitive);
   void set_qualifier(EVENT_DESCRIPTOR_QUALIFIER _qualifier);
   template<typename T> void set_type(T);
-
+  void set_type_using_ordinal(const rbl_types::ordinal_type ordinal);
 private:
   friend void serialize(SF::Archive & ar, EventTypeDescriptor & etd);
   

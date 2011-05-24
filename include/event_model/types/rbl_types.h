@@ -1,30 +1,19 @@
 #ifndef RBL_EM_TYPES_H
 #define RBL_EM_TYPES_H
-#include <boost/cstdint.hpp>
-#include <boost/mpl/vector/vector10.hpp>
-#include <boost/mpl/find.hpp>
-#include <boost/variant.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/equal_to.hpp>
-#include <boost/mpl/comparison.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/for_each.hpp>
-#include <boost/mpl/apply_wrap.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/bind.hpp>
-#include <boost/array.hpp>
+#include "meta_primitives.h"
 
 namespace rubble { namespace event_model { namespace types {
 
+/// the runtime type used to represent the ordinal
 typedef uint8_t ordinal_type;
 
+/// the traits of interest.
 template<typename tag> struct rbl_type_type_traits;
 template<typename tag> struct rbl_type_parser_rule;
 
-
 } } } // namespace
 
+/// adding a type has two steps; step one the types ned to be included
 #include "0_rbl_undefined.h"
 #include "1_rbl_int4.h"
 #include "2_rbl_int8.h"
@@ -33,47 +22,19 @@ template<typename tag> struct rbl_type_parser_rule;
 
 namespace rubble { namespace event_model { namespace types {
 
+// step two: the types of interest need to be wired up as  a mpl sequence
 typedef boost::mpl::vector3< 
   rbl_undefined, 
   rbl_int4, 
   rbl_int8> rbl_type_mpl_vector;
 //  rbl_string> rbl_type_mpl_vector;
 
-typedef boost::make_variant_over<rbl_type_mpl_vector>::type rbl_type_value_variant;
+// create a variant out of the supported type, this is used at runtime
+typedef boost::make_variant_over<rbl_type_mpl_vector>::type 
+  rbl_type_value_variant;
 
-template<typename SEQ, typename T>
-struct get_type_ordinal_in_sequence_f
-{
-  typedef typename boost::mpl::find<SEQ,T>::type it;
-  typedef typename boost::mpl::end<SEQ>::type end;
-
-  BOOST_MPL_ASSERT_NOT (( boost::is_same< it, end >));
-  
-  typedef typename it::pos pos; 
-};
-
-template<typename T> 
-struct get_type_ordinal_f
-{
-  typedef typename boost::mpl::find<rbl_type_mpl_vector,T>::type it;
-  typedef typename boost::mpl::end<rbl_type_mpl_vector>::type end;
-  
-  // A failure of the following assertion means that the type
-  // is not supported, in other words it's not part of the sequence.
-  BOOST_MPL_ASSERT_NOT (( boost::is_same< it, end >));
-  
-  typedef typename it::pos pos; 
-
-  ordinal_type operator()()
-  {
-    return (ordinal_type) it::pos::value;
-   }
-};
-
-#define RBL_TYPE_ORDINAL(type_name) \
-  (rubble::event_model::types::ordinal_type)                        \
-    rubble::event_model::types::get_type_ordinal_f<type_name>()()
-
+// the next three elements are related to creating a variant
+// for the empty-struct tags that represent the types' type at runtime
 struct get_type_f
 {
   template<class T1>
@@ -89,38 +50,33 @@ typedef boost::mpl::transform<rbl_type_mpl_vector, get_type_f>::type
 typedef boost::make_variant_over<type_variant_mpl_vector>::type
   type_variant;
 
-template<typename SEQ ,typename VARIANT, typename TRAIT_EXTRACTOR>
-struct variant_ordinal_map : 
-  boost::array< VARIANT, boost::mpl::size<SEQ>::type::value> 
+// helper template forward functor
+template<typename T> 
+struct get_type_ordinal_f
 {
-  typedef boost::array< VARIANT,boost::mpl::size<SEQ>::type::value> array_t;
-  struct set_rule_f
-  {
-    template<typename T>
-    void operator()(T, array_t & a)
-    {
-      typedef typename get_type_ordinal_in_sequence_f<SEQ,T>::pos pos;
-      typedef typename  boost::mpl::apply_wrap1<TRAIT_EXTRACTOR,T >::type current_variant_type;      
- 
-      a.at(pos::value) = current_variant_type();
-    }
-  };
- 
-  variant_ordinal_map()
-  {
-    boost::mpl::for_each<SEQ> ( boost::bind<void>(set_rule_f(),_1, boost::ref(*this))); 
-  }      
+  typedef typename get_ordinal_in_sequence_f<rbl_type_mpl_vector, T>::pos pos;
 };
 
+#define RBL_TYPE_ORDINAL(type_name)                                         \
+  ( (rubble::event_model::types::ordinal_type)                              \
+    rubble::event_model::types::                                            \
+    get_ordinal_in_sequence_f<  rubble::event_model::types::                \
+                                rbl_type_mpl_vector,                        \
+                                type_name>::pos::value)
+
+
+// define a runtime map that maps a ordinal to a type.
 typedef variant_ordinal_map<  rbl_type_mpl_vector, 
                               type_variant, 
                               get_type_f> type_ordinal_map_t;
 
 extern type_ordinal_map_t type_ordinal_map;
 } } } 
-
+#endif
 
 #ifdef RBL_TYPE_HEADER_SPIRIT_PARSING
+#ifndef RBL_EM_TYPES_SPIRIT_PARSING__
+#define RBL_EM_TYPES_SPIRIT_PARSING__
 #include <boost/spirit/include/qi_symbols.hpp>
 #include <algorithm>
 #include <iostream>
@@ -137,13 +93,15 @@ struct RblTypes : rbl_type_symbols_t
     template<typename T>
     void operator()(T, rbl_type_symbols_t & s)
     {
-      ordinal_type ord = get_type_ordinal_f<T>()();
+      ordinal_type ord = 
+        get_ordinal_in_sequence_f<rbl_type_mpl_vector,T>::pos::value;
       typename rbl_type_type_traits<T>::dsl_strings dsl_strings;
       int dsl_string_count = dsl_strings.count();
 
       for(int i =0; i< dsl_string_count; ++i)
       {
-        s.add(dsl_strings()[i],get_type_ordinal_f<T>()());
+        s.add(  dsl_strings()[i],
+                get_ordinal_in_sequence_f<rbl_type_mpl_vector, T>::pos::value);
       }
     }
   };
@@ -170,7 +128,7 @@ struct RblTypes : rbl_type_symbols_t
   }
 };
 
-
+#if 0
 struct get_rule_f
 {
   template<class T1>
@@ -211,7 +169,7 @@ struct rbl_type_string_parser_rules
     template<typename T> 
     void operator()(T, rbl_rule_array_t & s)
     {
-       typedef typename get_type_ordinal_f<T>::pos pos;
+       typedef typename get_ordinal_in_sequence_f<rbl_type_mpl_vector,T>::pos pos;
        typedef typename boost::mpl::at<parser_rules_mpl_vector, pos>::type rule_type;
     
         s.at(pos::value) = rule_type();
@@ -234,7 +192,7 @@ struct rbl_type_string_parser_rules
       (boost::bind<void>(set_rule_f(), _1,boost::ref(*this)));
   }
 };
-
+#endif
 } } } // namespace
 
 

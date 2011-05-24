@@ -45,6 +45,13 @@ inline void EventTypeDescriptor::set_type(T)
 {
   m_type = T();
 }
+
+inline void EventTypeDescriptor::set_type_using_ordinal
+  (const rbl_types::ordinal_type ordinal)
+{
+  m_type = rbl_types::type_ordinal_map.at(ordinal);
+}
+
 //---------------------------------------------------------------------------//
 
 // EventDescriptorBase ////////////////////////////////////////////////////////
@@ -111,7 +118,7 @@ EventDescriptorBase::TypeValueTypeAt(const ordinal_type ordinal) const
 {
   const EventTypeDescriptor * etd = m_event_oid_type_pair.entry()[ordinal];
   if( etd == NULL)
-    return rbl_types::get_type_ordinal_f<rbl_types::rbl_undefined>()();
+    return rbl_types::get_type_ordinal_f<rbl_types::rbl_undefined>::pos::value;
   else
     return etd->type();
 }
