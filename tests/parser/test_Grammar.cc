@@ -31,7 +31,6 @@ TEST(grammar_test, valid_name)
     ASSERT_FALSE(res);
 }
 
-#if 0
 TEST(grammar_test, identifier_pair)
 {
     parser::IdentifierRules<c_s_it> rules;
@@ -82,7 +81,7 @@ TEST(grammar_test, event_data_line)
 
     ASSERT_EQ(medb.types[1]->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(medb.types[1]->is_primitive(),true);
-    ASSERT_EQ(medb.types[1]->type(), VALUE_INT4);
+    ASSERT_EQ(medb.types[1]->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
 
     ASSERT_EQ(medb.types.EntryAtordinal(1)->Id().name(), "hassan");
 }
@@ -124,14 +123,13 @@ TEST(grammar_test, event_descriptor)
     EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(1)->name(), "hassan");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), VALUE_INT4);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     
     EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(2)->name(), "monkeys");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), VALUE_INT8);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
 }
-
 
 TEST(grammar_test, namespace_descriptor)
 {
@@ -179,12 +177,12 @@ TEST(grammar_test, namespace_descriptor)
     EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(1)->name(), "hassan");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), VALUE_INT4);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     
     EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(2)->name(), "monkeys");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), VALUE_INT8);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
     
     EXPECT_EQ( mndb.EventAt(6)->type_container_occupied_size(), 2);
     EXPECT_EQ( mndb.EventAt(6)->type_container_size(),3);
@@ -192,15 +190,14 @@ TEST(grammar_test, namespace_descriptor)
     EXPECT_EQ( mndb.EventAt(6)->TypeOidAt(1)->name(), "hassan");
     EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->type(), VALUE_INT4);
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int4));
     
     EXPECT_EQ( mndb.EventAt(6)->TypeOidAt(2)->name(), "monkeys");
     EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->type(), VALUE_INT8);
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
 
 }
-#endif
 
 #ifdef ISOLATED_GTEST_COMPILE
 int main(int argc,char ** argv)

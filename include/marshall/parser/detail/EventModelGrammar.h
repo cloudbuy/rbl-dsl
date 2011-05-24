@@ -137,6 +137,5 @@ namespace rubble { namespace event_model { namespace descriptors { namespace par
     ; 
   }
   };
-}
-}
+} } } }
 #endif
