@@ -9,17 +9,8 @@ namespace rubble { namespace event_model { namespace descriptors {
 inline void serialize(SF::Archive & ar, EventTypeDescriptor & etd)
 {
   using namespace rubble::event_model::types;
-  rbl_types::ordinal_type ord;
   
-  if(ar.isWrite()) {
-    ord =  (rbl_types::ordinal_type) etd.m_type.which();
-    ar & etd.m_qualifier & ord & etd.m_primitive;
-  }
-  else 
-  {
-    ar & etd.m_qualifier & ord & etd.m_primitive;
-    etd.m_type = rbl_types::type_ordinal_map[ord];
-  }
+  ar & etd.m_qualifier & m_type & etd.m_primitive;
 }
 
 inline void serialize(SF::Archive & ar, EventDescriptorBase & edb)

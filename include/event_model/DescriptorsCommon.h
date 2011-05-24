@@ -51,7 +51,7 @@ private:
   friend void serialize(SF::Archive & ar, EventTypeDescriptor & etd);
   
   EVENT_DESCRIPTOR_QUALIFIER        m_qualifier;
-  rbl_types::type_variant  m_type;
+  rbl_types::ordinal_type  m_type;
   bool m_primitive;
 };
 
