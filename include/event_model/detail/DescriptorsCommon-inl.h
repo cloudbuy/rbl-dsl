@@ -16,7 +16,7 @@ inline EventTypeDescriptor::EventTypeDescriptor(
   T,
   bool primitive_in)
   : m_qualifier(_qualifier),
-    m_type( typename rbl_types::rbl_type_type_traits<T>::tag() ),
+    m_type( rbl_types::get_type_ordinal_f<T>::pos::value ),
     m_primitive(primitive_in) {}
 
 inline const bool 
@@ -28,7 +28,7 @@ EventTypeDescriptor::qualifier() const
 
 inline const rbl_types::ordinal_type  EventTypeDescriptor::type() const 
 { 
-  return (rbl_types::ordinal_type) m_type.which(); 
+  return m_type; 
 }
 
 inline void EventTypeDescriptor::set_is_primitive(bool _is_primitive)
@@ -44,12 +44,6 @@ template<typename T>
 inline void EventTypeDescriptor::set_type(T)
 {
   m_type = T();
-}
-
-inline void EventTypeDescriptor::set_type_using_ordinal
-  (const rbl_types::ordinal_type ordinal)
-{
-  m_type = rbl_types::type_ordinal_map.at(ordinal);
 }
 
 //---------------------------------------------------------------------------//

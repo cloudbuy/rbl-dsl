@@ -29,7 +29,8 @@ typedef boost::mpl::vector3<
   rbl_int8> rbl_type_mpl_vector;
 //  rbl_string> rbl_type_mpl_vector;
 
-// create a variant out of the supported type, this is used at runtime
+// create a variant out of the supported type, this is the concrete runtime 
+// representation of a type.
 typedef boost::make_variant_over<rbl_type_mpl_vector>::type 
   rbl_type_value_variant;
 

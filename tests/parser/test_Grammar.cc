@@ -31,6 +31,7 @@ TEST(grammar_test, valid_name)
     ASSERT_FALSE(res);
 }
 
+#if 0
 TEST(grammar_test, identifier_pair)
 {
     parser::IdentifierRules<c_s_it> rules;
@@ -198,7 +199,7 @@ TEST(grammar_test, namespace_descriptor)
     EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->type(), RBL_TYPE_ORDINAL(rbl_types::rbl_int8));
 
 }
-
+#endif
 #ifdef ISOLATED_GTEST_COMPILE
 int main(int argc,char ** argv)
 {

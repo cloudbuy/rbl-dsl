@@ -10,7 +10,7 @@ inline void serialize(SF::Archive & ar, EventTypeDescriptor & etd)
 {
   using namespace rubble::event_model::types;
   
-  ar & etd.m_qualifier & m_type & etd.m_primitive;
+  ar & etd.m_qualifier & etd.m_type & etd.m_primitive;
 }
 
 inline void serialize(SF::Archive & ar, EventDescriptorBase & edb)

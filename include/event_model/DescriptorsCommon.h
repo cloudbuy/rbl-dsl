@@ -1,6 +1,6 @@
 #ifndef _EM_DESCRIPTORS_COMMON_H
 #define _EM_DESCRIPTORS_COMMON_H
-#include <event_model/types/rbl_types.h>
+#include <event_model/types2/rbl_types.h>
 #include <boost/cstdint.hpp>
 #include "detail/OidContainer.h"
 
@@ -48,6 +48,7 @@ public:
   template<typename T> void set_type(T);
   void set_type_using_ordinal(const rbl_types::ordinal_type ordinal);
 private:
+
   friend void serialize(SF::Archive & ar, EventTypeDescriptor & etd);
   
   EVENT_DESCRIPTOR_QUALIFIER        m_qualifier;
