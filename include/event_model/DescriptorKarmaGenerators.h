@@ -6,43 +6,41 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <string>
 
-namespace event_model
-{
+namespace rubble { namespace event_model { namespace descriptors {
+  namespace karma = boost::spirit::karma;
+  namespace phoenix = boost::phoenix;
 
-namespace karma = boost::spirit::karma;
-namespace phoenix = boost::phoenix;
-
-#define TYPE_CONTAINER_BASE_RULE_SIGNATURE                \
-    std::back_insert_iterator<std::string>,               \
-    void (const event_model::EventTypeDescriptor &),      \
-    boost::spirit::karma::locals<uint32_t>
+  #define TYPE_CONTAINER_BASE_RULE_SIGNATURE                \
+      std::back_insert_iterator<std::string>,               \
+      void (const EventTypeDescriptor &),                   \
+      boost::spirit::karma::locals<uint32_t>
 
 
-struct EventTypeContainerGenerator: 
-    boost::spirit::karma::grammar<TYPE_CONTAINER_BASE_RULE_SIGNATURE>
-{
-    boost::spirit::karma::rule <TYPE_CONTAINER_BASE_RULE_SIGNATURE> base_rule;
-    
-    EventTypeContainerGenerator(); 
-    
-};
+  struct EventTypeContainerGenerator: 
+      boost::spirit::karma::grammar<TYPE_CONTAINER_BASE_RULE_SIGNATURE>
+  {
+      boost::spirit::karma::rule <TYPE_CONTAINER_BASE_RULE_SIGNATURE> base_rule;
+      
+      EventTypeContainerGenerator(); 
+      
+  };
 
-#undef TYPE_CONTAINER_BASE_RULE_SIGNATURE 
+  #undef TYPE_CONTAINER_BASE_RULE_SIGNATURE 
 
-#define EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE            \
-    std::back_insert_iterator<std::string>,             \
-    void (const event_model::EventDescriptorBase &),    \
-    boost::spirit::karma::locals<uint32_t,uint32_t>
+  #define EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE            \
+      std::back_insert_iterator<std::string>,             \
+      void (const EventDescriptorBase &),                 \
+      boost::spirit::karma::locals<uint32_t,uint32_t>
 
 
-struct  BaseEventDescriptorGenerator 
-    : boost::spirit::karma::grammar<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE>
-{
-    karma::rule<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE> base_rule;
+  struct  BaseEventDescriptorGenerator 
+      : boost::spirit::karma::grammar<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE>
+  {
+      karma::rule<EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE> base_rule;
 
-    BaseEventDescriptorGenerator();
-};
-}
+      BaseEventDescriptorGenerator();
+  };
+} } }
 #undef  EVENT_DESCRIPTOR_BASE_RULE_SIGNATURE
 
 #endif //_EM_DESCRIPTOR_KARMA_GENERATORS

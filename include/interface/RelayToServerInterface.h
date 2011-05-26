@@ -4,7 +4,7 @@
 #include <RCF/Idl.hpp>
 #include <relay/Descriptors-Serialization.h>
 
-using event_model::RelayNamespaceDescriptor;
+using rubble::event_model::descriptors::RelayNamespaceDescriptor;
 
 RCF_BEGIN(I_NamespaceRepository, "I_NamespaceRepository")
     RCF_METHOD_R1(RelayNamespaceDescriptor, GetRelayNamespaceDescriptor, std::string)

@@ -1,6 +1,5 @@
 SET (PARSER_TEST_FILES
     test_OidContainer.cc
-    test_RowAndTable.cc 
     test_Grammar.cc
     test_FileParsing.cc
     test_Descriptors.cc
@@ -9,7 +8,7 @@ SET (PARSER_TEST_FILES
      
 
 ADD_EXECUTABLE( parser_tests_ ${PARSER_TEST_FILES})
-TARGET_LINK_LIBRARIES(parser_tests_ event_processing  parser ${RCF_LIB} ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread)
+TARGET_LINK_LIBRARIES(parser_tests_ parser  ${RCF_LIB} ${GTEST_LIBRARIES} ${Boost_LIBRARIES} -lpthread)
 
 
 ADD_TEST(parser_tests parser_tests_)

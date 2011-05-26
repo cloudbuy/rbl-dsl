@@ -52,12 +52,6 @@ struct variant_ordinal_map :
     boost::mpl::for_each<SEQ> ( boost::bind<void>(set_rule_f(),_1, boost::ref(*this))); 
   }      
 };
-
-template<typename SEQ>
-struct tag_enum
-{
-};
-
 } } }
 
 #endif

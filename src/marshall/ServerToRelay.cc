@@ -1,7 +1,7 @@
 #include <marshall/ServerToRelay.h>
 #include <marshall/parser/NamespaceParsers.h>
 
-using namespace event_model;
+using namespace rubble::event_model::descriptors;
 
 NamespaceRepository::NamespaceRepository()
     : map_() {}
@@ -33,7 +33,7 @@ void NamespaceRepository::AddNamespaceFromFile(const std::string & namespace_fil
     map_[mnd_s->name()] = mnd_s;
 }
 
-event_model::RelayNamespaceDescriptor NamespaceRepository::
+rubble::event_model::descriptors::RelayNamespaceDescriptor NamespaceRepository::
 GetRelayNamespaceDescriptor(const std::string name) const
 {
     map_type_::const_iterator it = map_.find(name);

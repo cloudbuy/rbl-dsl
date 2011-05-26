@@ -30,8 +30,7 @@ struct rbl_type_type_traits<rbl_undefined>
       return 0;
     }
   };
-  struct rbl_undefined_type_tag{};
-  typedef rbl_undefined_type_tag tag;
+  typedef rbl_undefined value_type;
   typedef rbl_undefined_runtime_string runtime_string;
   typedef rbl_undefined_dsl_strings dsl_strings;
 };

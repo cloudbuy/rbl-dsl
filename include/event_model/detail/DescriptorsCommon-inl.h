@@ -45,7 +45,11 @@ inline void EventTypeDescriptor::set_type(T)
 {
   m_type = T();
 }
-
+inline void EventTypeDescriptor::set_type_using_ordinal
+(const rbl_types::ordinal_type ordinal)
+{
+  m_type = ordinal;
+}
 //---------------------------------------------------------------------------//
 
 // EventDescriptorBase ////////////////////////////////////////////////////////

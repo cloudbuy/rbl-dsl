@@ -1,6 +1,6 @@
 #ifndef _EM_DESCRIPTORS_COMMON_H
 #define _EM_DESCRIPTORS_COMMON_H
-#include <event_model/types2/rbl_types.h>
+#include <event_model/types/rbl_types.h>
 #include <boost/cstdint.hpp>
 #include "detail/OidContainer.h"
 

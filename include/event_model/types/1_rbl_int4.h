@@ -30,8 +30,7 @@ struct rbl_type_type_traits<rbl_int4>
       return  r;
     }  
   };
-  struct rbl_int4_type_tag{};
-  typedef rbl_int4_type_tag tag;
+  typedef rbl_int4 value_type;
   typedef rbl_int4_runtime_string runtime_string;
   typedef rbl_int4_dsl_strings    dsl_strings;
 

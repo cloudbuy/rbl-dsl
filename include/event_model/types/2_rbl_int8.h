@@ -30,8 +30,7 @@ struct rbl_type_type_traits<rbl_int8>
       return  r;
     }  
   };
-  struct rbl_int8_type_tag{};
-  typedef rbl_int8_type_tag tag;
+  typedef rbl_int8 value_type;
   typedef rbl_int8_runtime_string  runtime_string;
   typedef rbl_int8_dsl_strings     dsl_strings;
 };

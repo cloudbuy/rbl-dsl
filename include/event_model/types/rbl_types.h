@@ -29,26 +29,10 @@ typedef boost::mpl::vector3<
   rbl_int8> rbl_type_mpl_vector;
 //  rbl_string> rbl_type_mpl_vector;
 
-// create a variant out of the supported type, this is used at runtime
+// create a variant out of the supported type, this is the concrete runtime 
+// representation of a type.
 typedef boost::make_variant_over<rbl_type_mpl_vector>::type 
   rbl_type_value_variant;
-
-// the next three elements are related to creating a variant
-// for the empty-struct tags that represent the types' type at runtime
-struct get_type_f
-{
-  template<class T1>
-  struct apply
-  {
-    typedef typename rbl_type_type_traits<T1>::tag type;
-  };
-};
-
-typedef boost::mpl::transform<rbl_type_mpl_vector, get_type_f>::type
-  type_variant_mpl_vector;
-
-typedef boost::make_variant_over<type_variant_mpl_vector>::type
-  type_variant;
 
 // helper template forward functor
 template<typename T> 
@@ -57,20 +41,6 @@ struct get_type_ordinal_f
   typedef typename get_ordinal_in_sequence_f<rbl_type_mpl_vector, T>::pos pos;
 };
 
-#define RBL_TYPE_ORDINAL(type_name)                                         \
-  ( (rubble::event_model::types::ordinal_type)                              \
-    rubble::event_model::types::                                            \
-    get_ordinal_in_sequence_f<  rubble::event_model::types::                \
-                                rbl_type_mpl_vector,                        \
-                                type_name>::pos::value)
-
-
-// define a runtime map that maps a ordinal to a type.
-typedef variant_ordinal_map<  rbl_type_mpl_vector, 
-                              type_variant, 
-                              get_type_f> type_ordinal_map_t;
-
-extern type_ordinal_map_t type_ordinal_map;
 } } } 
 #endif
 
