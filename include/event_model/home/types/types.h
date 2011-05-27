@@ -52,9 +52,8 @@ struct get_type_ordinal_f
 #include <iostream>
 
 
-namespace rubble { namespace event_model { namespace types {
-
-typedef boost::spirit::qi::symbols<char,ordinal_type> rbl_type_symbols_t;
+namespace rubble { namespace event_model { 
+typedef boost::spirit::qi::symbols<char,type_ordinal_type> rbl_type_symbols_t;
 
 struct RblTypes : rbl_type_symbols_t
 {
@@ -63,7 +62,7 @@ struct RblTypes : rbl_type_symbols_t
     template<typename T>
     void operator()(T, rbl_type_symbols_t & s)
     {
-      ordinal_type ord = 
+      type_ordinal_type ord = 
         get_ordinal_in_sequence_f<rbl_type_mpl_vector,T>::pos::value;
       typename rbl_type_type_traits<T>::dsl_strings dsl_strings;
       int dsl_string_count = dsl_strings.count();

@@ -2,7 +2,8 @@
 #define _SWAT_PARSER_DATA_ENTRY_H
 #include <boost/spirit/include/qi.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
-#include <marshall/DescriptorBuilders.h>
+#include "../descriptors/descriptors_common.h"
+#include "../descriptors/marshall_descriptor_builders.h"
 
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_fusion.hpp>
@@ -11,11 +12,11 @@
 #include <boost/spirit/include/phoenix_bind.hpp>
 
 #define RBL_TYPE_HEADER_SPIRIT_PARSING
-#include "event_model/types/rbl_types.h"
+#include "../types/types.h"
 #undef  RBL_TYPE_HEADER_SPIRIT_PARSING
  
 
-namespace rubble { namespace event_model { namespace descriptors { namespace parser {
+namespace rubble { namespace event_model {
  
   namespace qi = boost::spirit::qi;
   namespace ascii = boost::spirit::ascii;
@@ -45,9 +46,6 @@ namespace rubble { namespace event_model { namespace descriptors { namespace par
   using qi::eol;
   using qi::_pass;
 
-  using rubble::event_model::descriptors::Oid;
-  using rubble::event_model::types::RblTypes; 
- 
   template <typename Iterator>
   struct skipper : qi::grammar<Iterator>
   {
@@ -134,8 +132,8 @@ namespace rubble { namespace event_model { namespace descriptors { namespace par
         > char_('{')
         > *( event_descriptor(_r1))
         > char_('}')
-    ; 
-  }
+      ; 
+    }
   };
-} } } }
+} }
 #endif

@@ -1,9 +1,4 @@
-#include "marshall/parser/NamespaceParsers.h"
-
-#include "marshall/DescriptorBuilders.h"
-#include "event_model/detail/DescriptorsCommon-Serialization.h"
-#include "relay/Descriptors-Serialization.h"
-#include "generator/Descriptors-Serialization.h"
+#include "event_model/marshall_parser.h"
 #include <gtest/gtest.h>
 
 
@@ -13,7 +8,7 @@ std::string test_data_dir = "./test_data";
 std::string test_data_dir;
 #endif
 
-using namespace rubble::event_model::descriptors;
+using namespace rubble::event_model;
 
 TEST(FileParserTesting, test_file_existance)
 {
@@ -24,7 +19,7 @@ TEST(FileParserTesting, test_file_existance)
     non_existing_file.append("/namespace_monkeys");
 
 
-    parser::NamespaceFileParser file_parser(correct_namespace_file);
+    NamespaceFileParser file_parser(correct_namespace_file);
     
     ASSERT_TRUE(file_parser.CanParse()) << file_parser.error();
    
@@ -37,12 +32,12 @@ TEST(FileParserTesting, parse_correct_file)
     std::string correct_namespace_file = test_data_dir;
     correct_namespace_file.append("/namespace_correct");
  
-    parser::NamespaceFileParser file_parser(correct_namespace_file);
+    NamespaceFileParser file_parser(correct_namespace_file);
     ASSERT_TRUE(file_parser.CanParse());
     
      
     ASSERT_TRUE(file_parser.Parse());
-    parser::NamespaceFileParser::t_mnd_shp mnd_s = 
+    NamespaceFileParser::t_mnd_shp mnd_s = 
         file_parser.get_descriptor();
 
     ASSERT_EQ(mnd_s->name(), "baboons");
@@ -62,12 +57,12 @@ TEST(FileParserTesting, parse_correct_file)
     EXPECT_EQ( (*mnd_s).EventAt(1)->TypeOidAt(1)->name(), "hassan");
     EXPECT_EQ( (*mnd_s).EventAt(1)->TypeAt(1)->is_primitive(), true);
     EXPECT_EQ( (*mnd_s).EventAt(1)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( (*mnd_s).EventAt(1)->TypeAt(1)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int4>::pos::value);
+    EXPECT_EQ( (*mnd_s).EventAt(1)->TypeAt(1)->type(), get_type_ordinal_f<rbl_int4>::pos::value);
 
     EXPECT_EQ( (*mnd_s).EventAt(1)->TypeOidAt(2)->name(), "monkeys");
     EXPECT_EQ( (*mnd_s).EventAt(1)->TypeAt(2)->is_primitive(), true);
     EXPECT_EQ( (*mnd_s).EventAt(1)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( (*mnd_s).EventAt(1)->TypeAt(2)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int8>::pos::value);
+    EXPECT_EQ( (*mnd_s).EventAt(1)->TypeAt(2)->type(), get_type_ordinal_f<rbl_int8>::pos::value);
 
     EXPECT_EQ( (*mnd_s).EventAt(6)->type_container_occupied_size(), 2);
     EXPECT_EQ( (*mnd_s).EventAt(6)->type_container_size(),3);
@@ -75,12 +70,12 @@ TEST(FileParserTesting, parse_correct_file)
     EXPECT_EQ( (*mnd_s).EventAt(6)->TypeOidAt(1)->name(), "hassan");
     EXPECT_EQ( (*mnd_s).EventAt(6)->TypeAt(1)->is_primitive(), true);
     EXPECT_EQ( (*mnd_s).EventAt(6)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( (*mnd_s).EventAt(6)->TypeAt(1)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int4>::pos::value);
+    EXPECT_EQ( (*mnd_s).EventAt(6)->TypeAt(1)->type(), get_type_ordinal_f<rbl_int4>::pos::value);
 
     EXPECT_EQ( (*mnd_s).EventAt(6)->TypeOidAt(2)->name(), "monkeys");
     EXPECT_EQ( (*mnd_s).EventAt(6)->TypeAt(2)->is_primitive(), true);
     EXPECT_EQ( (*mnd_s).EventAt(6)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( (*mnd_s).EventAt(6)->TypeAt(2)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int8>::pos::value);
+    EXPECT_EQ( (*mnd_s).EventAt(6)->TypeAt(2)->type(), get_type_ordinal_f<rbl_int8>::pos::value);
 }
 
 TEST(FileParserTesting, parse_incorrect_files)
@@ -88,7 +83,7 @@ TEST(FileParserTesting, parse_incorrect_files)
     std::string correct_namespace_file = test_data_dir;
     correct_namespace_file.append("/namespace_failbrace");
  
-    parser::NamespaceFileParser file_parser(correct_namespace_file);
+    NamespaceFileParser file_parser(correct_namespace_file);
     ASSERT_TRUE(file_parser.CanParse());
     
     try { ASSERT_FALSE(file_parser.Parse());}
@@ -102,7 +97,7 @@ TEST(FileParserTesting, parse_spacein_id)
     std::string correct_namespace_file = test_data_dir;
     correct_namespace_file.append("/namespace_spacein_id");
  
-    parser::NamespaceFileParser file_parser(correct_namespace_file);
+    NamespaceFileParser file_parser(correct_namespace_file);
     ASSERT_TRUE(file_parser.CanParse());
     
     try { ASSERT_FALSE(file_parser.Parse());}

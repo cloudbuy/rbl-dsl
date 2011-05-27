@@ -2,7 +2,7 @@
 #define RBL_EM_HOME_DESCRIPTORS_COMMON_H
 
 #include "../types/types.h"
-#include <event_model/oid_container.h>
+#include "../oid_container/oid_container.h"
 
 #include <boost/cstdint.hpp>
 

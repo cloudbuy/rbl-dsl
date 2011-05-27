@@ -1,10 +1,10 @@
 #ifndef _EM_NAMESPACE_PARSERS
 #define _EM_NAMESPACE_PARSERS
-#include "marshall/Descriptors.h"
+#include "../descriptors/marshall_descriptor_builders.h"
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-namespace rubble { namespace  event_model { namespace descriptors { namespace parser {
+namespace rubble { namespace  event_model { 
 
 
 class NamespaceFileParser
@@ -31,5 +31,5 @@ private:
     t_mnd_shp m_mnd_shp;
 };
 
-} } } } 
+} } 
 #endif 

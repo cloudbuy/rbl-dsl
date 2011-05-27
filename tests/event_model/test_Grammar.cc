@@ -1,20 +1,15 @@
 #include <gtest/gtest.h>
 #include <string>
-#include <marshall/parser/detail/EventModelGrammar.h>
+#include <event_model/home/parser/event_model_grammar.h>
 
 typedef std::string::iterator c_s_it;
-using rubble::event_model::descriptors::Oid;
 
 //namespace parser = rubble::event_model::descriptors::parser;
-using namespace rubble::event_model::descriptors;
-
-namespace qi = boost::spirit::qi;
-namespace ascii = boost::spirit::ascii;
-namespace phoenix = boost::phoenix;
+using namespace rubble::event_model;
 
 TEST(grammar_test, valid_name)
 {
-    parser::IdentifierRules<c_s_it> rules;
+    IdentifierRules<c_s_it> rules;
     
     std::string valid_char_str = "hasSan_Syed";
     c_s_it beg = valid_char_str.begin();
@@ -35,7 +30,7 @@ TEST(grammar_test, valid_name)
 
 TEST(grammar_test, identifier_pair)
 {
-    parser::IdentifierRules<c_s_it> rules;
+    IdentifierRules<c_s_it> rules;
     
     std::string identifier_pair_string = "1:hassan";
     c_s_it      beg = identifier_pair_string.begin();
@@ -57,8 +52,8 @@ TEST(grammar_test, identifier_pair)
 
 TEST(grammar_test, event_data_line)
 {
-    parser::skipper<c_s_it> skipper;
-    parser::CompoundRules<c_s_it, parser::skipper<c_s_it> > compound_rules;
+    skipper<c_s_it> skipper_;
+    CompoundRules<c_s_it, skipper<c_s_it> > compound_rules;
          
     std::string data_line_string = "OPTIONAL 1:hassan INT4;";
     c_s_it beg = data_line_string.begin();
@@ -73,7 +68,7 @@ TEST(grammar_test, event_data_line)
     res = qi::phrase_parse(
         beg, end, 
         compound_rules.event_type_line(phoenix::ref(medb)),
-        skipper 
+        skipper_ 
     );
     ASSERT_TRUE(res);
     
@@ -83,15 +78,15 @@ TEST(grammar_test, event_data_line)
 
     ASSERT_EQ(medb.types[1]->qualifier(), ENTRY_OPTIONAL);
     ASSERT_EQ(medb.types[1]->is_primitive(),true);
-    ASSERT_EQ(medb.types[1]->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int4>::pos::value);
+    ASSERT_EQ(medb.types[1]->type(), get_type_ordinal_f<rbl_int4>::pos::value);
 
     ASSERT_EQ(medb.types.EntryAtordinal(1)->Id().name(), "hassan");
 }
 
 TEST(grammar_test, event_descriptor)
 {
-    parser::skipper<c_s_it> skipper;
-    parser::CompoundRules<c_s_it, parser::skipper<c_s_it> > compound_rules;
+    skipper<c_s_it> skipper_;
+    CompoundRules<c_s_it, skipper<c_s_it> > compound_rules;
 
     std::string data_line_string = "EVENT 1:hassan              \
                                     //comment               \n  \
@@ -108,7 +103,7 @@ TEST(grammar_test, event_descriptor)
     bool res =  qi::phrase_parse(
                     beg,end,
                     compound_rules.event_descriptor(phoenix::ref(mndb)),
-                   skipper 
+                   skipper_ 
                 );
     ASSERT_TRUE(res);
     ASSERT_TRUE(mndb.EventAt(1) != NULL);
@@ -125,18 +120,18 @@ TEST(grammar_test, event_descriptor)
     EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(1)->name(), "hassan");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int4>::pos::value);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), get_type_ordinal_f<rbl_int4>::pos::value);
     
     EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(2)->name(), "monkeys");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int8>::pos::value);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), get_type_ordinal_f<rbl_int8>::pos::value);
 }
 
 TEST(grammar_test, namespace_descriptor)
 {
-    parser::skipper<c_s_it> skipper;
-    parser::CompoundRules<c_s_it, parser::skipper<c_s_it> > compound_rules;
+    skipper<c_s_it> skipper_;
+    CompoundRules<c_s_it, skipper<c_s_it> > compound_rules;
     
     std::string data_line_string = "namespace baboons               \
                                     //comment \n                    \
@@ -161,7 +156,7 @@ TEST(grammar_test, namespace_descriptor)
     bool res =  qi::phrase_parse(
                     beg,end,
                     compound_rules.namespace_descriptor(phoenix::ref(mndb)),
-                    skipper 
+                    skipper_ 
                 );
     ASSERT_TRUE(res);
     ASSERT_TRUE(mndb.EventAt(1) != NULL);
@@ -179,12 +174,12 @@ TEST(grammar_test, namespace_descriptor)
     EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(1)->name(), "hassan");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int4>::pos::value);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(1)->type(), get_type_ordinal_f<rbl_int4>::pos::value);
     
     EXPECT_EQ( mndb.EventAt(1)->TypeOidAt(2)->name(), "monkeys");
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int8>::pos::value);
+    EXPECT_EQ( mndb.EventAt(1)->TypeAt(2)->type(), get_type_ordinal_f<rbl_int8>::pos::value);
     
     EXPECT_EQ( mndb.EventAt(6)->type_container_occupied_size(), 2);
     EXPECT_EQ( mndb.EventAt(6)->type_container_size(),3);
@@ -192,12 +187,12 @@ TEST(grammar_test, namespace_descriptor)
     EXPECT_EQ( mndb.EventAt(6)->TypeOidAt(1)->name(), "hassan");
     EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->qualifier(), ENTRY_OPTIONAL);
-    EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int4>::pos::value);
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(1)->type(), get_type_ordinal_f<rbl_int4>::pos::value);
     
     EXPECT_EQ( mndb.EventAt(6)->TypeOidAt(2)->name(), "monkeys");
     EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->is_primitive(), true);
     EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->qualifier(), ENTRY_REQUIRED);
-    EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->type(), rbl_types::get_type_ordinal_f<rbl_types::rbl_int8>::pos::value);
+    EXPECT_EQ( mndb.EventAt(6)->TypeAt(2)->type(), get_type_ordinal_f<rbl_int8>::pos::value);
 
 }
 

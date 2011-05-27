@@ -1,5 +1,4 @@
-#include "marshall/parser/NamespaceParsers.h"
-#include "marshall/parser/detail/EventModelGrammar.h"
+#include "event_model/marshall_parser.h"
 #define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem.hpp>
 #include <fstream>
@@ -8,7 +7,7 @@
 #include <boost/spirit/include/support_multi_pass.hpp>
 #include <boost/spirit/include/classic_position_iterator.hpp>
 
-namespace rubble { namespace event_model { namespace descriptors { namespace parser {
+namespace rubble { namespace event_model { 
 
     NamespaceFileParser::NamespaceFileParser()
       : filepath_(), canParse_(false), error_message_("none") {}
@@ -61,10 +60,10 @@ namespace rubble { namespace event_model { namespace descriptors { namespace par
         pos_iterator_type position_begin(fwd_begin, fwd_end, filepath_);
         pos_iterator_type position_end;
        
-        typedef parser::skipper<pos_iterator_type> skipper_type;
+        typedef skipper<pos_iterator_type> skipper_type;
         skipper_type skipper;
     
-        parser::CompoundRules< pos_iterator_type,skipper_type > 
+        CompoundRules< pos_iterator_type,skipper_type > 
             namespace_compound_rules;
          
         using boost::phoenix::ref;
@@ -122,4 +121,4 @@ namespace rubble { namespace event_model { namespace descriptors { namespace par
     {
         return m_mnd_shp;
     }
-} } } }
+} } 
