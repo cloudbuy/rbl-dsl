@@ -80,7 +80,7 @@ namespace rubble { namespace event_model {
     {        
         RelayNamespaceDescriptor::t_edc redc;
         m_events.SlicingPopulate(redc); 
-        RelayNamespaceDescriptor casted(m_name,m_ordinal,redc);
+        RelayNamespaceDescriptor casted(name(),ordinal(),redc);
         return casted;
     }
     //-----------------------------------------------------------------------//

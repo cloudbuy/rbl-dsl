@@ -32,7 +32,7 @@ namespace rubble { namespace event_model {
       ar & static_cast<NamespaceDescriptorBase<RelayEventDescriptor> >(rnd);
     #endif
     
-    ar & rnd.m_name & rnd.m_ordinal & rnd.m_events;
+    ar & rnd.m_oid & rnd.m_events;
   }
 } }
 #endif 

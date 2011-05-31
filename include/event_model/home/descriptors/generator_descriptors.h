@@ -77,7 +77,7 @@ namespace rubble { namespace event_model {
     {
       NamespaceDescriptorBase<EventDescriptorBase>::t_edc bedc;
       m_events.SlicingPopulate(bedc);
-      NamespaceDescriptorBase<EventDescriptorBase> casted(m_name,m_ordinal, bedc);
+      NamespaceDescriptorBase<EventDescriptorBase> casted(name(),ordinal(), bedc);
       return casted;
     }
     //-----------------------------------------------------------------------//

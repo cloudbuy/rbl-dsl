@@ -99,7 +99,7 @@ namespace rubble { namespace event_model {
     {
         ok = true;
         MarshallEventDescriptor med(    medb.oid(),
-                                        m_ordinal,
+                                        ordinal(),
                                         medb.types);
 
         t_edc::entry_type entry

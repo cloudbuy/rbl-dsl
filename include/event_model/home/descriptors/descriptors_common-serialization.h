@@ -19,7 +19,7 @@ inline void serialize(SF::Archive & ar, EventDescriptorBase & edb)
 template<typename NDBType>
 inline void serialize(SF::Archive & ar, NamespaceDescriptorBase<NDBType> & ndb)
 {
-  ar & ndb.m_name & ndb.m_ordinal & ndb.m_events;
+  ar & ndb.m_oid & ndb.m_events;
 }
 
 } }

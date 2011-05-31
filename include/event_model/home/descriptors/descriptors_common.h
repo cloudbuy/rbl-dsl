@@ -116,18 +116,19 @@ namespace rubble { namespace event_model {
     const EventDescriptor * EventWithName(const OidName & name_in)      const;
     const t_edc &           events()                                    const;
 
-    const std::string & name();
-    const ordinal_type ordinal();
-    
+    const std::string & name()                                          const;
+    const ordinal_type ordinal()                                        const;
+    const Oid &oid()                                                    const;   
+ 
   protected:
     template<typename NDBType>
     friend void serialize(  SF::Archive & ar, 
                             NamespaceDescriptorBase<NDBType> & ndb);
 
     Oid m_oid;
-    std::string m_name;
-    ordinal_type m_ordinal;
     t_edc m_events;
+  private:
+    mutable std::string m_name; // logically constant
   };
 
   typedef NamespaceDescriptorBase<EventDescriptorBase> 

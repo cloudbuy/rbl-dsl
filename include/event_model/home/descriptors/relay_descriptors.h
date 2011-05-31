@@ -77,7 +77,7 @@ public:
     {
         GeneratorNamespaceDescriptor::t_edc gedc;
         m_events.SlicingPopulate(gedc);
-        GeneratorNamespaceDescriptor casted(m_name,m_ordinal,gedc);
+        GeneratorNamespaceDescriptor casted(name(),ordinal(),gedc);
         return casted;    
     }
     //-----------------------------------------------------------------------//

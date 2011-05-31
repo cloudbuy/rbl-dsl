@@ -71,8 +71,6 @@ namespace rubble { namespace event_model {
     
     karma::rule<iterator, void(const BasicNamespaceDescriptor &) > base_rule;
  
-    
- 
     namespace_grammar() : namespace_grammar::base_type(base_rule)
     {
        
