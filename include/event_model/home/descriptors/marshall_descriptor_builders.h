@@ -118,7 +118,7 @@ namespace rubble { namespace event_model {
     inline void MarshallNamespaceDescriptorBuilder::set_name
       (const std::string & s_in)
     {
-      this->m_name = s_in;
+      this->m_oid.set_name( Oid::name_type(s_in));
     }
     //-----------------------------------------------------------------------//
 //---------------------------------------------------------------------------//

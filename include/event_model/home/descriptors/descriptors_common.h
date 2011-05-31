@@ -124,6 +124,7 @@ namespace rubble { namespace event_model {
     friend void serialize(  SF::Archive & ar, 
                             NamespaceDescriptorBase<NDBType> & ndb);
 
+    Oid m_oid;
     std::string m_name;
     ordinal_type m_ordinal;
     t_edc m_events;

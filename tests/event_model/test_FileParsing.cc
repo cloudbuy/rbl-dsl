@@ -40,7 +40,7 @@ TEST(FileParserTesting, parse_correct_file)
     NamespaceFileParser::t_mnd_shp mnd_s = 
         file_parser.get_descriptor();
 
-    ASSERT_EQ(mnd_s->name(), "baboons");
+    //ASSERT_EQ(mnd_s->name(), "baboons");
 
     ASSERT_TRUE((*mnd_s).EventAt(1) != NULL);
     ASSERT_TRUE((*mnd_s).EventAt(6) != NULL);

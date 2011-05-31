@@ -138,7 +138,7 @@ namespace rubble { namespace event_model {
   inline NamespaceDescriptorBase<EventDescriptor>::
   NamespaceDescriptorBase(  const std::string & name_in,
                             const ordinal_type ordinal)
-    : m_name(name_in), m_ordinal(ordinal), m_events()
+    : m_oid(name_in,ordinal), m_events()
   {
   }
 
@@ -147,7 +147,7 @@ namespace rubble { namespace event_model {
   NamespaceDescriptorBase(  const std::string & name_in,
                             const ordinal_type ordinal,
                             const t_edc & con)
-    : m_name(name_in), m_ordinal(ordinal), m_events(con)
+    : m_oid(name_in, ordinal), m_events(con)
   {
   }
 
@@ -155,13 +155,14 @@ namespace rubble { namespace event_model {
   inline const std::string & NamespaceDescriptorBase<EventDescriptor>
   ::name()
   {
-    return m_name;
+    m_name = std::string(m_oid.name().c_str());
+    return m_name; 
   }
   template<class EventDescriptor>
   inline const ordinal_type NamespaceDescriptorBase<EventDescriptor>
   ::ordinal()
   {
-    return m_ordinal;
+    return m_oid.ordinal();
   }
 
   template<class EventDescriptor>
