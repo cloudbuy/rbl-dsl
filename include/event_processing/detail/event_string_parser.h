@@ -2,8 +2,8 @@
 #define _EM_ROW_PARSER_H
 
 #include <boost/spirit/include/qi.hpp>
-#include <event_model/Types.h>
-#include <event_model/DescriptorsCommon.h>
+#include <event_model/types.h>
+#include <event_model/descriptors_common.h>
 #include <string>
 
 namespace rubble { namespace event_model {

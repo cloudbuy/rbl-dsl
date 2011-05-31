@@ -1,5 +1,5 @@
-#ifndef RBL_EM_TYPES_H
-#define RBL_EM_TYPES_H
+#ifndef RBL_EM_HOME_TYPES_H
+#define RBL_EM_HOME_TYPES_H
 #include "meta_primitives.h"
 
 namespace rubble { namespace event_model { 

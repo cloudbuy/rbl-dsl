@@ -1,10 +1,10 @@
-#include "event_model/DescriptorsCommon.h"
-#include "event_model/DescriptorKarmaGenerators.h"
+#include "event_model/descriptors_common.h"
+#include "event_model/home/generator/descriptor_karma_generators.h"
 #include <RCF/TcpEndpoint.hpp>
 #include <interface/RelayToServerInterface.h>
 #include <string>
 
-using namespace event_model;
+using namespace rubble::event_model;
 
 int main()
 {

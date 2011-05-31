@@ -1,6 +1,6 @@
-#include "event_model/DescriptorKarmaGenerators.h"
+#include "event_model/descriptor_karma_generators.h"
 
-namespace rubble { namespace event_model { namespace descriptors {
+namespace rubble { namespace event_model { 
   EventTypeContainerGenerator::EventTypeContainerGenerator()
   : EventTypeContainerGenerator::base_type(base_rule)
   {
@@ -64,4 +64,4 @@ namespace rubble { namespace event_model { namespace descriptors {
     #undef _TYPE_CONTAINER_SIZE
     #undef _CURRENT_VALUE_TYPE
   }
-} } }
+} } 

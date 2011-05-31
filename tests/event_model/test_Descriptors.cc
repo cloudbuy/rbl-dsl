@@ -497,6 +497,78 @@ TEST(descriptor_building_and_serialization, descriptor_downcast_slicing_tests)
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(8)->type(), get_type_ordinal_f<rbl_int8>::pos::value);
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
     ASSERT_EQ(gnd.EventAt(5)->TypeAt(8)->is_primitive(), true);
+
+    // NEW ADDITION -> generator to basic
+    // note: needed because gnd != gnd : nsd, but gnd: nsd<T>.
+    BasicNamespaceDescriptor bnd = gnd;
+
+    ASSERT_TRUE(bnd.EventAt(0) != NULL);
+    ASSERT_TRUE(bnd.EventAt(1) == NULL);
+    ASSERT_TRUE(bnd.EventAt(2) == NULL);
+    ASSERT_TRUE(bnd.EventAt(3) == NULL);
+    ASSERT_TRUE(bnd.EventAt(4) == NULL);
+    ASSERT_TRUE(bnd.EventAt(5) != NULL);
+ 
+    ASSERT_TRUE( bnd.EventWithName("MonKey") != NULL);
+    ASSERT_TRUE( bnd.EventWithName("HasSan") ==NULL);
+    ASSERT_TRUE( bnd.EventWithName("eVeNt") !=NULL);
+
+    ASSERT_TRUE(bnd.EventWithName("MonKey")->ordinal() == 5);
+    ASSERT_TRUE(bnd.EventWithName("eVeNt")->ordinal() == 0);
+
+    ASSERT_EQ( typeid((*bnd.EventWithName("Monkey"))) 
+        ,typeid(*new EventDescriptorBase()) );
+
+    ASSERT_EQ(bnd.EventAt(0)->type_container_size(),9);
+    ASSERT_EQ(bnd.EventAt(0)->type_container_occupied_size(),3);
+
+    ASSERT_TRUE(bnd.EventAt(0)->TypeAt(0)!=NULL);
+    ASSERT_TRUE(bnd.EventAt(0)->TypeAt(1)==NULL);
+    ASSERT_TRUE(bnd.EventAt(0)->TypeAt(2)==NULL);
+    ASSERT_TRUE(bnd.EventAt(0)->TypeAt(3)!=NULL);
+    ASSERT_TRUE(bnd.EventAt(0)->TypeAt(4)==NULL);
+    ASSERT_TRUE(bnd.EventAt(0)->TypeAt(5)==NULL);
+    ASSERT_TRUE(bnd.EventAt(0)->TypeAt(6)==NULL);
+    ASSERT_TRUE(bnd.EventAt(0)->TypeAt(7)==NULL);
+    ASSERT_TRUE(bnd.EventAt(0)->TypeAt(8)!=NULL);
+   
+    ASSERT_EQ(bnd.EventAt(0)->TypeAt(0)->type(), get_type_ordinal_f<rbl_int4>::pos::value);
+    ASSERT_EQ(bnd.EventAt(0)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(bnd.EventAt(0)->TypeAt(0)->is_primitive(), true);
+    
+    ASSERT_EQ(bnd.EventAt(0)->TypeAt(3)->type(), get_type_ordinal_f<rbl_int4>::pos::value);
+    ASSERT_EQ(bnd.EventAt(0)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(bnd.EventAt(0)->TypeAt(3)->is_primitive(), false);
+    
+    ASSERT_EQ(bnd.EventAt(0)->TypeAt(8)->type(), get_type_ordinal_f<rbl_int8>::pos::value);
+    ASSERT_EQ(bnd.EventAt(0)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(bnd.EventAt(0)->TypeAt(8)->is_primitive(), true);
+
+    ASSERT_EQ(bnd.EventAt(5)->type_container_size(),9);
+    ASSERT_EQ(bnd.EventAt(5)->type_container_occupied_size(),3);
+
+    ASSERT_TRUE(bnd.EventAt(5)->TypeAt(0)!=NULL);
+    ASSERT_TRUE(bnd.EventAt(5)->TypeAt(1)==NULL);
+    ASSERT_TRUE(bnd.EventAt(5)->TypeAt(2)==NULL);
+    ASSERT_TRUE(bnd.EventAt(5)->TypeAt(3)!=NULL);
+    ASSERT_TRUE(bnd.EventAt(5)->TypeAt(4)==NULL);
+    ASSERT_TRUE(bnd.EventAt(5)->TypeAt(5)==NULL);
+    ASSERT_TRUE(bnd.EventAt(5)->TypeAt(6)==NULL);
+    ASSERT_TRUE(bnd.EventAt(5)->TypeAt(7)==NULL);
+    ASSERT_TRUE(bnd.EventAt(5)->TypeAt(8)!=NULL);
+    
+    ASSERT_EQ(bnd.EventAt(5)->TypeAt(0)->type(), get_type_ordinal_f<rbl_int4>::pos::value);
+    ASSERT_EQ(bnd.EventAt(5)->TypeAt(0)->qualifier(), ENTRY_REQUIRED); 
+    ASSERT_EQ(bnd.EventAt(5)->TypeAt(0)->is_primitive(), true);
+    
+    ASSERT_EQ(bnd.EventAt(5)->TypeAt(3)->type(), get_type_ordinal_f<rbl_int4>::pos::value);
+    ASSERT_EQ(bnd.EventAt(5)->TypeAt(3)->qualifier(), ENTRY_OPTIONAL);
+    ASSERT_EQ(bnd.EventAt(5)->TypeAt(3)->is_primitive(), false);
+    
+    ASSERT_EQ(bnd.EventAt(5)->TypeAt(8)->type(), get_type_ordinal_f<rbl_int8>::pos::value);
+    ASSERT_EQ(bnd.EventAt(5)->TypeAt(8)->qualifier(),ENTRY_REQUIRED);
+    ASSERT_EQ(bnd.EventAt(5)->TypeAt(8)->is_primitive(), true);
+ 
 }
 
 // there is a serialization issue for the new class heirarchy, rather than 

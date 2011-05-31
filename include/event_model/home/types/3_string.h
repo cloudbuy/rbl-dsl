@@ -20,7 +20,7 @@ struct rbl_string_runtime_string
 {
   const char * operator()()
   {
-    return "int";
+    return "string";
   }
 };
 

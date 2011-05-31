@@ -109,24 +109,28 @@ namespace rubble { namespace event_model {
                               const ordinal_type ordinal,
                               const t_edc & con);
 
-    const std::size_t       event_container_size()                        const;
-    const std::size_t       event_container_occupied_size()               const;
-    const OP_RESPONSE       ContainsEventIdentifier(const Oid & oid)      const;
-    const EventDescriptor * EventAt(const ordinal_type ordinal)           const;
-    const EventDescriptor * EventWithName(const OidName & name_in)        const;
-    const t_edc &           events()                                      const;
+    const std::size_t       event_container_size()                      const;
+    const std::size_t       event_container_occupied_size()             const;
+    const OP_RESPONSE       ContainsEventIdentifier(const Oid & oid)    const;
+    const EventDescriptor * EventAt(const ordinal_type ordinal)         const;
+    const EventDescriptor * EventWithName(const OidName & name_in)      const;
+    const t_edc &           events()                                    const;
 
     const std::string & name();
     const ordinal_type ordinal();
     
   protected:
     template<typename NDBType>
-    friend void serialize(SF::Archive & ar, NamespaceDescriptorBase<NDBType> & ndb);
+    friend void serialize(  SF::Archive & ar, 
+                            NamespaceDescriptorBase<NDBType> & ndb);
 
     std::string m_name;
     ordinal_type m_ordinal;
     t_edc m_events;
   };
+
+  typedef NamespaceDescriptorBase<EventDescriptorBase> 
+    BasicNamespaceDescriptor;
 //---------------------------------------------------------------------------//
 } } 
 #include "descriptors_common-inl.h"

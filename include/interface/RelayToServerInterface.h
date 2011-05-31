@@ -2,9 +2,9 @@
 #define _RCF_INTERFACE_RELAY_TO_SERVER
 
 #include <RCF/Idl.hpp>
-#include <relay/Descriptors-Serialization.h>
+#include <event_model/relay_descriptors.h>
 
-using rubble::event_model::descriptors::RelayNamespaceDescriptor;
+using rubble::event_model::RelayNamespaceDescriptor;
 
 RCF_BEGIN(I_NamespaceRepository, "I_NamespaceRepository")
     RCF_METHOD_R1(RelayNamespaceDescriptor, GetRelayNamespaceDescriptor, std::string)

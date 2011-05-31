@@ -14,7 +14,7 @@ struct rbl_type_type_traits<rbl_int8>
   {
     const char * operator()()
     {
-      return "int";
+      return "bigint";
     }
   };
 

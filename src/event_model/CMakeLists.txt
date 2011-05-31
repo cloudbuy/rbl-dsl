@@ -1,6 +1,7 @@
 SET(    PARSER_COMPILE_FILES
             DescriptorBuilders.cc
             NamespaceParsers.cc
+            descriptor_karma_generators.cc
             )
  
 

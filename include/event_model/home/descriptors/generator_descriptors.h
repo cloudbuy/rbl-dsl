@@ -34,7 +34,7 @@ namespace rubble { namespace event_model {
         GeneratorNamespaceDescriptor(   const   std::string & name_in,
                                         const   ordinal_type ordinal_in,
                                         const   t_edc &);
-        operator NamespaceDescriptorBase<EventDescriptorBase>() const;
+        operator BasicNamespaceDescriptor() const;
         friend void serialize(  SF::Archive & ar,
                                 GeneratorNamespaceDescriptor & gnd );
     };
@@ -73,7 +73,7 @@ namespace rubble { namespace event_model {
     }
     
     inline GeneratorNamespaceDescriptor::operator 
-      NamespaceDescriptorBase<EventDescriptorBase>() const
+      BasicNamespaceDescriptor() const
     {
       NamespaceDescriptorBase<EventDescriptorBase>::t_edc bedc;
       m_events.SlicingPopulate(bedc);
