@@ -3,6 +3,7 @@ SET (PARSER_TEST_FILES
     test_Grammar.cc
     test_FileParsing.cc
     test_Descriptors.cc
+    test_Generator.cc
     em_tests.cc
 )
      
