@@ -4,6 +4,7 @@
 #include "../descriptors/descriptors_common.h"
 #include <boost/spirit/include/phoenix_bind.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
+#include <boost/spirit/home/phoenix/object/static_cast.hpp>
 
 namespace rubble { namespace event_model {
   namespace karma = boost::spirit::karma;  
@@ -77,7 +78,7 @@ namespace rubble { namespace event_model {
         int_(_ORDINAL_OID) << lit(':') << stream(_NAME_OID) <<
         space << lit('{') << eol;
       ;
-      event_footer = one_indent << eol << eol;
+      event_footer = one_indent << lit('}') << eol;
       
       #undef _ORDINAL_OID
       #undef _NAME_OID
@@ -100,23 +101,48 @@ namespace rubble { namespace event_model {
 ///////////////////////////////////////////////////////////////////////////////
   template<typename iterator>
   struct event_generator_grammar<iterator, EventDescriptorBase>
-    : karma::grammar<iterator, void(const EventDescriptorBase &)>
+    : karma::grammar< iterator,
+                      void(const EventDescriptorBase *),
+                      karma::locals< unsigned int, 
+                                     const EventTypeDescriptor *> > 
   {
     des_e_gen_prim<iterator> primitives; 
 
-    karma::rule<iterator, void(const EventDescriptorBase &)> base_rule;
+    karma::rule< iterator, void(const EventDescriptorBase *), 
+                 karma::locals< unsigned int, 
+                                const EventTypeDescriptor *> > base_rule;
     
     event_generator_grammar() : event_generator_grammar::base_type(base_rule)
     {
       using karma::eps;
       using karma::_r1;
+      using karma::int_;
+      using karma::eol;
+      using karma::repeat;
+      using karma::_a;
+      using karma::_b;
 
       #define _E_OID \
       phoenix::bind(&EventDescriptorBase::oid,_r1)
 
-      base_rule = primitives.event_header(_E_OID) <<
-        primitives.event_footer
+      #define _E_SIZE \
+      phoenix::bind(&EventDescriptorBase::type_container_size,_r1)      
+
+      #define _TYPE_AT(i) \
+      phoenix::bind(&EventDescriptorBase::TypeAt,_r1,i)
+
+      base_rule = 
+        primitives.one_indent << primitives.event_header(_E_OID) <<
+        eps[ _a = 0 ] <<
+        repeat(_E_SIZE) [
+          eps[ _b = _TYPE_AT(_a) ] <<
+          ( ( eps(_b) ) | eps) << 
+          eps[ _a++ ]
+        ] << 
+        primitives.one_indent << primitives.event_footer
       ;
+
+      #undef _E_SIZE 
       #undef _E_OID
     }
   };
@@ -126,14 +152,14 @@ namespace rubble { namespace event_model {
   struct namespace_generator_grammar<iterator, BasicNamespaceDescriptor > 
     : karma::grammar< iterator, 
                       void(const BasicNamespaceDescriptor &), 
-                      boost::spirit::karma::locals<unsigned int> >
+                      karma::locals< unsigned int, const EventDescriptorBase *> >
   {
     des_ns_gen_prim<iterator> primitives;
     event_generator_grammar<iterator, EventDescriptorBase> event_grammar;
    
     karma::rule<  iterator, 
                   void(const BasicNamespaceDescriptor &), 
-                  boost::spirit::karma::locals<unsigned int>  > base_rule;
+                  karma::locals< unsigned int, const EventDescriptorBase *> > base_rule;
  
     
     namespace_generator_grammar() : namespace_generator_grammar::base_type(base_rule)
@@ -142,20 +168,31 @@ namespace rubble { namespace event_model {
       using karma::repeat;
       using karma::eps;
       using karma::_a;
+      using karma::_b;
   
       #define _ND_NAME  \
       phoenix::bind(&BasicNamespaceDescriptor::oid, _r1)
     
       #define _ND_SIZE \
       phoenix::bind(&BasicNamespaceDescriptor::event_container_size, _r1)
+      
+      #define _EVENT_AT(i) \
+      phoenix::bind(&BasicNamespaceDescriptor::EventAt,_r1,i)
      
       base_rule = 
         primitives.namespace_header(_ND_NAME) << 
-         eps[ _a = 0 ] << repeat(_ND_SIZE) [
-          eps[ _a ++ ]
-        ] <<
+          eps[ _a = 0 ] << 
+          repeat(_ND_SIZE) [
+            eps [ _b = _EVENT_AT(_a)] <<
+            ( ( eps(_b) << event_grammar(_b) ) | eps )  <<
+            eps[ _a ++ ]
+          ] <<
         primitives.namespace_footer
       ; 
+
+      #undef _ND_NAME
+      #undef _ND_SIZE
+      #undef _EVENT_AT
     }
   };
 ///////////////////////////////////////////////////////////////////////////////
