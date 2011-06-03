@@ -11,27 +11,19 @@ typedef boost::spirit::unused_type rbl_undefined;
 template<>
 struct rbl_type_type_traits<rbl_undefined>
 {
-  struct rbl_undefined_runtime_string
-  {
-    const char * operator()()
-    {
-      return "undefined";
-    }
-  };
-
   struct rbl_undefined_dsl_strings
   {
     const unsigned char count()
     {
-      return 0;
+      return 1;
     }
     const char ** operator()()
     {
-      return 0;
+      static const char * r[] = { "undefined"};
+      return r;
     }
   };
   typedef rbl_undefined value_type;
-  typedef rbl_undefined_runtime_string runtime_string;
   typedef rbl_undefined_dsl_strings dsl_strings;
 };
 

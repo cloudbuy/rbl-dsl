@@ -10,14 +10,6 @@ typedef boost::int32_t  rbl_int4;
 template<>
 struct rbl_type_type_traits<rbl_int4>
 {
-  struct rbl_int4_runtime_string
-  {
-    const char * operator()()
-    {
-      return "int";
-    }
-  };
-
   struct rbl_int4_dsl_strings
   {
     int count()
@@ -31,7 +23,6 @@ struct rbl_type_type_traits<rbl_int4>
     }  
   };
   typedef rbl_int4 value_type;
-  typedef rbl_int4_runtime_string runtime_string;
   typedef rbl_int4_dsl_strings    dsl_strings;
 
 };

@@ -130,7 +130,7 @@ namespace rubble { namespace event_model {
   private:
     mutable std::string m_name; // logically constant
   };
-
+  /////////////////////////////////////////////////////////////////////////////
   typedef NamespaceDescriptorBase<EventDescriptorBase> 
     BasicNamespaceDescriptor;
 //---------------------------------------------------------------------------//

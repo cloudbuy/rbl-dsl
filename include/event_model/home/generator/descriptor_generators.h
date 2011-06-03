@@ -5,6 +5,12 @@
 #include <boost/spirit/include/phoenix_bind.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/home/phoenix/object/static_cast.hpp>
+#include <boost/spirit/home/phoenix/object/const_cast.hpp>
+
+#define RBL_TYPE_HEADER_SPIRIT_PARSING
+#include "../types/types.h"
+#undef RBL_TYPE_HEADER_SPIRIT_PARSING
+ 
 
 namespace rubble { namespace event_model {
   namespace karma = boost::spirit::karma;  
@@ -74,7 +80,7 @@ namespace rubble { namespace event_model {
       one_indent = space << space;
       
       event_header = 
-        one_indent<< lit("event")  << space <<
+        one_indent << lit("event")  << space <<
         int_(_ORDINAL_OID) << lit(':') << stream(_NAME_OID) <<
         space << lit('{') << eol;
       ;
@@ -99,9 +105,65 @@ namespace rubble { namespace event_model {
     event_generator_grammar();
   };
 ///////////////////////////////////////////////////////////////////////////////
-  template<typename iterator
-  struct type_generator_grammar
+  template<typename iterator>
+  struct type_generator_grammar 
+    : karma::grammar< iterator,
+                      void( const Oid * ,const EventTypeDescriptor *)
+                      , karma::locals<unsigned int, type_ordinal_type> >
   {
+    karma::rule<iterator, void( const Oid *, 
+                                const EventTypeDescriptor *), 
+                                karma::locals<unsigned int, type_ordinal_type> > 
+                                  base_rule;
+
+    karma::rule<iterator, void()> two_indent;
+
+    OrdinalToTypeST type_symbols;
+
+    type_generator_grammar() : type_generator_grammar::base_type(base_rule)
+    {
+      using karma::eps;
+      using ascii::space;
+      using karma::eol;     
+      using karma::stream;
+      using karma::int_;
+      using karma::lit;
+      using karma::_r1;
+      using karma::_a;
+      using karma::_r2;
+      using karma::_b;
+      using karma::_1; 
+
+      #define _T_QUALIFIER \
+      phoenix::bind(&EventTypeDescriptor::qualifier,_r2)
+    
+      #define _ORDINAL_OID                      \
+      phoenix::bind(&Oid::ordinal, _r1)
+      
+      #define _NAME_OID                         \
+      phoenix::bind(&Oid::name,_r1)
+
+      #define _TYPE_ORDINAL \
+      phoenix::bind(&EventTypeDescriptor::type,_r2)
+
+      two_indent = space << space << space << space;
+      
+      base_rule = two_indent <<
+        eps[_a = _T_QUALIFIER] <<
+        (   ( eps( _a == ENTRY_REQUIRED ) << lit("REQUIRED")  ) 
+          | ( eps( _a == ENTRY_OPTIONAL ) << lit("OPTIONAL")  )
+          | ( eps                                             ) 
+        ) <<
+        int_(_ORDINAL_OID) << lit(':') << stream(_NAME_OID) << space <<
+        type_symbols[ _1 = _TYPE_ORDINAL] <<
+        lit(';') << eol
+      ;
+      
+      #undef _T_QUALIFIER 
+      #undef _ORDINAL_OID
+      #undef _NAME_OID
+      #undef _TYPE_ORDINAL 
+    }
   };
 ///////////////////////////////////////////////////////////////////////////////
   template<typename iterator>
@@ -112,7 +174,9 @@ namespace rubble { namespace event_model {
                                      const EventTypeDescriptor *> > 
   {
     des_e_gen_prim<iterator> primitives; 
-
+      
+    type_generator_grammar<iterator> type_grammar;
+  
     karma::rule< iterator, void(const EventDescriptorBase *), 
                  karma::locals< unsigned int, 
                                 const EventTypeDescriptor *> > base_rule;
@@ -135,20 +199,25 @@ namespace rubble { namespace event_model {
 
       #define _TYPE_AT(i) \
       phoenix::bind(&EventDescriptorBase::TypeAt,_r1,i)
+      
+      #define _TYPE_OID_AT(i) \
+      phoenix::bind(&EventDescriptorBase::TypeOidAt,_r1,i)
 
       base_rule = 
-        primitives.one_indent << primitives.event_header(_E_OID) <<
+        primitives.event_header(_E_OID) <<
         eps[ _a = 0 ] <<
         repeat(_E_SIZE) [
           eps[ _b = _TYPE_AT(_a) ] <<
-          ( ( eps(_b) ) | eps) << 
+          ( ( eps(_b) << type_grammar(_TYPE_OID_AT(_a) , _b)  ) | eps) << 
           eps[ _a++ ]
         ] << 
-        primitives.one_indent << primitives.event_footer
+        primitives.event_footer
       ;
 
       #undef _E_SIZE 
       #undef _E_OID
+      #undef _TYPE_AT
+      #undef _TYPE_OID_AT
     }
   };
 

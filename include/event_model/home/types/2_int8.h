@@ -10,14 +10,6 @@ typedef boost::int64_t rbl_int8;
 template<>
 struct rbl_type_type_traits<rbl_int8>
 {
-  struct rbl_int8_runtime_string
-  {
-    const char * operator()()
-    {
-      return "bigint";
-    }
-  };
-
   struct rbl_int8_dsl_strings
   {
     int count()
@@ -31,7 +23,6 @@ struct rbl_type_type_traits<rbl_int8>
     }  
   };
   typedef rbl_int8 value_type;
-  typedef rbl_int8_runtime_string  runtime_string;
   typedef rbl_int8_dsl_strings     dsl_strings;
 };
 } }
