@@ -41,7 +41,7 @@ namespace rubble { namespace event_model {
       
       namespace_header = 
         lit("namespace") << space <<
-        int_(_ORDINAL_OID) << lit(':') << stream(_NAME_OID) <<
+        stream(_NAME_OID) <<
         space << lit('{') << eol;
       ;
       namespace_footer = lit('}') << eol;
@@ -153,7 +153,7 @@ namespace rubble { namespace event_model {
         (   ( eps( _a == ENTRY_REQUIRED ) << lit("REQUIRED")  ) 
           | ( eps( _a == ENTRY_OPTIONAL ) << lit("OPTIONAL")  )
           | ( eps                                             ) 
-        ) <<
+        ) << space <<
         int_(_ORDINAL_OID) << lit(':') << stream(_NAME_OID) << space <<
         type_symbols[ _1 = _TYPE_ORDINAL] <<
         lit(';') << eol
