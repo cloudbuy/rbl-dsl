@@ -99,6 +99,11 @@ namespace rubble { namespace event_model {
     event_generator_grammar();
   };
 ///////////////////////////////////////////////////////////////////////////////
+  template<typename iterator
+  struct type_generator_grammar
+  {
+  };
+///////////////////////////////////////////////////////////////////////////////
   template<typename iterator>
   struct event_generator_grammar<iterator, EventDescriptorBase>
     : karma::grammar< iterator,
