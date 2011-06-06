@@ -91,13 +91,6 @@ namespace rubble { namespace event_model {
     };
   };
 ///////////////////////////////////////////////////////////////////////////////
-  template<typename iterator, typename ns_type>
-  struct namespace_generator_grammar
-  {
-  private:
-    namespace_generator_grammar();
-  };
-///////////////////////////////////////////////////////////////////////////////
   template <typename iterator, typename e_type>
   struct event_generator_grammar
   {
@@ -222,17 +215,17 @@ namespace rubble { namespace event_model {
   };
 
 ///////////////////////////////////////////////////////////////////////////////
-  template<typename iterator>
-  struct namespace_generator_grammar<iterator, BasicNamespaceDescriptor > 
+  template<typename iterator, typename NamespaceDescriptor>
+  struct namespace_generator_grammar
     : karma::grammar< iterator, 
-                      void(const BasicNamespaceDescriptor &), 
+                      void(const NamespaceDescriptor &), 
                       karma::locals< unsigned int, const EventDescriptorBase *> >
   {
     des_ns_gen_prim<iterator> primitives;
     event_generator_grammar<iterator, EventDescriptorBase> event_grammar;
    
     karma::rule<  iterator, 
-                  void(const BasicNamespaceDescriptor &), 
+                  void(const NamespaceDescriptor &), 
                   karma::locals< unsigned int, const EventDescriptorBase *> > base_rule;
  
     
@@ -245,13 +238,13 @@ namespace rubble { namespace event_model {
       using karma::_b;
   
       #define _ND_NAME  \
-      phoenix::bind(&BasicNamespaceDescriptor::oid, _r1)
+      phoenix::bind(&NamespaceDescriptor::oid, _r1)
     
       #define _ND_SIZE \
-      phoenix::bind(&BasicNamespaceDescriptor::event_container_size, _r1)
+      phoenix::bind(&NamespaceDescriptor::event_container_size, _r1)
       
       #define _EVENT_AT(i) \
-      phoenix::bind(&BasicNamespaceDescriptor::EventAt,_r1,i)
+      phoenix::bind(&NamespaceDescriptor::EventAt,_r1,i)
      
       base_rule = 
         primitives.namespace_header(_ND_NAME) << 

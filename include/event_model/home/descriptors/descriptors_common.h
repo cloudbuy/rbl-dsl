@@ -131,8 +131,6 @@ namespace rubble { namespace event_model {
     mutable std::string m_name; // logically constant
   };
   /////////////////////////////////////////////////////////////////////////////
-  typedef NamespaceDescriptorBase<EventDescriptorBase> 
-    BasicNamespaceDescriptor;
 //---------------------------------------------------------------------------//
 } } 
 #include "descriptors_common-inl.h"

@@ -84,17 +84,15 @@ TEST(descriptor_generation , create_desc_generate_and_parse)
     mndb.AddEventDescriptor(medb2,res);
     ASSERT_TRUE(res);
   
-    BasicNamespaceDescriptor  bnd = (BasicNamespaceDescriptor)(GeneratorNamespaceDescriptor)(RelayNamespaceDescriptor)(MarshallNamespaceDescriptor) mndb;
-  
     typedef std::back_insert_iterator<std::string> iterator_t;
     std::string str;
     iterator_t sink(str);
    
-    namespace_generator_grammar<iterator_t, BasicNamespaceDescriptor> nsg;
+    namespace_generator_grammar<iterator_t, MarshallNamespaceDescriptor> nsg;
  
     bool ret = karma::generate(
       sink,
-      nsg(phoenix::cref(bnd))
+      nsg(phoenix::cref(mndb))
     );
     //std::cout << str << std::endl;
     
