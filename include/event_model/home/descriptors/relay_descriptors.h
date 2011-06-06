@@ -11,13 +11,12 @@ namespace SF
 
 namespace rubble { namespace event_model { 
 // RelayEventDescriptor ///////////////////////////////////////////////////
-class RelayEventDescriptor : public EventDescriptorBase
+class RelayEventDescriptor : public GeneratorEventDescriptor
 {
 public:
   RelayEventDescriptor();
   RelayEventDescriptor (  const Oid & oid, const ordinal_type ordinal_, 
                           const EventTypeContainer & etc);
-  operator GeneratorEventDescriptor() const;
   friend void serialize(SF::Archive & ar,RelayEventDescriptor & red);
 };
 //-----------------------------------------------------------------------//
@@ -43,23 +42,16 @@ public:
 //---------------------------------------------------------------------------//
     // RelayEventDescriptor ///////////////////////////////////////////////////
     inline RelayEventDescriptor::RelayEventDescriptor()
+      : GeneratorEventDescriptor()
     {
     }
     inline RelayEventDescriptor::
     RelayEventDescriptor ( const Oid & oid,
                            const ordinal_type ordinal_,
                            const EventTypeContainer & etc)
-        : EventDescriptorBase(oid,ordinal_, etc) 
+        : GeneratorEventDescriptor(oid,ordinal_, etc) 
     {
     }
-    inline RelayEventDescriptor::operator GeneratorEventDescriptor() const
-    {
-        GeneratorEventDescriptor ged(   m_event_oid_type_pair.Id(),
-                                        m_namespace_ordinal,
-                                        m_event_oid_type_pair.entry());
-        return ged;
-    }
-
     //-----------------------------------------------------------------------//
     // RelayNamespaceDescriptor ///////////////////////////////////////////////
     inline RelayNamespaceDescriptor::RelayNamespaceDescriptor()

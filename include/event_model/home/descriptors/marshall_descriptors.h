@@ -9,13 +9,12 @@ namespace rubble { namespace event_model {
 // Class Declarations                                                        //
 //---------------------------------------------------------------------------//
     // MarshallEventDescriptor ////////////////////////////////////////////////
-    class MarshallEventDescriptor : public EventDescriptorBase
+    class MarshallEventDescriptor : public RelayEventDescriptor    
     {
     public:
         MarshallEventDescriptor(); 
         MarshallEventDescriptor( const Oid & oid, const ordinal_type ordinal_, 
                                  const EventTypeContainer & etc);
-        operator RelayEventDescriptor() const;
     };
     //-----------------------------------------------------------------------//
     
@@ -43,20 +42,13 @@ namespace rubble { namespace event_model {
 //---------------------------------------------------------------------------//
     // MarshallEvenDescriptor /////////////////////////////////////////////////
     inline MarshallEventDescriptor::MarshallEventDescriptor()
-        :  EventDescriptorBase()
+        :  RelayEventDescriptor()
     {
     }
     inline MarshallEventDescriptor::MarshallEventDescriptor
     (const Oid & oid, const ordinal_type ordinal_, const EventTypeContainer & edc)
-        : EventDescriptorBase(oid,ordinal_,edc)
+        : RelayEventDescriptor(oid,ordinal_,edc)
     {
-    }
-    inline MarshallEventDescriptor::operator RelayEventDescriptor() const
-    {
-        RelayEventDescriptor red(   m_event_oid_type_pair.Id(),
-                                    m_namespace_ordinal,
-                                    m_event_oid_type_pair.entry());
-        return red;
     }
     //-----------------------------------------------------------------------//
 
