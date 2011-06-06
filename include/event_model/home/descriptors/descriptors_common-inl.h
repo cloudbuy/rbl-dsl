@@ -1,6 +1,5 @@
 #ifndef RBL_EM_HOME_DESCRIPTORS_INL_COMMON_H
 #define RBL_EM_HOME_DESCRIPTORS_INL_COMMON_H
-#include "descriptors_common.h"
 namespace rubble { namespace event_model {
 // EventTypeDescriptor ////////////////////////////////////////////////////////
   inline EventTypeDescriptor::EventTypeDescriptor()

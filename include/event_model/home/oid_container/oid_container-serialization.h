@@ -1,7 +1,5 @@
 #ifndef     RBL_HOME_EM_OID_CONTAINER_SERIALIZATION_H
 #define     RBL_HOME_EM_OID_CONTAINER_SERIALIZATION_H
-#include "oid_container.h"
-
 #include <SF/vector.hpp>
 #include <SF/string.hpp>
 namespace rubble { namespace event_model {  

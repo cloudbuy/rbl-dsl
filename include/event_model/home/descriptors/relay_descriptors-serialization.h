@@ -1,7 +1,5 @@
 #ifndef RBL_EM_HOME_RELAY_DESCRIPTORS_SERIALIZATION_H
 #define RBL_EM_HOME_RELAY_DESCRIPTORS_SERIALIZATION_H
-#include "relay_descriptors.h"
-#include "descriptors_common-serialization.h"
 #include <SF/Serializer.hpp>
 
 namespace rubble { namespace event_model { 

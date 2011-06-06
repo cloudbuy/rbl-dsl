@@ -134,5 +134,6 @@ namespace rubble { namespace event_model {
 //---------------------------------------------------------------------------//
 } } 
 #include "descriptors_common-inl.h"
+#include "descriptors_common-serialization.h"
 #endif 
 

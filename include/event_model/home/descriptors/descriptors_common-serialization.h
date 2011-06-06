@@ -1,7 +1,5 @@
 #ifndef RBL_EM_HOME_DESCRIPTORS_COMMON_SERIALIZATION_H
 #define RBL_EM_HOME_DESCRIPTORS_COMMON_SERIALIZATION_H
-#include <event_model/descriptors_common.h>
-#include <event_model/oid_container.h>
 #include <SF/Serializer.hpp>
 
 namespace rubble { namespace event_model {
