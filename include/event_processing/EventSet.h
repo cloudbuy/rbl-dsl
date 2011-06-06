@@ -1,6 +1,6 @@
 #ifndef _EM_ROW_AND_TABLE_H
 #define _EM_ROW_AND_TABLE_H
-#include "event_model/DescriptorsCommon.h"
+#include "event_model/descriptors_common.h"
 #include "detail/event_string_parser.h"
 #include "detail/event_string_generator.h"
 #include <boost/scoped_ptr.hpp>
@@ -17,7 +17,7 @@
 ///         -- i.e., the uint32_t API that calls it, the callee's need to 
 ///         test for overflows
 
-namespace event_model {
+namespace rubble { namespace event_processing { 
     class Event : boost::noncopyable
     {
     public:
@@ -59,5 +59,5 @@ namespace event_model {
         const EventDescriptorBase & ed_;
         
     };
-};
+} }
 #endif 
