@@ -1,5 +1,4 @@
 SET(    PARSER_COMPILE_FILES
-            DescriptorBuilders.cc
             NamespaceParsers.cc
             )
  
