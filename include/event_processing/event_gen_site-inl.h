@@ -1,14 +1,5 @@
 namespace rubble { namespace event_processing {
   // FieldToken ///////////////////////////////////////////////////////////////
-  inline FieldToken::FieldToken( const char * ft_name,const char * signature, 
-                          const EventToken & event_token)
-    : m_ft_name(ft_name),
-      m_event_token(event_token),
-      m_signature(signature),
-      m_is_variant(false),
-      m_is_reference(false),
-      m_referenced_event(0){}
- 
   inline const char * FieldToken::name() const
   {
     return m_ft_name;
@@ -18,11 +9,42 @@ namespace rubble { namespace event_processing {
   {
     return m_signature;
   }
+
+  inline const bool FieldToken::is_variant() const
+  {
+    return m_is_variant;
+  }
+  inline const bool FieldToken::is_reference() const
+  {
+    return m_is_reference;
+  }
+  inline const rubble::event_model::type_ordinal_type 
+  FieldToken::type_ordinal() const
+  {
+    return m_type_ordinal; 
+  }
+  inline void FieldToken::set_is_variant(bool is_variant_)
+  {
+    m_is_variant = is_variant_;
+  }
+
+  inline void FieldToken::set_is_reference
+    (bool is_reference_, const EventToken & event_token)
+  {
+    m_is_reference = is_reference_;
+    m_referenced_event = & event_token;
+  }
+  
+  inline void FieldToken::set_type_ordinal
+  (rubble::event_model::type_ordinal_type ordinal)
+  {
+    m_type_ordinal = ordinal;
+  }
   //-------------------------------------------------------------------------//
   
   // EventToken //////////////////////////////////////////////////////////////
   inline EventToken::EventToken(const char * et_name, const EventGenSite & egs)
-    : m_et_name(et_name), m_event_gen_site(egs) {}
+    : m_et_name(et_name), m_gen_site(egs) {}
   
   inline const char * EventToken::name() const 
   {

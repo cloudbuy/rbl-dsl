@@ -42,7 +42,7 @@ namespace rubble { namespace event_model {
   };
 
   } } 
-  #endif
+#endif
 
   #ifdef RBL_TYPE_HEADER_SPIRIT_PARSING
   #ifndef RBL_EM_TYPES_SPIRIT_PARSING__

@@ -2,7 +2,12 @@
 #include <string>
 #include <gtest/gtest.h>
 
+#define RBL_TYPE_HEADER_SPIRIT_PARSING
+#include "event_model/types.h"
+#undef RBL_TYPE_HEADER_SPIRIT_PARSING
+
 using namespace rubble::event_processing;
+using namespace rubble::event_model;
 
 void function()
 {
@@ -10,6 +15,7 @@ void function()
   static EventToken & person        = species.eventToken("person");
   static FieldToken person_height   = person.fieldToken("height", "int");
   static FieldToken person_weight   = person.fieldToken("weight", "int");
+  static FieldToken person_blood_pressure = person.fieldToken("blood_presssure", "int[]");
   static FieldToken person_name     = person.fieldToken("name", "string");
 
   static EventToken & child = species.eventToken("child");
@@ -28,11 +34,20 @@ TEST(callsite_schema_generation_tests, basic)
   static EventGenSite species("species");
   static EventToken & person        = species.eventToken("person");
   static FieldToken person_height   = person.fieldToken("height", "int");
+  static FieldToken person_blood_pressure = person.fieldToken("blood_presssure", "int[]");
 
   EXPECT_EQ(std::string(person.name()), std::string("person"));
   EXPECT_EQ(std::string(species.name()), std::string("species"));
   EXPECT_EQ(std::string(person_height.name()), std::string("height"));
   EXPECT_EQ(std::string(person_height.signature()), std::string("int"));
+ 
+  EXPECT_EQ(person_height.type_ordinal(), get_type_ordinal_f<rbl_int4>::pos::value); 
+  EXPECT_NE(person_height.type_ordinal(), get_type_ordinal_f<rbl_int8>::pos::value);
+
+  EXPECT_FALSE(person_height.is_variant());
+
+  EXPECT_EQ(person_blood_pressure.type_ordinal(), get_type_ordinal_f<rbl_int4>::pos::value); 
+  EXPECT_TRUE(person_blood_pressure.is_variant());
 }
 
 #ifdef ISOLATED_GTEST_COMPILE
