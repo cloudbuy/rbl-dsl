@@ -1,8 +1,9 @@
 #ifndef _EM_ROW_AND_TABLE_H
 #define _EM_ROW_AND_TABLE_H
 #include "event_model/descriptors_common.h"
-#include "detail/event_string_parser.h"
-#include "detail/event_string_generator.h"
+#include "event_model/types.h"
+//#include "detail/event_string_parser.h"
+//#include "detail/event_string_generator.h"
 #include <boost/scoped_ptr.hpp>
 #include <boost/utility.hpp>
 
@@ -21,7 +22,7 @@ namespace rubble { namespace event_processing {
     class Event : boost::noncopyable
     {
     public:
-        Event(const EventDescriptorBase & event_descriptor);
+        Event(const event_model::EventDescriptorBase & event_descriptor);
         bool operator >>(std::string & str) const; 
         bool operator <<(const std::string & str);
         const value_variant_vector & get_event_vector() const;
