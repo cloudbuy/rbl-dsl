@@ -10,6 +10,7 @@
 
 #include <string>
 #include <boost/algorithm/string/case_conv.hpp>
+#include <ostream>
 
 
 namespace rubble { namespace event_processing {
@@ -59,13 +60,8 @@ namespace rubble { namespace event_processing {
     type_signature_grammar<c_it> grammar;
     bool res = qi::parse(beg,end,grammar(phoenix::ref(*this)));
   }
-
   //-------------------------------------------------------------------------//  
   // EventToken ///////////////////////////////////////////////////////////////
-  bool EventToken::FieldExists(const char * name) const
-  {
-  }
-
   FieldToken EventToken::fieldToken(const char * name, const char * signature)
   {
     std::string key_type(name);
@@ -80,7 +76,11 @@ namespace rubble { namespace event_processing {
     if(ret.second)
       return (ret.first->second);
     else
-      ;
+    {
+      std::ostringstream os;
+      os << "Field: \"" << name << "\" allready exists in this event";
+      throw GenSiteException(os.str());
+    }
   }
   //-------------------------------------------------------------------------//
 
@@ -98,7 +98,11 @@ namespace rubble { namespace event_processing {
     if(ret.second)
       return (ret.first->second);
     else
-      ;
+    {
+      std::ostringstream os;
+      os << "Field: \"" << name << "\" allready exists in this event";
+      throw GenSiteException(os.str());
+    }
   }
   //-------------------------------------------------------------------------//
 

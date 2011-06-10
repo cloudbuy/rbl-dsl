@@ -48,6 +48,10 @@ TEST(callsite_schema_generation_tests, basic)
 
   EXPECT_EQ(person_blood_pressure.type_ordinal(), get_type_ordinal_f<rbl_int4>::pos::value); 
   EXPECT_TRUE(person_blood_pressure.is_variant());
+
+  
+  EXPECT_THROW(person.fieldToken("HeIght", "int"), GenSiteException);
+  EXPECT_THROW(species.eventToken("PerSoN"), GenSiteException);
 }
 
 #ifdef ISOLATED_GTEST_COMPILE

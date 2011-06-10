@@ -3,11 +3,18 @@
 #include "event_model/types.h"
 #include <map>
 #include <string>
+#include <exception>
 
 namespace rubble { namespace event_processing {
 
   class EventGenSite;
   class EventToken;
+  
+  class GenSiteException : public std::domain_error
+  {
+  public:
+    GenSiteException(const std::string & str) : std::domain_error(str) {}
+  };
 
   class FieldToken
   {
@@ -47,7 +54,6 @@ namespace rubble { namespace event_processing {
 
     EventToken(const char * et_name, const EventGenSite & egs); 
     FieldToken fieldToken(const char * name, const char * signature);
-    bool FieldExists(const char * name) const;
     const char * name() const ;
   private:
     const char * m_et_name;
