@@ -1,0 +1,23 @@
+NAMESPACE species
+{
+  EVENT 1:person
+  {
+    REQUIRED 1:height         INT4;
+    REQUIRED 2:weight         INT4;
+    REQUIRED 3:blood_pressure INT4[];
+    REQUIRED 4:name           STRING;
+  }
+
+  EVENT 2:child
+  { 
+    REQUIRED  1:id            INT4;
+    REQUIRED  2:person        EVENT(person);
+  }
+  
+  EVENT 3:adult
+  {
+    REQUIRED  1:id            INT4;
+    REQUIRED  2:person        INT4;
+    REQUIRED  3:children      EVENT(person)[];
+  }
+}
