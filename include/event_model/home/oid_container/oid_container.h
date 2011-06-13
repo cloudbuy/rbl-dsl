@@ -204,4 +204,5 @@ namespace rubble { namespace event_model {
 //---------------------------------------------------------------------------//
 } }
 #include "oid_container-inl.h"
+#include "oid_container-serialization.h"
 #endif
