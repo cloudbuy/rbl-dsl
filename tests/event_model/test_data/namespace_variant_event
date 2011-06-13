@@ -4,7 +4,7 @@ NAMESPACE species
   {
     REQUIRED 1:height         INT4;
     REQUIRED 2:weight         INT4;
-//    REQUIRED 3:blood_pressure INT4[];
+    REQUIRED 3:blood_pressure INT4[];
     REQUIRED 4:name           STRING;
   }
 
