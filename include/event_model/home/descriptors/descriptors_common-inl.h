@@ -31,6 +31,10 @@ namespace rubble { namespace event_model {
   { 
     return m_type; 
   }
+  inline const ordinal_type EventTypeDescriptor::reference_event_ordinal() const 
+  { 
+    return m_referenced_event; 
+  }
 
   inline void EventTypeDescriptor::set_is_primitive(bool _is_primitive)
   {
@@ -41,6 +45,15 @@ namespace rubble { namespace event_model {
   {
     m_variant = _is_variant;
   }
+  inline const bool EventTypeDescriptor::is_event() const
+  {
+    if(m_type == 
+        rubble::event_model::get_type_ordinal_f<rubble::event_model::rbl_event>::pos::value)
+      return true;
+    else
+      return false;
+  }
+
 
   inline void EventTypeDescriptor::set_qualifier
     (EVENT_DESCRIPTOR_QUALIFIER _qualifier)
@@ -56,6 +69,11 @@ namespace rubble { namespace event_model {
   (const type_ordinal_type ordinal)
   {
     m_type = ordinal;
+  }
+  inline void 
+  EventTypeDescriptor::set_reference_event_ordinal(ordinal_type ordinal_in)
+  {
+    m_referenced_event = ordinal_in;
   }
   //---------------------------------------------------------------------------//
 
@@ -220,6 +238,24 @@ namespace rubble { namespace event_model {
   {
     return m_events;
   }
+  
+  template<class EventDescriptor>
+  inline const ordinal_type NamespaceDescriptorBase<EventDescriptor>::
+  HasOrdinalWithName( std::string name_in, bool & ok) const
+  {
+    const EventDescriptor * etd = EventWithName(name_in);
+    if(etd==NULL)
+    {
+      ok = false;
+      return 0;
+    }
+    else
+    {
+      ok = true; 
+      return etd->ordinal();
+    }
+  }
+
 //---------------------------------------------------------------------------//
 } } 
 #endif

@@ -110,8 +110,16 @@ namespace rubble { namespace event_model {
             )
         >> identifier_rules.ordinal_string_identifier(_a)
         > no_case[ marshall_types [bind(&EventTypeDescriptor::set_type_using_ordinal,_b,_1)] ] > 
-        -lit("[]") [ bind(&EventTypeDescriptor::set_is_variant,_b,phoenix::val(true))]
-          > char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r2,_a,_b,_pass)];
+        ( ( eps(phoenix::bind(&EventTypeDescriptor::is_event,_b)) >
+              lit('(') >
+                identifier_rules.valid_char_str 
+                  [ bind(&EventTypeDescriptor::set_reference_event_ordinal,_b, bind(& MarshallNamespaceDescriptorBuilder::HasOrdinalWithName,_r1,_1,_pass) ) ]
+                 >> 
+              lit(')')
+            )
+          | eps ) >
+        -lit("[]") [ bind(&EventTypeDescriptor::set_is_variant,_b,phoenix::val(true))] >>
+        char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r2,_a,_b,_pass)];
       
       event_descriptor.name("event descriptor"); 
       event_descriptor = 

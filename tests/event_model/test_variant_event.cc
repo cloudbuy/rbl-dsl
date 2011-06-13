@@ -44,6 +44,13 @@ TEST(VariantEventFileParsing, test_event)
   
   NamespaceFileParser::t_mnd_shp mnd_s = 
         file_parser.get_descriptor();
+  
+  ASSERT_TRUE(mnd_s->EventAt(2)->TypeAt(2)->is_event());
+  ASSERT_TRUE(mnd_s->EventAt(3)->TypeAt(3)->is_event());
+  ASSERT_TRUE(mnd_s->EventAt(3)->TypeAt(3)->is_variant());
+  
+  EXPECT_EQ(mnd_s->EventAt(2)->TypeAt(2)->reference_event_ordinal(),1);
+  EXPECT_EQ(mnd_s->EventAt(3)->TypeAt(3)->reference_event_ordinal(),1);
 }
 #ifdef ISOLATED_GTEST_COMPILE
 int main(int argc,char ** argv)

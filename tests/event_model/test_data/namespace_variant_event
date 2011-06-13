@@ -11,13 +11,13 @@ NAMESPACE species
   EVENT 2:child
   { 
     REQUIRED  1:id            INT4;
-//    REQUIRED  2:person        EVENT(person);
+    REQUIRED  2:person        EVENT(person);
   }
   
   EVENT 3:adult
   {
     REQUIRED  1:id            INT4;
     REQUIRED  2:person        INT4;
-//    REQUIRED  3:children      EVENT(person)[];
+    REQUIRED  3:children      EVENT(person)[];
   }
 }

@@ -39,25 +39,29 @@ namespace rubble { namespace event_model {
     
     // no operator= or copy constructor as bitwise copy is fine
 
-    const bool                              is_primitive()        const;
-    const bool                              is_variant()          const;
-    const EVENT_DESCRIPTOR_QUALIFIER        qualifier()           const;    
-    const type_ordinal_type                 type()                const;
-    
+    const bool                              is_primitive()            const;
+    const bool                              is_variant()              const;
+    const bool                              is_event()                const;
+    const EVENT_DESCRIPTOR_QUALIFIER        qualifier()               const;    
+    const type_ordinal_type                 type()                    const;
+    const ordinal_type                      reference_event_ordinal() const;
+  
     void set_is_primitive(bool _is_primitive);
-    void set_is_variant(bool _is_variant); 
+    void set_is_variant(bool _is_variant);
     void set_qualifier(EVENT_DESCRIPTOR_QUALIFIER _qualifier);
     template<typename T> void set_type(T);
     void set_type_using_ordinal(const type_ordinal_type ordinal);
-   
+    void set_reference_event_ordinal(ordinal_type ordinal_in); 
   private:
 
     friend void serialize(SF::Archive & ar, EventTypeDescriptor & etd);
     
     EVENT_DESCRIPTOR_QUALIFIER        m_qualifier;
     type_ordinal_type  m_type;
+    ordinal_type       m_referenced_event;
     bool m_primitive;
     bool m_variant;
+    
   };
 
   //---------------------------------------------------------------------------//
@@ -118,6 +122,8 @@ namespace rubble { namespace event_model {
     const OP_RESPONSE       ContainsEventIdentifier(const Oid & oid)    const;
     const EventDescriptor * EventAt(const ordinal_type ordinal)         const;
     const EventDescriptor * EventWithName(const OidName & name_in)      const;
+    const ordinal_type      HasOrdinalWithName( std::string name_in, 
+                                                bool & ok)              const;
     const t_edc &           events()                                    const;
 
     const std::string & name()                                          const;
