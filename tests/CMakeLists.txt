@@ -7,7 +7,7 @@ IF(${EVENT_MODEL_TESTS_ENABLED})
     ADD_SUBDIRECTORY(event_model event_model)
 ENDIF()
 
-# IF(${EVENT_PROCESSING_TESTS_ENABLED})
+IF(${EVENT_PROCESSING_TESTS_ENABLED})
   ADD_SUBDIRECTORY(event_processing event_processing)
-# ENDIF()
+ENDIF()
 
