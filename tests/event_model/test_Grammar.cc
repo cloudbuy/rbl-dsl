@@ -67,7 +67,7 @@ TEST(grammar_test, event_data_line)
 
     res = qi::phrase_parse(
         beg, end, 
-        compound_rules.event_type_line(phoenix::ref(medb)),
+        compound_rules.event_type_line(phoenix::ref(mndb),phoenix::ref(medb)),
         skipper_ 
     );
     ASSERT_TRUE(res);

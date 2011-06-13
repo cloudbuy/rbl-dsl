@@ -86,7 +86,7 @@ namespace rubble { namespace event_model {
     IdentifierRules<Iterator> identifier_rules;    
 
     qi::rule< Iterator, 
-              void(MarshallEventDescriptorBuilder &), 
+              void(MarshallNamespaceDescriptorBuilder &,MarshallEventDescriptorBuilder &), 
               locals<Oid, EventTypeDescriptor>,
               Skipper> event_type_line;
 
@@ -111,7 +111,7 @@ namespace rubble { namespace event_model {
         >> identifier_rules.ordinal_string_identifier(_a)
         > no_case[ marshall_types [bind(&EventTypeDescriptor::set_type_using_ordinal,_b,_1)] ] > 
         -lit("[]") [ bind(&EventTypeDescriptor::set_is_variant,_b,phoenix::val(true))]
-          > char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r1,_a,_b,_pass)];
+          > char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r2,_a,_b,_pass)];
       
       event_descriptor.name("event descriptor"); 
       event_descriptor = 
@@ -120,7 +120,7 @@ namespace rubble { namespace event_model {
             [   bind(&MarshallEventDescriptorBuilder::
                 Init,_b,_a,_r1,_pass)]
         > char_('{')
-        > *( event_type_line(_b))
+        > *( event_type_line(_r1,_b))
         > char_('}')  [ bind(&MarshallNamespaceDescriptorBuilder::
                         AddEventDescriptor,_r1,_b,_pass) ]
       ;
