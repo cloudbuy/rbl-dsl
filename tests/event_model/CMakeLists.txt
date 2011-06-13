@@ -4,6 +4,7 @@ SET (PARSER_TEST_FILES
     test_FileParsing.cc
     test_Descriptors.cc
     test_Generator.cc
+    test_variant_event.cc 
     em_tests.cc
 )
      
