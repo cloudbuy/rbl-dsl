@@ -18,4 +18,5 @@ ADD_TEST(em_tests em_tests_)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_data/namespace_correct       DESTINATION "${TEST_DATA_DIR}")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_data/namespace_failbrace     DESTINATION "${TEST_DATA_DIR}")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_data/namespace_spacein_id    DESTINATION "${TEST_DATA_DIR}")
-
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_data/namespace_spacein_id    DESTINATION "${TEST_DATA_DIR}")
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_data/namespace_variant_event DESTINATION "${TEST_DATA_DIR}")

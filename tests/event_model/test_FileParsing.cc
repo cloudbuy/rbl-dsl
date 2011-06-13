@@ -5,7 +5,7 @@
 #ifdef ISOLATED_GTEST_COMPILE
 std::string test_data_dir = "./test_data";
 #else
-std::string test_data_dir;
+extern std::string test_data_dir;
 #endif
 
 using namespace rubble::event_model;

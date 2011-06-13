@@ -11,7 +11,7 @@ std::string test_data_dir;
 
 using namespace rubble::event_model;
 
-TEST(VariantEventFileParsing, test_basic)
+TEST(VariantEventFileParsing, test_variant)
 {
   std::string correct_namespace_file = test_data_dir;
   correct_namespace_file.append("/namespace_variant_event");
@@ -31,6 +31,20 @@ TEST(VariantEventFileParsing, test_basic)
   EXPECT_FALSE( mnd_s->EventAt(1)->TypeAt(2)->is_variant());
 }
 
+TEST(VariantEventFileParsing, test_event)
+{
+  std::string correct_namespace_file = test_data_dir;
+  correct_namespace_file.append("/namespace_variant_event");
+    
+  NamespaceFileParser file_parser(correct_namespace_file);
+  
+  ASSERT_TRUE(file_parser.CanParse()) << file_parser.error();
+
+  ASSERT_TRUE(file_parser.Parse());
+  
+  NamespaceFileParser::t_mnd_shp mnd_s = 
+        file_parser.get_descriptor();
+}
 #ifdef ISOLATED_GTEST_COMPILE
 int main(int argc,char ** argv)
 {
