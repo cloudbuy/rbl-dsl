@@ -5,7 +5,8 @@ namespace rubble { namespace event_model {
   inline EventTypeDescriptor::EventTypeDescriptor()
   : m_qualifier(ENTRY_UNINITIALIZED), 
     m_type(), 
-    m_primitive(false) {} 
+    m_primitive(false),
+    m_variant(false) {} 
 
   template<typename T>
   inline EventTypeDescriptor::EventTypeDescriptor( 
@@ -18,6 +19,9 @@ namespace rubble { namespace event_model {
 
   inline const bool 
   EventTypeDescriptor::is_primitive() const {return m_primitive; } 
+
+  inline const bool 
+  EventTypeDescriptor::is_variant() const { return m_variant; } 
 
   inline const EVENT_DESCRIPTOR_QUALIFIER 
   EventTypeDescriptor::qualifier() const
@@ -32,6 +36,12 @@ namespace rubble { namespace event_model {
   {
     m_primitive = _is_primitive;
   }
+
+  inline void EventTypeDescriptor::set_is_variant(bool _is_variant)
+  {
+    m_variant = _is_variant;
+  }
+
   inline void EventTypeDescriptor::set_qualifier
     (EVENT_DESCRIPTOR_QUALIFIER _qualifier)
   {

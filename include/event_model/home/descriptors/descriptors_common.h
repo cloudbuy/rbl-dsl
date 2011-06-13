@@ -40,13 +40,16 @@ namespace rubble { namespace event_model {
     // no operator= or copy constructor as bitwise copy is fine
 
     const bool                              is_primitive()        const;
+    const bool                              is_variant()          const;
     const EVENT_DESCRIPTOR_QUALIFIER        qualifier()           const;    
     const type_ordinal_type                 type()                const;
     
     void set_is_primitive(bool _is_primitive);
+    void set_is_variant(bool _is_variant); 
     void set_qualifier(EVENT_DESCRIPTOR_QUALIFIER _qualifier);
     template<typename T> void set_type(T);
     void set_type_using_ordinal(const type_ordinal_type ordinal);
+   
   private:
 
     friend void serialize(SF::Archive & ar, EventTypeDescriptor & etd);
@@ -54,6 +57,7 @@ namespace rubble { namespace event_model {
     EVENT_DESCRIPTOR_QUALIFIER        m_qualifier;
     type_ordinal_type  m_type;
     bool m_primitive;
+    bool m_variant;
   };
 
   //---------------------------------------------------------------------------//
