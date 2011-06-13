@@ -109,7 +109,8 @@ namespace rubble { namespace event_model {
                 | no_case[lit("required")[bind(&EventTypeDescriptor::set_qualifier,_b,ENTRY_REQUIRED)]]
             )
         >> identifier_rules.ordinal_string_identifier(_a)
-        > no_case[ marshall_types [bind(&EventTypeDescriptor::set_type_using_ordinal,_b,_1)] ]
+        > no_case[ marshall_types [bind(&EventTypeDescriptor::set_type_using_ordinal,_b,_1)] ] > 
+        -lit("[]") [ bind(&EventTypeDescriptor::set_is_variant,_b,phoenix::val(true))]
           > char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r1,_a,_b,_pass)];
       
       event_descriptor.name("event descriptor"); 

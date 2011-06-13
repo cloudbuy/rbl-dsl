@@ -21,7 +21,14 @@ TEST(VariantEventFileParsing, test_basic)
   ASSERT_TRUE(file_parser.CanParse()) << file_parser.error();
 
   ASSERT_TRUE(file_parser.Parse());
+  
+  NamespaceFileParser::t_mnd_shp mnd_s = 
+        file_parser.get_descriptor();
 
+  ASSERT_TRUE( mnd_s->EventAt(1)->TypeAt(3)!=NULL);
+  EXPECT_TRUE( mnd_s->EventAt(1)->TypeAt(3)->is_variant());
+
+  EXPECT_FALSE( mnd_s->EventAt(1)->TypeAt(2)->is_variant());
 }
 
 #ifdef ISOLATED_GTEST_COMPILE
