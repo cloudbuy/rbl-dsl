@@ -14,31 +14,44 @@ namespace rubble { namespace event_processing {
   {
     return m_is_variant;
   }
-  inline const bool FieldToken::is_reference() const
+  inline const bool FieldToken::is_event() const
   {
-    return m_is_reference;
+    if(m_type_ordinal == 
+        rubble::event_model::get_type_ordinal_f<rubble::event_model::rbl_event>::pos::value)
+      return true;
+    else
+      return false;
   }
   inline const rubble::event_model::type_ordinal_type 
   FieldToken::type_ordinal() const
   {
     return m_type_ordinal; 
   }
+
+  inline const EventToken & FieldToken::get_ref_event_token() const
+  {
+    if(m_event_reference == 0)
+      throw "Object is not an event";
+    else
+      return *m_event_reference;
+  }
+
+
   inline void FieldToken::set_is_variant(bool is_variant_)
   {
     m_is_variant = is_variant_;
   }
 
-  inline void FieldToken::set_is_reference
-    (bool is_reference_, const EventToken & event_token)
-  {
-    m_is_reference = is_reference_;
-    m_referenced_event = & event_token;
-  }
-  
   inline void FieldToken::set_type_ordinal
   (rubble::event_model::type_ordinal_type ordinal)
   {
     m_type_ordinal = ordinal;
+  }
+
+  inline const EventToken & 
+  FieldToken::set_ref_event_token(std::string & name)
+  {
+    m_event_reference = &(m_gen_site.getEventToken(name));
   }
   //-------------------------------------------------------------------------//
   

@@ -17,16 +17,18 @@ namespace rubble { namespace event_model {
   #include "0_undefined.h"
   #include "1_int4.h"
   #include "2_int8.h"
-  //#include "3_rbl_string.h"
-
+  #include "3_string.h"
+  #include "4_event.h"
 
   namespace rubble { namespace event_model { 
 
   // step two: the types of interest need to be wired up as  a mpl sequence
-  typedef boost::mpl::vector3< 
+  typedef boost::mpl::vector5< 
     rbl_undefined, 
     rbl_int4, 
-    rbl_int8> rbl_type_mpl_vector;
+    rbl_int8,
+    rbl_string,
+    rbl_event> rbl_type_mpl_vector;
   //  rbl_string> rbl_type_mpl_vector;
 
   // create a variant out of the supported type, this is the concrete runtime 

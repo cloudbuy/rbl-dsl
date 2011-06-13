@@ -41,7 +41,7 @@ namespace rubble { namespace event_model {
 
     const bool                              is_primitive()        const;
     const EVENT_DESCRIPTOR_QUALIFIER        qualifier()           const;    
-    const type_ordinal_type                      type()           const;
+    const type_ordinal_type                 type()                const;
     
     void set_is_primitive(bool _is_primitive);
     void set_qualifier(EVENT_DESCRIPTOR_QUALIFIER _qualifier);

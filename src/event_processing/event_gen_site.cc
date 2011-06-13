@@ -25,6 +25,7 @@ namespace rubble { namespace event_processing {
     : qi::grammar< Iterator, void(FieldToken &)>
   {
     qi::rule<Iterator, void(FieldToken &) > base_rule;
+    qi::rule< Iterator,   std::string()> valid_char_str;
     rubble::event_model::RblTypes RblTypes;
      
     type_signature_grammar() : type_signature_grammar::base_type(base_rule)
@@ -32,9 +33,20 @@ namespace rubble { namespace event_processing {
       using qi::lit;
       using qi::_r1;
       using qi::_1;    
+      using qi::eps;
+      using qi::char_;
  
+      valid_char_str = + (char_("a","z") | char_("A","Z") | char_('_')); 
+
       base_rule = 
         RblTypes [phoenix::bind(&FieldToken::set_type_ordinal,_r1,_1)] >>
+        ( ( eps(phoenix::bind(&FieldToken::is_event,_r1)) >
+              lit('(') >>
+              valid_char_str  
+                [phoenix::bind(&FieldToken::set_ref_event_token, _r1, _1)] >> 
+              lit(')')
+            ) 
+          | eps ) >>
         -(lit("[]")[phoenix::bind(&FieldToken::set_is_variant,_r1, phoenix::val(true))])
       ;
     }
@@ -48,8 +60,7 @@ namespace rubble { namespace event_processing {
       m_signature(signature),
       m_gen_site(gen_site),
       m_is_variant(false),
-      m_is_reference(false),
-      m_referenced_event(0)
+      m_event_reference(0)
   {
     std::string signature_str(signature);
     typedef std::string::const_iterator c_it;
@@ -59,6 +70,9 @@ namespace rubble { namespace event_processing {
     
     type_signature_grammar<c_it> grammar;
     bool res = qi::parse(beg,end,grammar(phoenix::ref(*this)));
+
+    if(res == false)
+      throw "signature parsing error";
   }
   //-------------------------------------------------------------------------//  
   // EventToken ///////////////////////////////////////////////////////////////
@@ -103,6 +117,24 @@ namespace rubble { namespace event_processing {
       os << "Field: \"" << name << "\" allready exists in this event";
       throw GenSiteException(os.str());
     }
+  }
+  
+  const EventToken & EventGenSite::getEventToken(std::string name) const
+  {
+    boost::to_lower(name);   
+ 
+    EventToken::event_token_map_t::const_iterator it = 
+      event_token_map.find(name);
+    
+    if(it == event_token_map.end())
+    {
+      std::ostringstream os;
+      os << "Event: \"" << name << "\" Does not exist in this Gen Site";
+      
+      throw GenSiteException(os.str());
+    }
+    else
+      return it->second;
   }
   //-------------------------------------------------------------------------//
 
