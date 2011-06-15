@@ -86,7 +86,8 @@ namespace rubble { namespace event_model {
     IdentifierRules<Iterator> identifier_rules;    
 
     qi::rule< Iterator, 
-              void(MarshallNamespaceDescriptorBuilder &,MarshallEventDescriptorBuilder &), 
+              void( MarshallNamespaceDescriptorBuilder &,
+                    MarshallEventDescriptorBuilder &), 
               locals<Oid, EventTypeDescriptor>,
               Skipper> event_type_line;
 
@@ -101,25 +102,41 @@ namespace rubble { namespace event_model {
 
     
     CompoundRules()
-    { 
+    {
+      #define SET_QUALIFIER(QUALIFIER) \
+      bind(&EventTypeDescriptor::set_qualifier,_b, QUALIFIER) 
+      
+      #define SET_TYPE_USING_ORDINAL  \
+      bind(&EventTypeDescriptor::set_type_using_ordinal,_b,_1)
+
+      #define FINALIZE_ADD_ENTRY \
+      bind(&MarshallEventDescriptorBuilder::AddEventType,_r2,_a,_b,_pass)
+
+      #define SET_IS_VARIANT  \
+      bind(&EventTypeDescriptor::set_is_variant,_b,phoenix::val(true))
+ 
+      #define SET_REF_EVENT_IDENTIFIER                              \
+      bind(&EventTypeDescriptor::set_reference_event_ordinal,_b,    \
+      bind(& MarshallNamespaceDescriptorBuilder::                   \
+        HasOrdinalWithName,_r1,_1,_pass) )
+
       event_type_line.name("event type entry line");
       event_type_line =
-        eps [bind(&EventTypeDescriptor::set_is_primitive,_b,true)] 
-        >> -(  no_case[lit("optional")[bind(&EventTypeDescriptor::set_qualifier,_b,ENTRY_OPTIONAL) ]]
-                | no_case[lit("required")[bind(&EventTypeDescriptor::set_qualifier,_b,ENTRY_REQUIRED)]]
-            )
-        >> identifier_rules.ordinal_string_identifier(_a)
-        > no_case[ marshall_types [bind(&EventTypeDescriptor::set_type_using_ordinal,_b,_1)] ] > 
+        eps [bind(&EventTypeDescriptor::set_is_primitive,_b,true)] >> 
+        -(    no_case[lit("optional") [SET_QUALIFIER(ENTRY_OPTIONAL) ] ]
+            | no_case[lit("required") [SET_QUALIFIER(ENTRY_REQUIRED) ] ] 
+        ) >>
+        identifier_rules.ordinal_string_identifier(_a) > 
+        no_case[ marshall_types [ SET_TYPE_USING_ORDINAL ] ] > 
         ( ( eps(phoenix::bind(&EventTypeDescriptor::is_event,_b)) >
-              lit('(') >
-                identifier_rules.valid_char_str 
-                  [ bind(&EventTypeDescriptor::set_reference_event_ordinal,_b, bind(& MarshallNamespaceDescriptorBuilder::HasOrdinalWithName,_r1,_1,_pass) ) ]
-                 >> 
-              lit(')')
+            lit('(') >
+              identifier_rules.valid_char_str [ SET_REF_EVENT_IDENTIFIER ] >> 
+            lit(')')
             )
-          | eps ) >
-        -lit("[]") [ bind(&EventTypeDescriptor::set_is_variant,_b,phoenix::val(true))] >>
-        char_(';')[bind(&MarshallEventDescriptorBuilder::AddEventType,_r2,_a,_b,_pass)];
+          | eps 
+        ) >
+        -lit("[]") [ SET_IS_VARIANT] >>
+        char_(';')[FINALIZE_ADD_ENTRY];
       
       event_descriptor.name("event descriptor"); 
       event_descriptor = 
@@ -141,7 +158,12 @@ namespace rubble { namespace event_model {
         > char_('{')
         > *( event_descriptor(_r1))
         > char_('}')
-      ; 
+      ;
+      #undef SET_REF_EVENT_IDENTIFIER
+      #undef SET_IS_VARIANT
+      #undef FINALIZE_ADD_ENTRY
+      #undef SET_TYPE_USING_ORDINAL
+      #undef SET_QUALIFIER
     }
   };
 } }
