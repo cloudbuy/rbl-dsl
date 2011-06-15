@@ -80,7 +80,7 @@ TEST(VariantEventFileParsing, generation_testing)
       nsg(phoenix::cref(*mnd_s))
     );
 
-  std::cout << str << std::endl;
+//  std::cout << str << std::endl;
 
   typedef std::string::iterator c_s_it;
 
@@ -97,8 +97,20 @@ TEST(VariantEventFileParsing, generation_testing)
                     compound_rules.namespace_descriptor(phoenix::ref(mndb)),
                     skipper_ 
                 );
+  // variant tests
+  ASSERT_TRUE( mndb.EventAt(1)->TypeAt(3)!=NULL);
+  EXPECT_TRUE( mndb.EventAt(1)->TypeAt(3)->is_variant());
 
+  EXPECT_FALSE( mndb.EventAt(1)->TypeAt(2)->is_variant());
  
+  // event and variant tests
+  ASSERT_TRUE(mndb.EventAt(2)->TypeAt(2)->is_event());
+  ASSERT_TRUE(mndb.EventAt(3)->TypeAt(3)->is_event());
+  ASSERT_TRUE(mndb.EventAt(3)->TypeAt(3)->is_variant());
+  
+  EXPECT_EQ(mndb.EventAt(2)->TypeAt(2)->reference_event_ordinal(),1);
+  EXPECT_EQ(mndb.EventAt(3)->TypeAt(3)->reference_event_ordinal(),1);
+
 }
 
 #ifdef ISOLATED_GTEST_COMPILE

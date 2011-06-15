@@ -109,7 +109,8 @@ namespace rubble { namespace event_model {
     karma::rule<iterator, void( const Oid *, 
                                 const EventTypeDescriptor *,
                                 const NamespaceDescriptor &), 
-                                karma::locals<unsigned int, type_ordinal_type> > 
+                                karma::locals<  unsigned int, 
+                                                type_ordinal_type> > 
                                   base_rule;
 
     karma::rule<iterator, void()> two_indent;
@@ -146,10 +147,13 @@ namespace rubble { namespace event_model {
       #define _IS_EVENT \
       phoenix::bind(&EventTypeDescriptor::is_event,_r2)
 
-      #define _REFERENCE_EVENT_NAME \
+      #define _REFERENCE_NAME \
       phoenix::bind(&NamespaceDescriptor::EventDescriptor::name,          \
       phoenix::bind(&NamespaceDescriptor::EventAt,_r3,                    \
       phoenix::bind(&EventTypeDescriptor::reference_event_ordinal,_r2)))  \
+  
+      #define _IS_VARIANT \
+      phoenix::bind(&EventTypeDescriptor::is_variant, _r2)
 
       two_indent = space << space << space << space;
       
@@ -161,12 +165,14 @@ namespace rubble { namespace event_model {
         ) << space <<
         int_(_ORDINAL_OID) << lit(':') << stream(_NAME_OID) << space <<
         type_symbols[ _1 = _TYPE_ORDINAL] <<
-        ( ( eps(_IS_EVENT) << lit('(') << stream(_REFERENCE_EVENT_NAME) << lit(')') )
+        ( ( eps(_IS_EVENT) << lit('(') << stream(_REFERENCE_NAME) << lit(')') )
           | eps ) <<
+        ( ( eps(_IS_VARIANT) << lit("[]") )
+          | eps ) << 
         lit(';') << eol
       ;
 
-      #undef _REFERENCE_EVENT_NAME
+      #undef _REFERENCE_NAME
       #undef _T_QUALIFIER 
       #undef _ORDINAL_OID
       #undef _NAME_OID
@@ -238,17 +244,22 @@ namespace rubble { namespace event_model {
   struct namespace_generator_grammar
     : karma::grammar< iterator, 
                       void(const NamespaceDescriptor &), 
-                      karma::locals< unsigned int, const EventDescriptorBase *> >
+                      karma::locals<  unsigned int, 
+                                      const EventDescriptorBase *> >
   {
     des_ns_gen_prim<iterator> primitives;
-    event_generator_grammar<iterator, NamespaceDescriptor ,EventDescriptorBase> event_grammar;
+    event_generator_grammar<  iterator, 
+                              NamespaceDescriptor ,
+                              EventDescriptorBase> event_grammar;
    
     karma::rule<  iterator, 
                   void(const NamespaceDescriptor &), 
-                  karma::locals< unsigned int, const EventDescriptorBase *> > base_rule;
+                  karma::locals<  unsigned int, 
+                                  const EventDescriptorBase *> > base_rule;
  
     
-    namespace_generator_grammar() : namespace_generator_grammar::base_type(base_rule)
+    namespace_generator_grammar() 
+      : namespace_generator_grammar::base_type(base_rule)
     {
       using karma::_r1;
       using karma::repeat;
