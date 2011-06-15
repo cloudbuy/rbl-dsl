@@ -91,21 +91,24 @@ namespace rubble { namespace event_model {
     };
   };
 ///////////////////////////////////////////////////////////////////////////////
-  template <typename iterator, typename e_type>
+  template <typename iterator, typename NamespaceDescriptor, typename e_type>
   struct event_generator_grammar
   {
   private:
     event_generator_grammar();
   };
 ///////////////////////////////////////////////////////////////////////////////
-  template<typename iterator>
+  template<typename iterator,typename NamespaceDescriptor>
   struct type_generator_grammar 
     : karma::grammar< iterator,
-                      void( const Oid * ,const EventTypeDescriptor *)
+                      void( const Oid * ,
+                            const EventTypeDescriptor *,
+                            const NamespaceDescriptor &)
                       , karma::locals<unsigned int, type_ordinal_type> >
   {
     karma::rule<iterator, void( const Oid *, 
-                                const EventTypeDescriptor *), 
+                                const EventTypeDescriptor *,
+                                const NamespaceDescriptor &), 
                                 karma::locals<unsigned int, type_ordinal_type> > 
                                   base_rule;
 
@@ -124,6 +127,7 @@ namespace rubble { namespace event_model {
       using karma::_r1;
       using karma::_a;
       using karma::_r2;
+      using karma::_r3;
       using karma::_b;
       using karma::_1; 
 
@@ -138,6 +142,14 @@ namespace rubble { namespace event_model {
 
       #define _TYPE_ORDINAL \
       phoenix::bind(&EventTypeDescriptor::type,_r2)
+    
+      #define _IS_EVENT \
+      phoenix::bind(&EventTypeDescriptor::is_event,_r2)
+
+      #define _REFERENCE_EVENT_NAME \
+      phoenix::bind(&NamespaceDescriptor::EventDescriptor::name,          \
+      phoenix::bind(&NamespaceDescriptor::EventAt,_r3,                    \
+      phoenix::bind(&EventTypeDescriptor::reference_event_ordinal,_r2)))  \
 
       two_indent = space << space << space << space;
       
@@ -149,9 +161,12 @@ namespace rubble { namespace event_model {
         ) << space <<
         int_(_ORDINAL_OID) << lit(':') << stream(_NAME_OID) << space <<
         type_symbols[ _1 = _TYPE_ORDINAL] <<
+        ( ( eps(_IS_EVENT) << lit('(') << stream(_REFERENCE_EVENT_NAME) << lit(')') )
+          | eps ) <<
         lit(';') << eol
       ;
-      
+
+      #undef _REFERENCE_EVENT_NAME
       #undef _T_QUALIFIER 
       #undef _ORDINAL_OID
       #undef _NAME_OID
@@ -159,18 +174,21 @@ namespace rubble { namespace event_model {
     }
   };
 ///////////////////////////////////////////////////////////////////////////////
-  template<typename iterator>
-  struct event_generator_grammar<iterator, EventDescriptorBase>
+  template<typename iterator,typename NamespaceDescriptor>
+  struct event_generator_grammar< iterator,
+                                  NamespaceDescriptor, EventDescriptorBase>
     : karma::grammar< iterator,
-                      void(const EventDescriptorBase *),
+                      void( const EventDescriptorBase *,
+                            const NamespaceDescriptor &),
                       karma::locals< unsigned int, 
                                      const EventTypeDescriptor *> > 
   {
     des_e_gen_prim<iterator> primitives; 
       
-    type_generator_grammar<iterator> type_grammar;
+    type_generator_grammar<iterator,NamespaceDescriptor> type_grammar;
   
-    karma::rule< iterator, void(const EventDescriptorBase *), 
+    karma::rule< iterator, void(  const EventDescriptorBase *,
+                                  const NamespaceDescriptor &), 
                  karma::locals< unsigned int, 
                                 const EventTypeDescriptor *> > base_rule;
     
@@ -178,6 +196,7 @@ namespace rubble { namespace event_model {
     {
       using karma::eps;
       using karma::_r1;
+      using karma::_r2;
       using karma::int_;
       using karma::eol;
       using karma::repeat;
@@ -201,7 +220,7 @@ namespace rubble { namespace event_model {
         eps[ _a = 0 ] <<
         repeat(_E_SIZE) [
           eps[ _b = _TYPE_AT(_a) ] <<
-          ( ( eps(_b) << type_grammar(_TYPE_OID_AT(_a) , _b)  ) | eps) << 
+          ( ( eps(_b) << type_grammar(_TYPE_OID_AT(_a) , _b,_r2)  ) | eps) << 
           eps[ _a++ ]
         ] << 
         primitives.event_footer
@@ -222,7 +241,7 @@ namespace rubble { namespace event_model {
                       karma::locals< unsigned int, const EventDescriptorBase *> >
   {
     des_ns_gen_prim<iterator> primitives;
-    event_generator_grammar<iterator, EventDescriptorBase> event_grammar;
+    event_generator_grammar<iterator, NamespaceDescriptor ,EventDescriptorBase> event_grammar;
    
     karma::rule<  iterator, 
                   void(const NamespaceDescriptor &), 
@@ -251,7 +270,7 @@ namespace rubble { namespace event_model {
           eps[ _a = 0 ] << 
           repeat(_ND_SIZE) [
             eps [ _b = _EVENT_AT(_a)] <<
-            ( ( eps(_b) << event_grammar(_b) ) | eps )  <<
+            ( ( eps(_b) << event_grammar(_b,_r1) ) | eps )  <<
             eps[ _a ++ ]
           ] <<
         primitives.namespace_footer
